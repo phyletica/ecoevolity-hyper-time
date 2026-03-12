@@ -1,0 +1,17 @@
+name: hyper-time
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - git=2.53.0
+  - cxx-compiler=1.11.0
+  - cmake=4.2.3
+  - python>=3.8
+  - scipy
+  - numpy
+  - matplotlib
+  - seaborn
+  - munkres>=1.1.1
+  - pip
+  - pip:
+    - git+https://github.com/phyletica/pycoevolity.git@master
