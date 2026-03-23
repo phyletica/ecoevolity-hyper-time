@@ -8,6 +8,7 @@ dependencies:
   - cmake=4.2.3
   - quarto
   - python>=3.8
+  - pyyaml
   - scipy
   - numpy
   - matplotlib
