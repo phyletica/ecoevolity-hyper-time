@@ -1,0 +1,93 @@
+---
+event_model_prior:
+    dirichlet_process:
+        parameters:
+            concentration:
+                value:      10.0
+                estimate:   true
+                prior:
+                    gamma_distribution:
+                        shape: 4.0
+                        scale: 2.5
+
+event_time_prior:
+    exponential_distribution:
+        mean:
+          value: 0.2
+          estimate: false
+
+mcmc_settings:
+    chain_length: 60000
+    sample_frequency: 40
+
+operator_settings:
+    auto_optimize: true
+    auto_optimize_delay: 400
+    operators:
+        ModelOperator:
+            number_of_auxiliary_categories: 2
+
+global_comparison_settings:
+    ploidy: 2
+    genotypes_are_diploid: false
+    markers_are_dominant: false
+    population_name_delimiter: "-"
+    population_name_is_prefix: true
+    constant_sites_removed: false
+    equal_population_sizes: true
+    parameters:
+        population_size:
+            value: 0.0005
+            estimate: true
+            prior:
+                gamma_distribution:
+                    shape: 10.0
+                    mean: 0.0005
+        freq_1:
+            value: 0.5
+            estimate: false
+        mutation_rate:
+            value: 1.0
+            estimate: false
+
+comparisons:
+- comparison:
+    path: "../data/comp01-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp02-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp03-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp04-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp05-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp06-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp07-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp08-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp09-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp10-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp11-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp12-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp13-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp14-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp15-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp16-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp17-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp18-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp19-2species-04genomes-20000chars.txt"
+- comparison:
+    path: "../data/comp20-2species-04genomes-20000chars.txt"
