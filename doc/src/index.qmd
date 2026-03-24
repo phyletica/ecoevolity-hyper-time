@@ -1,0 +1,16 @@
+# About {.unnumbered}
+
+This is a project of the
+[Phyletica Lab](https://phyletica.org)
+to experiment with ways of improving comparative biogeographical
+estimates of shared times of divergence or population-size change
+across taxa.
+
+The goal of this documentation is to:
+
+1.  Aid members of the project to work collaboratively
+2.  Allow others to follow allong with the project, reproduce our findings, and
+    learn how to use and interpret the models we are testing.
+
+The ultimate arbiter of the project's full history is the
+[project repository](https://github.com/phyletica/ecoevolity-hyper-time).

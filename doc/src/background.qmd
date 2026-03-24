@@ -1,0 +1,46 @@
+# Background
+
+The primary goal of this project is to improve comparative biogeographical
+estimation of shared (synchronous) population divergences or size changes
+across taxa using genomic data.
+We have implemented the models we will be testing in the software package
+[ecoevolity](https://phyletica.org/ecoevolity).
+
+The background information below will assume some knowledge of
+the types of comparative biogeographic models implemented in
+[ecoevolity](https://phyletica.org/ecoevolity).
+The documentation provides a
+[brief and gentle introduction to such models](http://phyletica.org/ecoevolity/background.html).
+For more details, please refer to
+@Oaks2018ecoevolity, @Oaks2018paic, & @Oaks2019codemog.
+
+[Ecoevolity](https://phyletica.org/ecoevolity)
+estimates the relative timing of two types of evolutionary events among taxa:
+
+1.  Population divergence @Oaks2018ecoevolity.
+2.  Change in the effective size of a population @Oaks2019codemog.
+
+Throughout this documentation, we will focus on divergences, but all the
+comparative models we discuss and test also apply to changes in effective
+population sizes (or a mix of divergences and size changes).
+
+## A hypothetical example
+
+As a hypothetical example,
+let's imagine a three pairs of species of lizards of lizards that are
+co-distributed across two islands.
+We want to test the hypothesis that these three pairs of species diverged
+when the islands were fragmented by rising sea levels 130,000 years ago.
+This predicts that all three pairs of populations diverged at roughly the same
+time.
+
+![Three pairs of lizard species co-speciating when their island is fragmented](./images/div-island-cartoon-shared-event-labels.png "Lizards co-speciating when their island is fragmented"){fig-alt="Three pairs of lizard species co-speciating when their island is fragmented"}
+
+To evaluate the probability of such a model of co-divergence,
+we also need to consider other possible explanations (i.e., models).
+For example, perhaps all of these populations were founded by over-water
+dispersal events, which makes no obvious prediction that these events would be
+temporally clustered.
+Or, perhaps two pairs of populations co-diverged when rising seas separated the
+islands, but the third pair of lizards diverged at a different time via
+dispersal.

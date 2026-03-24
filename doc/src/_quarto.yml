@@ -1,0 +1,50 @@
+project:
+  type: book
+
+book:
+  title: "Time Hyper Prior Project"
+  author:
+    - name: Jamie Oaks
+      orcid: 0000-0002-3757-3836
+      url: https://phyletica.org
+      affiliation:
+        - id: aumnh
+          name: Auburn University Museum of Natural History
+          city: Auburn
+          state: AL
+          country: USA
+          url: https://aumnh.auburn.edu/
+        - id: audbs
+          name: Auburn University Department of Biological Sciences
+          city: Auburn
+          state: AL
+          country: USA
+          url: https://www.auburn.edu/cosam/departments/biology/index.htm
+    - name: João Fentanes Machado
+      affiliation:
+        - id: fsp
+          name: Universidade Federal de São Paulo
+          city: São Paulo
+          country: Brazil
+  chapters:
+    - index.qmd
+    - background.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+license: "CC BY"
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    anchor-sections: true
+    embed-resources: true
+    smooth-scroll: true
+    link-external-icon: true
+    link-external-newwindow: true
+  pdf:
+    documentclass: scrreprt
