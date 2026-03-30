@@ -3,9 +3,9 @@
 import scipy.stats as st
 import yaml
 try:
-    from yaml import CLoader as Loader
+    from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
-    from yaml import Loader
+    from yaml import Loader, Dumper
 
 import project_utils
 
@@ -14,6 +14,10 @@ def get_yaml_config(path):
     with open(path, 'r') as stream:
         config = yaml.load(stream, Loader = Loader)
     return config
+
+def write_yaml_config(data, path):
+    with open(path, 'w') as stream:
+        yaml.dump(data, stream, Dumper = Dumper)
 
 def get_gamma_shape_scale(mean, sd):
     variance = sd**2
