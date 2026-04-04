@@ -115,15 +115,19 @@ def run_ecoevolity(
     for attempt_idx in range(max_num_attempts):
         try:
             result = run_cmd(cmd, timeout = timeout)
+            # `check_returncode` will raise CalledProcessError if return code
+            # is non-zero This is likely redundant given we use `check = True`
+            # in `run_cmd`, but it doesn't hurt to double check
             result.check_returncode()
+            break
         except Exception as e:
             if (attempt_idx + 1) < max_num_attempts:
                 sys.stderr.write(
                     f"Attempt {attempt_idx + 2} for command:\n\t{cmd}\n"
                 )
                 clean_up_ecoevolity_output(state_log_path)
-            else:
-                raise e
+                continue
+            raise e
 
     run_time = None
     try:
