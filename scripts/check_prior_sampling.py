@@ -32,9 +32,11 @@ def plot_cdf_comparison(
             n = 100000,
         )
     fig = matplotlib.figure.Figure()
-    gs = fig.add_gridspec(nrows = 1, ncols = 1,
-            wspace = 0.0,
-            hspace = 0.0)
+    gs = fig.add_gridspec(
+        nrows = 1, ncols = 1,
+        wspace = 0.0,
+        hspace = 0.0,
+    )
     ax = fig.add_subplot(gs[0, 0])
     empirical_line, model_line = plotting.compare_samples_to_cdf(
         ax = ax,
