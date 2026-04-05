@@ -197,7 +197,7 @@ def create_sim_configs(sim_config_paths, inference_config_paths):
                 i_conf["comparisons"][i_idx]["comparison"]["population_name_is_prefix"] = s_conf["comparisons"][s_idx]["comparison"]["population_name_is_prefix"]
                 i_conf["comparisons"][i_idx]["comparison"]["constant_sites_removed"]    = s_conf["comparisons"][s_idx]["comparison"]["constant_sites_removed"]
             eco_config.write_yaml_config(i_conf, i_out_path)
-            sim_infer_confs.append(i_out_path)
+            sim_infer_confs.append((i_out_path, infer_conf_path))
         sim_infer_config_paths.append(tuple(sim_infer_confs))
     return sim_infer_config_paths
 
@@ -447,18 +447,18 @@ def run_analyses_on_sims(
         for true_vals_path, config_paths in true_val_config_paths:
             assert not true_vals_path in results
             results[true_vals_path] = {}
-            for conf_path in config_paths:
-                assert not conf_path in results[true_vals_path]
-                results[true_vals_path][conf_path] = {}
+            for rep_inf_conf_path, orig_inf_conf_path in config_paths:
+                assert not orig_inf_conf_path in results[true_vals_path]
+                results[true_vals_path][orig_inf_conf_path] = {}
                 for i in range(number_of_chains):
                     seed = project_utils.get_safe_seed(rng)
-                    assert not seed in results[true_vals_path][conf_path]
-                    results[true_vals_path][conf_path][seed] = {}
+                    assert not seed in results[true_vals_path][orig_inf_conf_path]
+                    results[true_vals_path][orig_inf_conf_path][seed] = {}
                     workers.append(
                         pool.apply_async(
                             run_ecoevolity,
                             args = (
-                                conf_path,
+                                rep_inf_conf_path,
                                 seed,
                                 output_dir,
                                 eco_exe_dir,
@@ -468,7 +468,8 @@ def run_analyses_on_sims(
                                 False,  # relax_triallelic_sites
                                 timeout,
                                 max_num_attempts,
-                                (true_vals_path, conf_path, seed), # extra_returns
+                                (true_vals_path, orig_inf_conf_path, seed), # extra_returns
+
                             )
                         )
                     )

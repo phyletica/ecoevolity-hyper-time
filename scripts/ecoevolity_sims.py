@@ -30,12 +30,13 @@ def parse_cli_args():
     )
     parser.add_argument(
         '-c', '--sim-config',
-        action = 'store',
+        action = 'append',
         required = True,
         type = pycoevolity.argparse_utils.arg_is_file,
         help = (
-            'Path to the ecoevolity configuratino file to use to simulate '
-            'data sets from the prior.'
+            'Path to the ecoevolity configuration file to use to simulate '
+            'data sets from the prior. This option can be used multiple times '
+            'if you want to generate simulations under multiple configs.'
         ),
     )
     parser.add_argument(
@@ -162,36 +163,37 @@ def main_cli():
     rng.seed(seed)
     np_rng = project_utils.get_numpy_rng(seed)
 
-    trueval_config_paths = interop.generate_simulations(
-        rng = rng,
-        sim_config = args.sim_config,
-        infer_configs = args.config_paths,
-        output_dir = output_dir,
-        eco_exe_dir = args.ecoevolity_dir,
-        number_of_sims = args.number_of_sims,
-        number_of_procs = args.number_of_procs,
-        singleton_sample_prob = None,
-        locus_size = None,
-        max_one_variable_site_per_locus = False,
-        charsets = False,
-        relax_constant_sites = False,
-        relax_missing_sites = False,
-        relax_triallelic_sites = False,
-        output_nexus = False,
-    )
-    results = interop.run_analyses_on_sims(
-        rng = rng,
-        true_val_config_paths = trueval_config_paths,
-        eco_exe_dir = args.ecoevolity_dir,
-        number_of_chains = args.number_of_chains,
-        number_of_procs = args.number_of_procs,
-        relax_constant_sites = False,
-        relax_missing_sites = False,
-        relax_triallelic_sites = False,
-        timeout = args.chain_timeout,
-        max_num_attempts = args.chain_attempts,
-    )
-
+    results = {}
+    for sim_config in args.sim_config:
+        trueval_config_paths = interop.generate_simulations(
+            rng = rng,
+            sim_config = sim_config,
+            infer_configs = args.config_paths,
+            output_dir = output_dir,
+            eco_exe_dir = args.ecoevolity_dir,
+            number_of_sims = args.number_of_sims,
+            number_of_procs = args.number_of_procs,
+            singleton_sample_prob = None,
+            locus_size = None,
+            max_one_variable_site_per_locus = False,
+            charsets = False,
+            relax_constant_sites = False,
+            relax_missing_sites = False,
+            relax_triallelic_sites = False,
+            output_nexus = False,
+        )
+        results[sim_config] = interop.run_analyses_on_sims(
+            rng = rng,
+            true_val_config_paths = trueval_config_paths,
+            eco_exe_dir = args.ecoevolity_dir,
+            number_of_chains = args.number_of_chains,
+            number_of_procs = args.number_of_procs,
+            relax_constant_sites = False,
+            relax_missing_sites = False,
+            relax_triallelic_sites = False,
+            timeout = args.chain_timeout,
+            max_num_attempts = args.chain_attempts,
+        )
     with open('results.json', 'w') as out_stream:
         json.dump(results, out_stream, indent=4)
 
