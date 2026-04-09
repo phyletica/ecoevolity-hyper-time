@@ -5,12 +5,50 @@ import sys
 import math
 import re
 import shutil
+import gzip
 import subprocess
 import multiprocessing
 import pycoevolity
 
 import eco_config
 import project_utils
+
+
+def compress_file(path, compressed_path):
+    with open(path, 'rb') as in_stream:
+        with gzip.open(compressed_path, 'wb') as out_stream:
+            shutil.copyfileobj(in_stream, out_stream)
+
+def compress_output_path(log_path, output_dir = None):
+    if not output_dir:
+        output_dir = os.path.dirname(log_path)
+    gz_log_path = os.path.join(
+        output_dir,
+        f"{os.path.basename(log_path)}.gz",
+    )
+    compress_file(log_path, gz_log_path)
+    return gz_log_path
+
+# def parse_sim_results(results):
+#     sim_configs = results["simulation_configs"]
+#     inf_configs = results["inference_configs"]
+#     nchains = results["number_of_chains"]
+#     burnin = results["burnin"]
+#     for sim_conf, sims in results["simulations"].items():
+#         assert sim_conf in sim_configs
+#         for true_vals_path, inf_results in sims.items():
+#             for inf_conf, rep_results in inf_results.items():
+#                 assert inf_conf in inf_configs
+#                 assert len(rep_results["chains"]) == nchains
+#                 # At this point I think it is worth simply using pycoevolity's
+#                 # posterior code, which means we need to specify/fix burnin
+#                 # from the beginning and use it here, and assemble one
+#                 # posterior sample and summary across chaings
+#                 # We cannot serialize pycoevolity posterior classes to json, so
+#                 # we need to decide how to store results
+
+def load_results_json(in_stream):
+    return json.load(in_stream)
 
 def get_ecoevolity_dir(dir_to_check = None):
     eco_path = None
@@ -30,22 +68,53 @@ def get_ecoevolity_dir(dir_to_check = None):
         )
     return os.path.dirname(eco_path)
 
-def parse_runtime_from_output(output_str):
+def parse_info_from_output(output_str):
     run_time_pattern = re.compile(
         r'^\s*runtime:\s+(?P<run_time>\d+)\s+seconds\.\s*$',
         re.IGNORECASE,
     )
+    summary_pattern = re.compile(
+        r'^\s*Summary\s+of\s+data\s+from\s+(?P<num_comparisons>\d+)\s+comparisons:\s*$',
+        re.IGNORECASE,
+    )
+    num_var_sites_pattern = re.compile(
+        r'^\s*Number\s+of\s+variable\s+sites:\s+(?P<num_var_sites>\d+)\s*$',
+        re.IGNORECASE,
+    )
     run_time = None
+    num_comparisons = None
+    num_var_sites = []
     for l in output_str.splitlines():
         line = l.strip()
+        m = summary_pattern.match(line)
+        if m:
+            num_comparisons = int(m.group("num_comparisons"))
+            continue
+        m = num_var_sites_pattern.match(line)
+        if m:
+            num_var_sites.append(int(m.group("num_var_sites")))
+            continue
         m = run_time_pattern.match(line)
         if m:
             run_time = int(m.group("run_time"))
+    if num_comparisons is None:
+        raise Exception(
+            f"Could not find number of comparisons in this output:\n{output_str}\n"
+        )
+    if not num_var_sites:
+        raise Exception(
+            f"Could not find number of variable sites in this output:\n{output_str}\n"
+        )
     if run_time is None:
         raise Exception(
             f"Could not find runtime in this output:\n{output_str}\n"
         )
-    return run_time
+    if num_comparisons != len(num_var_sites):
+        raise Exception(
+            f"Expected number of variable sites for {num_comparisons} pairs, "
+            f"but found {len(num_var_sites)} in this output:\n{output_str}\n"
+        )
+    return run_time, num_var_sites
 
 def run_cmd(cmd, timeout = None):
     result = subprocess.run(
@@ -131,7 +200,7 @@ def run_ecoevolity(
 
     run_time = None
     try:
-        run_time = parse_runtime_from_output(result.stdout)
+        run_time, num_var_sites = parse_info_from_output(result.stdout)
     except Exception as e:
         raise Exception(
             f"ERROR: could not parse stdout from ecoevolity run; "
@@ -139,7 +208,7 @@ def run_ecoevolity(
             f"stdout:\n{result.stdout}\n"
             f"stderr:\n{result.stderr}\n"
         )
-    return run_time, state_log_path, *extra_returns
+    return run_time, num_var_sites, state_log_path, *extra_returns
 
 def get_comparison_map(
     simcoevolity_config_comparisons,
@@ -266,7 +335,7 @@ def run_simcoevolity(
             f"'{result.returncode}'; here is the stderr:\n"
             f"{result.stderr}\n"
         )
-    run_time = parse_runtime_from_output(result.stderr)
+    run_time, num_var_sites = parse_info_from_output(result.stderr)
 
     config_paths = [
         f"{full_prefix}simcoevolity-sim-{i}-config.yml" for i in range(
@@ -321,7 +390,7 @@ def collect_prior_samples(
         sys.stderr.write(
             f"Loaded {len(workers)} ecoevolity workers for {number_of_procs} processors\n"
         )
-        for run_time, state_log_path in (w.get() for w in workers):
+        for run_time, num_var_sites, state_log_path in (w.get() for w in workers):
             log_raths.append(state_log_path)
     return log_paths
 
@@ -333,6 +402,7 @@ def run_sumcoevolity(
     num_prior_draws = 1000000,
     eco_exe_dir = None,
     burnin = 0,
+    extra_returns = [],
 ):
     eco_exe = "sumcoevolity"
     if eco_exe_dir:
@@ -346,7 +416,8 @@ def run_sumcoevolity(
         f"{config_name}-seed-{seed}-n-{num_prior_draws}-",
     )
 
-    results_path = f"{prefix}sumcoevolity-results-nevents.txt"
+    nevents_results_path = f"{prefix}sumcoevolity-results-nevents.txt"
+    model_results_path = f"{prefix}sumcoevolity-results-model.txt"
 
     cmd = [
         eco_exe,
@@ -364,7 +435,7 @@ def run_sumcoevolity(
         )
 
     result = run_cmd(cmd)
-    return result, results_path
+    return result, nevents_results_path, model_results_path, *extra_returns
 
 def generate_simulations(
     rng,
@@ -432,6 +503,7 @@ def run_analyses_on_sims(
     relax_triallelic_sites = False,
     timeout = None,
     max_num_attempts = 3,
+    output_dir = None,
 ):
     total_num_runs = 0
     for true_vals_path, config_paths in true_val_config_paths:
@@ -439,7 +511,8 @@ def run_analyses_on_sims(
     if number_of_procs > total_num_runs:
         number_of_procs = total_num_runs
 
-    output_dir = os.path.dirname(true_val_config_paths[0][0])
+    if not output_dir:
+        output_dir = os.path.dirname(true_val_config_paths[0][0])
 
     results = {}
     workers = []
@@ -450,10 +523,11 @@ def run_analyses_on_sims(
             for rep_inf_conf_path, orig_inf_conf_path in config_paths:
                 assert not orig_inf_conf_path in results[true_vals_path]
                 results[true_vals_path][orig_inf_conf_path] = {}
+                results[true_vals_path][orig_inf_conf_path]["chains"] = {}
                 for i in range(number_of_chains):
                     seed = project_utils.get_safe_seed(rng)
-                    assert not seed in results[true_vals_path][orig_inf_conf_path]
-                    results[true_vals_path][orig_inf_conf_path][seed] = {}
+                    assert not seed in results[true_vals_path][orig_inf_conf_path]["chains"]
+                    results[true_vals_path][orig_inf_conf_path]["chains"][seed] = {}
                     workers.append(
                         pool.apply_async(
                             run_ecoevolity,
@@ -469,14 +543,70 @@ def run_analyses_on_sims(
                                 timeout,
                                 max_num_attempts,
                                 (true_vals_path, orig_inf_conf_path, seed), # extra_returns
-
                             )
                         )
                     )
         sys.stderr.write(
             f"Loaded {len(workers)} ecoevolity workers for {number_of_procs} processors\n"
         )
-        for run_time, state_log_path, true_path, conf_path, seed in (w.get() for w in workers):
-            results[true_path][conf_path][seed]["run_time"] = run_time
-            results[true_path][conf_path][seed]["state_log_path"] = state_log_path
+        for run_time, num_var_sites, state_log_path, true_path, conf_path, seed in (w.get() for w in workers):
+            results[true_path][conf_path]["chains"][seed]["run_time"] = run_time
+            results[true_path][conf_path]["chains"][seed]["numbers_of_variable_sites"] = num_var_sites
+            results[true_path][conf_path]["chains"][seed]["state_log_path"] = state_log_path
     return results
+
+def add_sumcoevolity_to_results(
+    rng,
+    results,
+    eco_exe_dir = None,
+    output_dir = None,
+    num_prior_draws = 1000000,
+    burnin = 0,
+    number_of_procs = 4,
+):
+    if not output_dir:
+        output_dir = os.path.dirname(next(iter(results)))
+
+    worker_count = 0
+    for true_vals_path, infer_info in results.items():
+        worker_count += len(infer_info)
+    if number_of_procs > worker_count:
+        number_of_procs = worker_count
+
+    nchains = None
+    workers = []
+    with multiprocessing.Pool(number_of_procs) as pool:
+        for true_vals_path, infer_info in results.items():
+            for config_path, results_info in infer_info.items():
+                state_log_paths = [results_info["chains"][seed]["state_log_path"] for seed in results_info["chains"]]
+                if nchains is None:
+                    nchains = len(state_log_paths)
+                else:
+                    assert nchains == len(state_log_paths)
+                seed = project_utils.get_safe_seed(rng)
+                extra_returns = (true_vals_path, config_path, seed)
+                workers.append(
+                    pool.apply_async(
+                        run_sumcoevolity,
+                        args = (
+                            config_path,
+                            state_log_paths,
+                            seed,
+                            output_dir,
+                            num_prior_draws,
+                            eco_exe_dir,
+                            burnin,
+                            extra_returns,
+                        )
+                    )
+                )
+        sys.stderr.write(
+            f"Loaded {len(workers)} sumcoevolity workers for {number_of_procs} processors\n"
+        )
+        for res, nevents_results_path, model_results_path, true_vals_path, config_path, seed in (w.get() for w in workers):
+            assert true_vals_path in results
+            assert config_path in results[true_vals_path]
+            results[true_vals_path][config_path]["sumcoevolity"] = {}
+            results[true_vals_path][config_path]["sumcoevolity"]["seed"] = seed
+            results[true_vals_path][config_path]["sumcoevolity"]["nevents_summary_path"] = nevents_results_path
+            results[true_vals_path][config_path]["sumcoevolity"]["model_summary_path"] = model_results_path

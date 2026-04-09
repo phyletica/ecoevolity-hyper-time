@@ -215,7 +215,7 @@ def main_cli():
             include_time_in_coal_units = False,
         )
 
-        result, sumco_results_path = interop.run_sumcoevolity(
+        result, sumco_nevents_path, sumco_model_path = interop.run_sumcoevolity(
             config_path = args.config_path,
             input_state_log_paths = state_log_paths,
             seed = project_utils.get_safe_seed(rng),
@@ -231,7 +231,7 @@ def main_cli():
                 f"{result.stderr}\n"
             )
         sumco_nevents_table = pycoevolity.posterior.SumcoevolityNeventsTable(
-            sumcoevolity_nevents_table_path = sumco_results_path,
+            sumcoevolity_nevents_table_path = sumco_nevents_path,
         )
 
     config = eco_config.get_yaml_config(args.config_path)
