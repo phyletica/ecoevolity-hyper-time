@@ -4,6 +4,7 @@ import os
 import sys
 import random
 import argparse
+import copy
 import json
 
 import pycoevolity
@@ -175,35 +176,40 @@ def process_output_dir_arg(output_dir):
 def package_results(results_dict, results_dir, relative_to_dir = None):
     new_results = {}
     for true_vals_path in results_dict:
-        gz_true_vals_path = compress_output_path(true_vals_path, results_dir)
+        gz_true_vals_path = interop.compress_output_path(true_vals_path, results_dir)
         if relative_to_dir:
             gz_true_vals_path = os.path.relpath(gz_true_vals_path, relative_to_dir)
-        new_results[gz_true_vals_path] = {}
-        for config_path in results_dict[true_vals_path]:
-            results_info = copy.deepcopy(results_dict[true_vals_path][config_path])
+        new_results[gz_true_vals_path] = {
+            "analyses": {},
+            "numbers_of_variable_sites": copy.deepcopy(
+                results_dict[true_vals_path]["numbers_of_variable_sites"]
+            ),
+        }
+        for config_path in results_dict[true_vals_path]["analyses"]:
+            results_info = copy.deepcopy(results_dict[true_vals_path]["analyses"][config_path])
             if relative_to_dir:
                 config_path = os.path.relpath(config_path, relative_to_dir)
-            new_results[gz_true_vals_path][config_path] = results_info
+            new_results[gz_true_vals_path]["analyses"][config_path] = results_info
             nevents_sum_path = results_info["sumcoevolity"]["nevents_summary_path"]
-            gz_nevents_path = compress_output_path(nevents_sum_path, results_dir)
+            gz_nevents_path = interop.compress_output_path(nevents_sum_path, results_dir)
             if relative_to_dir:
                 gz_nevents_path = os.path.relpath(gz_nevents_path, relative_to_dir)
             results_info["sumcoevolity"]["nevents_summary_path"] = gz_nevents_path
             model_sum_path = results_info["sumcoevolity"]["model_summary_path"]
-            gz_model_path = compress_output_path(model_sum_path, results_dir)
+            gz_model_path = interop.compress_output_path(model_sum_path, results_dir)
             if relative_to_dir:
                 gz_model_path = os.path.relpath(gz_model_path, relative_to_dir)
             results_info["sumcoevolity"]["model_summary_path"] = gz_model_path
-            for seed, chain_info in results_info["chains"]:
+            for seed, chain_info in results_info["chains"].items():
                 state_log_path = chain_info["state_log_path"]
-                gz_state_log_path = compress_output_path(state_log_path, results_dir)
+                gz_state_log_path = interop.compress_output_path(state_log_path, results_dir)
                 if relative_to_dir:
                     gz_state_log_path = os.path.relpath(gz_state_log_path, relative_to_dir)
                 chain_info["state_log_path"] = gz_state_log_path
     return new_results
 
 def append_results(previous_results, new_results):
-    for sim_config, sim_reps in new_results["simulations"].items():
+    for sim_config, sim_reps in new_results.items():
         for true_vals_path, infer_info in sim_reps.items():
             assert not true_vals_path in previous_results["simulations"][sim_config]
             previous_results["simulations"][sim_config][true_vals_path] = infer_info
@@ -225,33 +231,44 @@ def main_cli():
     rng.seed(seed)
     np_rng = project_utils.get_numpy_rng(seed)
 
-    results = { "seeds" : [seed] }
-    prev_results = None
+    results = None
     json_path = None
+    json_dir = None
     if args.append_to:
         json_path = args.append_to
-        prev_results = interop.load_results_json(json_path)
-        if seed in prev_results["seeds"]:
+        json_dir = os.path.abspath(os.path.dirname(json_path))
+        with open(json_path, "r") as json_stream:
+            results = interop.load_results_json(json_stream)
+        if seed in results["seeds"]:
             raise Exception(
                 f"Seed {seed} was already used; please use a different seed."
             )
-        prev_results["seeds"].append(seed)
-        args.sim_config = [os.path.relpath(p, os.getcwd()) for p in prev_results["simulation_configs"]]
-        args.config_paths = [os.path.relpath(p, os.getcwd()) for p in prev_results["inference_configs"]]
-        args.number_of_chains = prev_results["number_of_chains"]
-        args.burnin = prev_results["burnin"]
-        results_dir = os.path.dirname(args.append_to)
-        if (not os.path.isdir(results_dir)) or (
-            not results_dir.endswith("results")):
+        results["seeds"].append(seed)
+        args.sim_config = [
+            os.path.abspath(
+                os.path.join(json_dir, p)
+            ) for p in results["simulation_configs"]
+        ]
+        args.config_paths = [
+            os.path.abspath(
+                os.path.join(json_dir, p)
+            ) for p in results["inference_configs"]
+        ]
+        args.number_of_chains = results["number_of_chains"]
+        args.number_of_prior_draws = results["number_of_prior_draws"]
+        args.burnin = results["burnin"]
+        output_dir = json_dir
+        results_dir = os.path.join(output_dir, "simulation-results-files")
+        if not os.path.isdir(results_dir):
             raise Exception(
                 f"Unexpected results directory determined from json results "
                 f"file: {results_dir}\n"
                 "Please don't move a 'results.json' file before appending "
                 "simulations to it."
             )
-        output_dir = os.path.dirname(results_dir)
-        sim_files_dir = os.path.join(output_dir, "simulation-files")
-
+        sim_files_dir = process_output_dir_arg(
+            os.path.join(output_dir, "simulation-working-files")
+        )
     else:
         if (not args.sim_config) or (not args.config_paths):
             msg = (
@@ -259,22 +276,31 @@ def main_cli():
                 "appending to previous results."
             )
             raise Exception(msg)
-        output_dir = process_output_dir_arg(args.output_dir)
+        args.sim_config = [os.path.abspath(p) for p in args.sim_config]
+        args.config_paths = [os.path.abspath(p) for p in args.config_paths]
+        output_dir = os.path.abspath(process_output_dir_arg(args.output_dir))
         sim_files_dir = process_output_dir_arg(
-            os.path.join(output_dir, "simulation-files")
+            os.path.join(output_dir, "simulation-working-files")
         )
         results_dir = process_output_dir_arg(
-            os.path.join(output_dir, "results-files")
+            os.path.join(output_dir, "simulation-results-files")
         )
-        json_path = os.path.join(results_dir, "results.json")
-    json_dir = os.path.abspath(os.path.dirname(json_path))
-    results["simulation_configs"] = [os.path.relpath(p, json_dir) for p in args.sim_config]
-    results["inference_configs"] = [os.path.relpath(p, json_dir) for p in args.config_paths]
-    results["number_of_chains"] = args.number_of_chains
-    results["burnin"] = args.burnin
-    results["simulations"] = {}
+        json_path = os.path.join(output_dir, "results.json")
+        json_dir = output_dir
+        results = { "seeds" : [seed] }
+        results["simulation_configs"] = [
+            os.path.relpath(p, json_dir) for p in args.sim_config
+        ]
+        results["inference_configs"] = [
+            os.path.relpath(p, json_dir) for p in args.config_paths
+        ]
+        results["number_of_chains"] = args.number_of_chains
+        results["number_of_prior_draws"] = args.number_of_prior_draws
+        results["burnin"] = args.burnin
 
+    tmp_results = {}
     for sim_config in args.sim_config:
+        rel_sim_config = os.path.relpath(sim_config, json_dir)
         trueval_config_paths = interop.generate_simulations(
             rng = rng,
             sim_config = sim_config,
@@ -292,7 +318,7 @@ def main_cli():
             relax_triallelic_sites = False,
             output_nexus = False,
         )
-        results["simulations"][sim_config] = interop.run_analyses_on_sims(
+        tmp_results[rel_sim_config] = interop.run_analyses_on_sims(
             rng = rng,
             true_val_config_paths = trueval_config_paths,
             eco_exe_dir = args.ecoevolity_dir,
@@ -305,22 +331,24 @@ def main_cli():
             max_num_attempts = args.chain_attempts,
             output_dir = sim_files_dir,
         )
-        add_sumcoevolity_to_results(
+        interop.add_sumcoevolity_to_results(
             rng = rng,
-            results = results["simulations"][sim_config],
+            results = tmp_results[rel_sim_config],
             eco_exe_dir = args.ecoevolity_dir,
             output_dir = sim_files_dir,
             num_prior_draws = args.number_of_prior_draws,
             burnin = args.burnin,
             number_of_procs = args.number_of_procs,
         )
-        results["simulations"][sim_config] = package_results(
-            results_dict = results["simulations"][sim_config],
+        tmp_results[rel_sim_config] = package_results(
+            results_dict = tmp_results[rel_sim_config],
             results_dir = results_dir,
             relative_to_dir = json_dir,
         )
-    if prev_results:
-        results = append_results(prev_results, results)
+    if args.append_to:
+        append_results(results, tmp_results)
+    else:
+        results["simulations"] = tmp_results
     with open(json_path, 'w') as out_stream:
         json.dump(results, out_stream, indent=4)
 

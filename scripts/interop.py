@@ -8,6 +8,7 @@ import shutil
 import gzip
 import subprocess
 import multiprocessing
+import json
 import pycoevolity
 
 import eco_config
@@ -429,9 +430,13 @@ def run_sumcoevolity(
         *input_state_log_paths,
     ]
 
-    if os.path.exists(results_path):
+    if os.path.exists(nevents_results_path):
         raise Exception(
-            f"Output results path already exists: '{results_path}'\n"
+            f"Output results path already exists: '{nevents_results_path}'\n"
+        )
+    if os.path.exists(model_results_path):
+        raise Exception(
+            f"Output results path already exists: '{model_results_path}'\n"
         )
 
     result = run_cmd(cmd)
@@ -519,15 +524,15 @@ def run_analyses_on_sims(
     with multiprocessing.Pool(number_of_procs) as pool:
         for true_vals_path, config_paths in true_val_config_paths:
             assert not true_vals_path in results
-            results[true_vals_path] = {}
+            results[true_vals_path] = {"analyses": {}}
             for rep_inf_conf_path, orig_inf_conf_path in config_paths:
                 assert not orig_inf_conf_path in results[true_vals_path]
-                results[true_vals_path][orig_inf_conf_path] = {}
-                results[true_vals_path][orig_inf_conf_path]["chains"] = {}
+                results[true_vals_path]["analyses"][orig_inf_conf_path] = {}
+                results[true_vals_path]["analyses"][orig_inf_conf_path]["chains"] = {}
                 for i in range(number_of_chains):
                     seed = project_utils.get_safe_seed(rng)
-                    assert not seed in results[true_vals_path][orig_inf_conf_path]["chains"]
-                    results[true_vals_path][orig_inf_conf_path]["chains"][seed] = {}
+                    assert not seed in results[true_vals_path]["analyses"][orig_inf_conf_path]["chains"]
+                    results[true_vals_path]["analyses"][orig_inf_conf_path]["chains"][seed] = {}
                     workers.append(
                         pool.apply_async(
                             run_ecoevolity,
@@ -549,10 +554,14 @@ def run_analyses_on_sims(
         sys.stderr.write(
             f"Loaded {len(workers)} ecoevolity workers for {number_of_procs} processors\n"
         )
-        for run_time, num_var_sites, state_log_path, true_path, conf_path, seed in (w.get() for w in workers):
-            results[true_path][conf_path]["chains"][seed]["run_time"] = run_time
-            results[true_path][conf_path]["chains"][seed]["numbers_of_variable_sites"] = num_var_sites
-            results[true_path][conf_path]["chains"][seed]["state_log_path"] = state_log_path
+        num_var_sites = {}
+        for run_time, n_var_sites, state_log_path, true_path, conf_path, seed in (w.get() for w in workers):
+            if "numbers_of_variable_sites" in results[true_path]:
+                assert results[true_path]["numbers_of_variable_sites"] == n_var_sites
+            else:
+                results[true_path]["numbers_of_variable_sites"] = n_var_sites
+            results[true_path]["analyses"][conf_path]["chains"][seed]["run_time"] = run_time
+            results[true_path]["analyses"][conf_path]["chains"][seed]["state_log_path"] = state_log_path
     return results
 
 def add_sumcoevolity_to_results(
@@ -577,7 +586,7 @@ def add_sumcoevolity_to_results(
     workers = []
     with multiprocessing.Pool(number_of_procs) as pool:
         for true_vals_path, infer_info in results.items():
-            for config_path, results_info in infer_info.items():
+            for config_path, results_info in infer_info["analyses"].items():
                 state_log_paths = [results_info["chains"][seed]["state_log_path"] for seed in results_info["chains"]]
                 if nchains is None:
                     nchains = len(state_log_paths)
@@ -605,8 +614,8 @@ def add_sumcoevolity_to_results(
         )
         for res, nevents_results_path, model_results_path, true_vals_path, config_path, seed in (w.get() for w in workers):
             assert true_vals_path in results
-            assert config_path in results[true_vals_path]
-            results[true_vals_path][config_path]["sumcoevolity"] = {}
-            results[true_vals_path][config_path]["sumcoevolity"]["seed"] = seed
-            results[true_vals_path][config_path]["sumcoevolity"]["nevents_summary_path"] = nevents_results_path
-            results[true_vals_path][config_path]["sumcoevolity"]["model_summary_path"] = model_results_path
+            assert config_path in results[true_vals_path]["analyses"]
+            results[true_vals_path]["analyses"][config_path]["sumcoevolity"] = {}
+            results[true_vals_path]["analyses"][config_path]["sumcoevolity"]["seed"] = seed
+            results[true_vals_path]["analyses"][config_path]["sumcoevolity"]["nevents_summary_path"] = nevents_results_path
+            results[true_vals_path]["analyses"][config_path]["sumcoevolity"]["model_summary_path"] = model_results_path
