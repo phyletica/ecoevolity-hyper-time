@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - nodefaults
 dependencies:
-  - git=2.53.0
+  - git=2.43.0
   - cxx-compiler=1.11.0
   - cmake=4.2.3
   - quarto
