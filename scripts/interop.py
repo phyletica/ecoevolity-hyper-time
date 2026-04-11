@@ -9,6 +9,7 @@ import gzip
 import subprocess
 import multiprocessing
 import json
+import glob
 import pycoevolity
 
 import eco_config
@@ -338,14 +339,15 @@ def run_simcoevolity(
         )
     run_time, num_var_sites = parse_info_from_output(result.stderr)
 
-    config_paths = [
-        f"{full_prefix}simcoevolity-sim-{i}-config.yml" for i in range(
-            number_of_replicates)
-    ]
-    true_val_paths = [
-        f"{full_prefix}simcoevolity-sim-{i}-true-values.txt" for i in range(
-            number_of_replicates)
-    ]
+
+    config_paths = glob.glob(
+        f"{full_prefix}simcoevolity-sim-[0-9]*-config.yml"
+    )
+    assert len(config_paths) == number_of_replicates
+    true_val_paths = glob.glob(
+        f"{full_prefix}simcoevolity-sim-[0-9]*-true-values.txt"
+    )
+    assert len(true_val_paths) == number_of_replicates
 
     sim_infer_config_paths = create_sim_configs(
         sim_config_paths = config_paths,
