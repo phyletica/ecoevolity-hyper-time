@@ -390,7 +390,7 @@ def collect_prior_samples(
             )
             for seed in seeds
         ]
-        sys.stderr.write(
+        sys.stdout.write(
             f"Loaded {len(workers)} ecoevolity workers for {number_of_procs} processors\n"
         )
         for run_time, num_var_sites, state_log_path in (w.get() for w in workers):
@@ -491,12 +491,20 @@ def generate_simulations(
                 ))
             for num_reps in num_sims_args
         ]
-        sys.stderr.write(
-            f"Loaded {len(workers)} simcoevolity workers for {number_of_procs} processors\n"
+        num_workers = len(workers)
+        sys.stdout.write(
+            f"Loaded {num_workers} simcoevolity workers for {number_of_procs} processors\n"
         )
         all_true_config_paths = []
+        reporting_freq = max(num_workers // 10, 1)
+        count = 0
         for run_time, true_val_config_paths in (w.get() for w in workers):
             all_true_config_paths.extend(true_val_config_paths)
+            count += 1
+            if count % reporting_freq == 0:
+                sys.stdout.write(
+                    f"{count} of {num_workers} simcoevolity workers finished\n"
+                )
     return all_true_config_paths
 
 def run_analyses_on_sims(
@@ -553,10 +561,13 @@ def run_analyses_on_sims(
                             )
                         )
                     )
-        sys.stderr.write(
-            f"Loaded {len(workers)} ecoevolity workers for {number_of_procs} processors\n"
+        num_workers = len(workers)
+        sys.stdout.write(
+            f"Loaded {num_workers} ecoevolity workers for {number_of_procs} processors\n"
         )
+        reporting_freq = max(num_workers // 10, 1)
         num_var_sites = {}
+        count = 0
         for run_time, n_var_sites, state_log_path, true_path, conf_path, seed in (w.get() for w in workers):
             if "numbers_of_variable_sites" in results[true_path]:
                 assert results[true_path]["numbers_of_variable_sites"] == n_var_sites
@@ -564,6 +575,11 @@ def run_analyses_on_sims(
                 results[true_path]["numbers_of_variable_sites"] = n_var_sites
             results[true_path]["analyses"][conf_path]["chains"][seed]["run_time"] = run_time
             results[true_path]["analyses"][conf_path]["chains"][seed]["state_log_path"] = state_log_path
+            count += 1
+            if count % reporting_freq == 0:
+                sys.stdout.write(
+                    f"{count} of {num_workers} ecoevolity workers finished\n"
+                )
     return results
 
 def add_sumcoevolity_to_results(
@@ -611,9 +627,12 @@ def add_sumcoevolity_to_results(
                         )
                     )
                 )
-        sys.stderr.write(
-            f"Loaded {len(workers)} sumcoevolity workers for {number_of_procs} processors\n"
+        num_workers = len(workers)
+        sys.stdout.write(
+            f"Loaded {num_workers} sumcoevolity workers for {number_of_procs} processors\n"
         )
+        reporting_freq = max(num_workers // 10, 1)
+        count = 0
         for res, nevents_results_path, model_results_path, true_vals_path, config_path, seed in (w.get() for w in workers):
             assert true_vals_path in results
             assert config_path in results[true_vals_path]["analyses"]
@@ -621,3 +640,8 @@ def add_sumcoevolity_to_results(
             results[true_vals_path]["analyses"][config_path]["sumcoevolity"]["seed"] = seed
             results[true_vals_path]["analyses"][config_path]["sumcoevolity"]["nevents_summary_path"] = nevents_results_path
             results[true_vals_path]["analyses"][config_path]["sumcoevolity"]["model_summary_path"] = model_results_path
+            count += 1
+            if count % reporting_freq == 0:
+                sys.stdout.write(
+                    f"{count} of {num_workers} sumcoevolity workers finished\n"
+                )

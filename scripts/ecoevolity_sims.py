@@ -72,13 +72,23 @@ def parse_cli_args():
         ),
     )
     parser.add_argument(
+        '--number-of-sim-procs',
+        action = 'store',
+        type = pycoevolity.argparse_utils.arg_is_nonnegative_int,
+        default = 1,
+        help = (
+            'The number of processors to use to generate '
+            'simulations with simcoevolity.'
+        ),
+    )
+    parser.add_argument(
         '-p', '--number-of-procs',
         action = 'store',
         type = pycoevolity.argparse_utils.arg_is_nonnegative_int,
         default = 4,
         help = (
-            'The number of processors to use to generate and analyze '
-            'simulations.'
+            'The number of processors to use to analyze '
+            'simulations with ecoevolity.'
         ),
     )
     parser.add_argument(
@@ -301,6 +311,9 @@ def main_cli():
     tmp_results = {}
     for sim_config in args.sim_config:
         rel_sim_config = os.path.relpath(sim_config, json_dir)
+        sys.stdout.write(
+            f"Generating simulated datasets for '{sim_config}'...\n"
+        )
         trueval_config_paths = interop.generate_simulations(
             rng = rng,
             sim_config = sim_config,
@@ -308,7 +321,7 @@ def main_cli():
             output_dir = sim_files_dir,
             eco_exe_dir = args.ecoevolity_dir,
             number_of_sims = args.number_of_sims,
-            number_of_procs = args.number_of_procs,
+            number_of_procs = args.number_of_sim_procs,
             singleton_sample_prob = None,
             locus_size = None,
             max_one_variable_site_per_locus = False,
@@ -317,6 +330,9 @@ def main_cli():
             relax_missing_sites = False,
             relax_triallelic_sites = False,
             output_nexus = False,
+        )
+        sys.stdout.write(
+            f"Starting analyses of simulated datasets for '{sim_config}'...\n"
         )
         tmp_results[rel_sim_config] = interop.run_analyses_on_sims(
             rng = rng,
@@ -331,6 +347,9 @@ def main_cli():
             max_num_attempts = args.chain_attempts,
             output_dir = sim_files_dir,
         )
+        sys.stdout.write(
+            f"Running sumcoevolity on results for '{sim_config}'...\n"
+        )
         interop.add_sumcoevolity_to_results(
             rng = rng,
             results = tmp_results[rel_sim_config],
@@ -339,6 +358,9 @@ def main_cli():
             num_prior_draws = args.number_of_prior_draws,
             burnin = args.burnin,
             number_of_procs = args.number_of_procs,
+        )
+        sys.stdout.write(
+            f"Packaging results for '{sim_config}'...\n"
         )
         tmp_results[rel_sim_config] = package_results(
             results_dict = tmp_results[rel_sim_config],
