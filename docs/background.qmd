@@ -198,7 +198,7 @@ different.
 While silly, this is an example of how differently our choice of prior on a
 parameter affects Bayesian parameter estimation vs model choice.
 
-## What do do?
+## What to do?
 
 Okay, so putting a "vague" prior distribution on divergence times can create a
 downward bias on the number of divergence times.
