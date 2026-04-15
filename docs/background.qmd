@@ -17,8 +17,8 @@ For more details, please refer to
 [Ecoevolity](https://phyletica.org/ecoevolity)
 estimates the relative timing of two types of evolutionary events among taxa:
 
-1.  Population divergence @Oaks2018ecoevolity.
-2.  Change in the effective size of a population @Oaks2019codemog.
+1.  Population divergence [@Oaks2018ecoevolity].
+2.  Change in the effective size of a population [@Oaks2019codemog].
 
 Throughout this documentation, we will focus on divergences, but all the
 comparative models we discuss and test also apply to changes in effective
