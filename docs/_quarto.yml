@@ -43,7 +43,7 @@ format:
       - cosmo
       - brand
     anchor-sections: true
-    embed-resources: true
+    embed-resources: false
     smooth-scroll: true
     link-external-icon: true
     link-external-newwindow: true
