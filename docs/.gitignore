@@ -1,1 +1,4 @@
+/.quarto/
+**/*.quarto_ipynb
 /build/
+update-bib.sh

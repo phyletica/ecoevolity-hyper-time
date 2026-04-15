@@ -1,6 +1,6 @@
 project:
   type: book
-  output-dir: ../build
+  output-dir: _build
 
 book:
   title: "Time Hyper Prior Project"
