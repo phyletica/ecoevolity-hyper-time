@@ -196,7 +196,7 @@ window.Quarto = {
   <li><a href="#bayesian-inference-of-divergence-models" id="toc-bayesian-inference-of-divergence-models" class="nav-link" data-scroll-target="#bayesian-inference-of-divergence-models"><span class="header-section-number">1.2</span> Bayesian inference of divergence models</a></li>
   <li><a href="#basics-of-bayesian-statistical-inference" id="toc-basics-of-bayesian-statistical-inference" class="nav-link" data-scroll-target="#basics-of-bayesian-statistical-inference"><span class="header-section-number">1.3</span> Basics of Bayesian statistical inference</a></li>
   <li><a href="#a-coin-flipping-example" id="toc-a-coin-flipping-example" class="nav-link" data-scroll-target="#a-coin-flipping-example"><span class="header-section-number">1.4</span> A coin flipping example</a></li>
-  <li><a href="#what-do-do" id="toc-what-do-do" class="nav-link" data-scroll-target="#what-do-do"><span class="header-section-number">1.5</span> What do do?</a></li>
+  <li><a href="#what-to-do" id="toc-what-to-do" class="nav-link" data-scroll-target="#what-to-do"><span class="header-section-number">1.5</span> What to do?</a></li>
   <li><a href="#a-hierarchical-bayesian-approach" id="toc-a-hierarchical-bayesian-approach" class="nav-link" data-scroll-target="#a-hierarchical-bayesian-approach"><span class="header-section-number">1.6</span> A hierarchical Bayesian approach</a></li>
   </ul>
 </nav>
@@ -322,8 +322,8 @@ window.Quarto = {
 </div>
 <p>Notice, how the posterior estimates of <span class="math inline">\(\theta\)</span> are nearly identical across all four models, but the average (marginal) likelihood of the models are very different. While silly, this is an example of how differently our choice of prior on a parameter affects Bayesian parameter estimation vs model choice.</p>
 </section>
-<section id="what-do-do" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="what-do-do"><span class="header-section-number">1.5</span> What do do?</h2>
+<section id="what-to-do" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="what-to-do"><span class="header-section-number">1.5</span> What to do?</h2>
 <p>Okay, so putting a “vague” prior distribution on divergence times can create a downward bias on the number of divergence times. What can we do about this bias?</p>
 <p>We could take an empirical Bayesian approach and use our data to inform the “prior” we put on divergence times. This is double-dipping, which could be okay if we just want point estimates of parameters. For example, if we cheated in our coin-flipping experiment above and added a 5th model that uses the posterior from <span class="math inline">\(M_1\)</span> as the prior, the mode of the posterior under this 5th model will be nearly identical to the other four models. However, when comparing models, using the data twice can have a big influence on the marginal likelihoods of the models.</p>
 <p>All is not lost though. We can use a hierarchical Bayesian approach to make estimating the prior on divergence times part of the model.</p>

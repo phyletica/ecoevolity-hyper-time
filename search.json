@@ -60,11 +60,11 @@
     ]
   },
   {
-    "objectID": "background.html#what-do-do",
-    "href": "background.html#what-do-do",
+    "objectID": "background.html#what-to-do",
+    "href": "background.html#what-to-do",
     "title": "1  Background",
-    "section": "1.5 What do do?",
-    "text": "1.5 What do do?\nOkay, so putting a “vague” prior distribution on divergence times can create a downward bias on the number of divergence times. What can we do about this bias?\nWe could take an empirical Bayesian approach and use our data to inform the “prior” we put on divergence times. This is double-dipping, which could be okay if we just want point estimates of parameters. For example, if we cheated in our coin-flipping experiment above and added a 5th model that uses the posterior from \\(M_1\\) as the prior, the mode of the posterior under this 5th model will be nearly identical to the other four models. However, when comparing models, using the data twice can have a big influence on the marginal likelihoods of the models.\nAll is not lost though. We can use a hierarchical Bayesian approach to make estimating the prior on divergence times part of the model.",
+    "section": "1.5 What to do?",
+    "text": "1.5 What to do?\nOkay, so putting a “vague” prior distribution on divergence times can create a downward bias on the number of divergence times. What can we do about this bias?\nWe could take an empirical Bayesian approach and use our data to inform the “prior” we put on divergence times. This is double-dipping, which could be okay if we just want point estimates of parameters. For example, if we cheated in our coin-flipping experiment above and added a 5th model that uses the posterior from \\(M_1\\) as the prior, the mode of the posterior under this 5th model will be nearly identical to the other four models. However, when comparing models, using the data twice can have a big influence on the marginal likelihoods of the models.\nAll is not lost though. We can use a hierarchical Bayesian approach to make estimating the prior on divergence times part of the model.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Background</span>"
     ]
