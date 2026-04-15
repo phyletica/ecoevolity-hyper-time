@@ -1,0 +1,52 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Time Hyper Prior Project",
+    "section": "",
+    "text": "About\nThis is a project of the Phyletica Lab to experiment with ways of improving comparative biogeographical estimates of shared times of divergence or population-size change across taxa.\nThe goal of this documentation is to:\n\nAid members of the project to work collaboratively\nAllow others to follow allong with the project, reproduce our findings, and learn how to use and interpret the models we are testing.\n\nThe ultimate arbiter of the project’s full history is the project repository.",
+    "crumbs": [
+      "About"
+    ]
+  },
+  {
+    "objectID": "background.html",
+    "href": "background.html",
+    "title": "1  Background",
+    "section": "",
+    "text": "1.1 A hypothetical example\nThe primary goal of this project is to improve comparative biogeographical estimation of shared (synchronous) population divergences or size changes across taxa using genomic data. We have implemented the models we will be testing in the software package ecoevolity.\nThe background information below will assume some knowledge of the types of comparative biogeographic models implemented in ecoevolity. The documentation provides a brief and gentle introduction to such models. For more details, please refer to Oaks (2019), Oaks, Siler, and Brown (2019), & Oaks, L’Bahy, and Cobb (2020).\nEcoevolity estimates the relative timing of two types of evolutionary events among taxa:\nThroughout this documentation, we will focus on divergences, but all the comparative models we discuss and test also apply to changes in effective population sizes (or a mix of divergences and size changes).\nAs a hypothetical example, let’s imagine a three pairs of species of lizards of lizards that are co-distributed across two islands. We want to test the hypothesis that these three pairs of species diverged when the islands were fragmented by rising sea levels 130,000 years ago. This predicts that all three pairs of populations diverged at roughly the same time.\nTo evaluate the probability of such a model of co-divergence, we also need to consider other possible explanations (i.e., models). For example, perhaps all of these populations were founded by over-water dispersal events, which makes no obvious prediction that these events would be temporally clustered. Or, perhaps two pairs of populations co-diverged when rising seas separated the islands, but the third pair of lizards diverged at a different time via dispersal.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Background</span>"
+    ]
+  },
+  {
+    "objectID": "background.html#a-hypothetical-example",
+    "href": "background.html#a-hypothetical-example",
+    "title": "1  Background",
+    "section": "",
+    "text": "Three pairs of lizard species co-speciating when their island is fragmented\n\n\n\n\n\n\n\nOaks, Jamie R. 2019. “Full Bayesian Comparative Phylogeography from Genomic Data.” Systematic Biology 68 (3): 371–95. https://doi.org/10.1093/sysbio/syy063.\n\n\nOaks, Jamie R., Nadia L’Bahy, and Kerry A. Cobb. 2020. “Insights from a General, Full-Likelihood Bayesian Approach to Inferring Shared Evolutionary Events from Genomic Data: Inferring Shared Demographic Events Is Challenging.” Evolution 74 (10): 2184–2206. https://doi.org/10.1111/evo.14052.\n\n\nOaks, Jamie R., Cameron D. Siler, and Rafe M. Brown. 2019. “The Comparative Biogeography of Philippine Geckos Challenges Predictions from a Paradigm of Climate-Driven Vicariant Diversification Across an Island Archipelago.” Evolution 73 (6): 1151–67. https://doi.org/10.1111/evo.13754.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Background</span>"
+    ]
+  },
+  {
+    "objectID": "summary.html",
+    "href": "summary.html",
+    "title": "2  Summary",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Summary</span>"
+    ]
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Oaks, Jamie R. 2019. “Full Bayesian Comparative\nPhylogeography from Genomic Data.” Systematic Biology 68\n(3): 371–95. https://doi.org/10.1093/sysbio/syy063.\n\n\nOaks, Jamie R., Nadia L’Bahy, and Kerry A. Cobb. 2020. “Insights\nfrom a General, Full-Likelihood Bayesian Approach to\nInferring Shared Evolutionary Events from Genomic Data: Inferring Shared\nDemographic Events Is Challenging.” Evolution 74 (10):\n2184–2206. https://doi.org/10.1111/evo.14052.\n\n\nOaks, Jamie R., Cameron D. Siler, and Rafe M. Brown. 2019. “The\nComparative Biogeography of Philippine Geckos Challenges\nPredictions from a Paradigm of Climate-Driven Vicariant Diversification\nAcross an Island Archipelago.” Evolution 73 (6):\n1151–67. https://doi.org/10.1111/evo.13754.",
+    "crumbs": [
+      "References"
+    ]
+  }
+]
