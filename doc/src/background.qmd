@@ -10,7 +10,7 @@ The background information below will assume some knowledge of
 the types of comparative biogeographic models implemented in
 [ecoevolity](https://phyletica.org/ecoevolity).
 The documentation provides a
-[brief and gentle introduction to such models](http://phyletica.org/ecoevolity/background.html).
+[brief and gentle introduction to such models](https://phyletica.org/ecoevolity/ecoevolity/background.html).
 For more details, please refer to
 @Oaks2018ecoevolity, @Oaks2018paic, & @Oaks2019codemog.
 
