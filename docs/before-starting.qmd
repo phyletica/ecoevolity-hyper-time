@@ -1,0 +1,62 @@
+# Before starting
+
+There's some required software for working on this project,
+which we'll cover in the next section.
+If you find the next section a bit confusing,
+you might want jump to @sec-reqskills that covers some of the prerequisite
+skills for the project.
+
+## Required software {#sec-reqsoftware}
+
+### Unix-like shell environment
+
+For working on this project, you will need access to a Unix-like shell
+environment (aka, Unix-like terminal or command line).
+If you are not sure what this is, please
+check out @sec-reqskills.
+
+[Please see here](https://phyletica.org/teaching/s4b/setup/#1-unix-like-shell)
+for some instructions on setting up and accessing a Unix-like shell
+on your computer.
+
+### Conda package manager {#sec-condainstall}
+
+Conda is a free and open-source package and environment manager that supports
+many languages and system tools.
+There are several flavors of conda package management systems and channels.
+I tend to prefer micromamba, but Miniforge is also good.
+I have
+[instructions for installing Miniforge here](https://phyletica.org/teaching/s4b/setup/#4-conda-package-manager).
+Below are instructions for installing micromamba.
+Either will work for this project.
+
+#### Installing Micromamba
+
+[See here for all the installation details](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html),
+but generally, the following command should work on a Unix-like shell command
+line:
+
+```default
+"${SHELL}" <(curl -L micro.mamba.pm/install.sh)
+```
+
+### Git {#sec-gitinstall}
+
+To clone the project Git repository, you will need Git.
+If you don't have Git, but have installed a conda package manager,
+the easiest way to get Git will be via conda.
+
+```default
+conda create --name git-env git
+```
+
+once this finished, you can activate your new `git-env` conda environment in
+which git is installed:
+
+```default
+conda activate git-env
+```
+
+## Required skills {#sec-reqskills}
+
+TODO

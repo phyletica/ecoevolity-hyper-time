@@ -30,7 +30,7 @@ book:
   chapters:
     - index.qmd
     - background.qmd
-    - summary.qmd
+    - before-starting.qmd
     - references.qmd
 
 bibliography: references.bib

@@ -30,11 +30,12 @@ As a hypothetical example,
 let's imagine three pairs of lizard species that are co-distributed across two
 islands.
 We want to test the hypothesis that these three pairs of species diverged
-when the islands were fragmented by rising sea levels 130,000 years ago.
+when the islands were fragmented by rising sea levels 130,000 years ago
+(@fig-divcartoon).
 This predicts that all three pairs of populations diverged at roughly the same
 time on an evolutionary timescale.
 
-![Three pairs of lizard species co-speciating when their island is fragmented](./images/div-island-cartoon-shared-event-labels.png "Lizards co-speciating when their island is fragmented"){fig-alt="Three pairs of lizard species co-speciating when their island is fragmented" fig-align="center" width=70%}
+![Three pairs of lizard species co-speciating when their island is fragmented](./images/div-island-cartoon-shared-event-labels.png "Lizards co-speciating when their island is fragmented"){#fig-divcartoon fig-alt="Three pairs of lizard species co-speciating when their island is fragmented" fig-align="center" width=70%}
 
 To evaluate the probability of such a model of co-divergence,
 we also need to consider other possible explanations (i.e., models).
@@ -52,18 +53,23 @@ history of divergence times:
 -   2 diverged together and the third independently; the independent diverger
     could have been any of the 3 pairs, so these comprise 3 models
 
-Below are illustrations of these 5 models, where $\tau$ represents independent
-divergence-time parameters.
+Below, @fig-divmodels illustrates these 5 models, where $\tau$ represents
+independent divergence-time parameters.
 
-![](./images/div-model-111-labels.svg "Three pairs of lizard species co-speciating"){fig-alt="Three pairs of lizard species co-speciating" fig-align="center" width=60%}
+::: {#fig-divmodels layout-ncol=2 layout-nrows=3}
 
-![](./images/div-model-311-labels.svg "Two pairs of lizard species co-speciating"){fig-alt="Two pairs of lizard species co-speciating" fig-align="center" width=60%}
+![All 3 pairs co-diverge](./images/div-model-111-labels.svg "Three pairs of lizard species co-speciating"){fig-alt="Three pairs of lizard species co-speciating" fig-align="center"}
 
-![](./images/div-model-131-labels.svg "Two pairs of lizard species co-speciating"){fig-alt="Two pairs of lizard species co-speciating" fig-align="center" width=60%}
+![Pair 1 diverges independently](./images/div-model-311-labels.svg "Two pairs of lizard species co-speciating"){fig-alt="Two pairs of lizard species co-speciating" fig-align="center"}
 
-![](./images/div-model-113-labels.svg "Two pairs of lizard species co-speciating"){fig-alt="Two pairs of lizard species co-speciating" fig-align="center" width=60%}
+![Pair 2 diverges independently](./images/div-model-131-labels.svg "Two pairs of lizard species co-speciating"){fig-alt="Two pairs of lizard species co-speciating" fig-align="center"}
 
-![Five possible divergence models for 3 pairs of lizard species](./images/div-model-213-labels.svg "Three pairs of lizard species speciating independently"){fig-alt="Three pairs of lizard species speciating independently" fig-align="center" width=60%}
+![Pair 3 diverges independently](./images/div-model-113-labels.svg "Two pairs of lizard species co-speciating"){fig-alt="Two pairs of lizard species co-speciating" fig-align="center"}
+
+![All 3 pairs diverge independently](./images/div-model-213-labels.svg "Three pairs of lizard species speciating independently"){fig-alt="Three pairs of lizard species speciating independently" fig-align="center"}
+
+Five possible divergence models for 3 pairs of lizard species
+:::
 
 The number of possible models is equal to the number of possible set partitions
 of the taxa, which increases very rapidly as the number of taxa increases.
@@ -186,11 +192,11 @@ four models that vary in our prior assumptions about the coin's rate of heads:
 -   $M_3$: The coin is probably fair; $\theta \sim \textrm{Beta}(5,5)$
 -   $M_4$: The coin is probably weighted toward tails; $\theta \sim \textrm{Beta}(1,5)$
 
-If we happen to flip 50/100 heads, here's what our posterior distributions of
-$\theta$ will look like, along with the marginal likelihoods of the four models
-(from @Oaks2018marginal):
+If we happen to flip 50/100 heads, @fig-coinflip (from @Oaks2018marginal) shows
+what our posterior distributions of $\theta$ will look like, along with the
+marginal likelihoods of the four models.
 
-![Results of our hypothetical coin-flip experiment. From @Oaks2018marginal.](./images/coin-flip.jpg "Results of our coin-flipping experiment"){fig-alt="Results of our coin-flipping experiment" fig-align="center" width=80%}
+![Results of our hypothetical coin-flip experiment. From @Oaks2018marginal.](./images/coin-flip.jpg "Results of our coin-flipping experiment"){#fig-coinflip fig-alt="Results of our coin-flipping experiment" fig-align="center" width=90%}
 
 Notice, how the posterior estimates of $\theta$ are nearly identical across all
 four models, but the average (marginal) likelihood of the models are very
