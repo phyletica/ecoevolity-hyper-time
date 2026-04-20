@@ -235,13 +235,32 @@ $$ p(\tau_1, \tau_2, \tau_3, \mu | D) = \frac{ p(D | \tau_1, \tau_2, \tau_3) p(\
 
 where
 
-$$ p(D) = \int_{\tau_1}\int_{\tau_2}\int_{\tau_3}\int_{\mu} p(D | \tau_1, \tau_2, \tau_3) p(\tau_1 | \mu) p(\tau_2 | \mu) p(\tau_3 | \mu) d\tau_1 d\tau_2 d\tau_3 d\mu $$.
+$$ p(D) = \int_{\tau_1}\int_{\tau_2}\int_{\tau_3}\int_{\mu} p(D | \tau_1, \tau_2, \tau_3) p(\tau_1 | \mu) p(\tau_2 | \mu) p(\tau_3 | \mu) p(\mu) d\tau_1 d\tau_2 d\tau_3 d\mu $$.
 
-Notice that the mean of the divergence-time prior is one-level removed from
-the data.
+Notice that $\mu$ (the mean of the divergence-time prior) is one-level removed
+from the data.
 So, integrating $\mu$ does not directly involve the model likelihood.
 This will allow the values of $\tau$ informed by our data (which remember, tend
 to be robust to the prior) to inform the mean of the prior.
 If our data suggest our prior on $\tau$ is "off", the second-level of the model
 can learn this indirectly from the data.
 
+Also notice that we have the new term $p(\mu)$ in our model.
+This is the prior probability of $\mu$, the mean of the divergence-time prior
+distribution.
+When we want to estimate a parameter of a prior distribution, we have to put a
+prior on it.
+
+Above, we use the mean of the prior distribution on divergence times as an
+example.
+In theory, we can do this for any parameter of the prior distribution
+on divergence times
+(*e.g.*, shape, scale, mean, standard deviation, min, max, etc.).
+
+### Terminology of hierarchical Bayesian models
+
+In the parlance of Bayesian statistics,
+when we estimate the parameter of a prior distribution, we
+call it a ***hyperparameter***.
+The prior distribution we place on a hyperparameter (i.e., the prior on the
+parameter of a prior) is called a ***hyperprior***.
