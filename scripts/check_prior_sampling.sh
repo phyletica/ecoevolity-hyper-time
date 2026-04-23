@@ -10,4 +10,4 @@ source ../project_utils.sh
     --number-of-runs 20 \
     --number-of-procs 8 \
     --output-dir ../prior-sampling-output \
-    ../ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-01-pairs-20-sites-20000.yml 1>check_prior_sampling.sh.out 2>&1
+    ../ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml 1>check_prior_sampling.sh.out 2>&1
