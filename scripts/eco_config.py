@@ -317,3 +317,112 @@ def sample_distribution(numpy_rng, prior_settings, n = 100000):
             f"{prior_name}\n"
         )
     return samples
+
+def sample_pitman_yor_process(rng, concentration, discount, number_of_elements):
+    assert  (discount >= 0.0) and (discount < 1.0)
+    assert concentration > -discount
+    assert number_of_elements > 0
+    subset_counts = [1]
+    elements = [0 for _ in range(number_of_elements)]
+    num_subsets = 1
+    for i in range(1, number_of_elements):
+        new_subset_prob = (
+            (concentration + (discount * num_subsets)) /
+            (concentration + i)
+        )
+        u = rng.random()
+        u -= new_subset_prob
+        if u < 0.0:
+            elements[i] = num_subsets
+            subset_counts.append(1)
+            num_subsets += 1
+            continue
+        for j in range(0, num_subsets):
+            subset_prob = (
+                (subset_counts[j] - discount) /
+                (concentration + i)
+            )
+            u -= subset_prob
+            if u < 0.0:
+                elements[i] = j
+                subset_counts[j] += 1
+                break
+        if u > 0.0:
+            elements[i] = num_subsets - 1
+            subset_counts[num_subsets - 1] += 1
+    return elements, num_subsets
+
+def sample_dirichlet_process(rng, concentration, number_of_elements):
+    return sample_pitman_yor_process(
+        rng = rng,
+        concentration = concentration,
+        discount = 0.0,
+        number_of_elements = number_of_elements,
+    )
+
+def sample_hyper_pitman_yor_distribution(
+    numpy_rng,
+    prior_parameters,
+    number_of_elements,
+    n = 100000
+):
+    if not "concentration" in prior_parameters:
+        raise Exception(
+            "pitman_yor_process doesn't specify concentration"
+        )
+    if not "discount" in prior_parameters:
+        raise Exception(
+            "pitman_yor_process doesn't specify discount"
+        )
+
+    conc_dist = None
+    discount_dist = None
+    if parameter_is_estimated(prior_parameters["concentration"]):
+        conc_dist = get_fixed_distribution(prior_parameters["concentration"]["prior"])
+    else:
+        conc = float(prior_parameters["concentration"]["value"])
+        conc_dist = st.uniform(conc, 0.0)
+    if parameter_is_estimated(prior_parameters["discount"]):
+        discount_dist = get_fixed_distribution(prior_parameters["discount"]["prior"])
+    else:
+        discount = float(prior_parameters["discount"]["value"])
+        discount_dist = st.uniform(discount, 0.0)
+    samples = []
+    for i in range(n):
+        conc = conc_dist.rvs(random_state = numpy_rng)
+        discount = discount_dist.rvs(random_state = numpy_rng)
+        elements, num_subsets = sample_pitman_yor_process(
+            rng = numpy_rng,
+            concentration = conc,
+            discount = discount,
+            number_of_elements = number_of_elements,
+        )
+        samples.append(num_subsets)
+    return samples
+
+def sample_hyper_dirichlet_distribution(
+    numpy_rng,
+    prior_parameters,
+    number_of_elements,
+    n = 100000,
+):
+    if not "concentration" in prior_parameters:
+        raise Exception(
+            "dirichlet_process doesn't specify concentration"
+        )
+    conc_dist = None
+    if parameter_is_estimated(prior_parameters["concentration"]):
+        conc_dist = get_fixed_distribution(prior_parameters["concentration"]["prior"])
+    else:
+        conc = float(prior_parameters["concentration"]["value"])
+        conc_dist = st.uniform(conc, 0.0)
+    samples = []
+    for i in range(n):
+        conc = conc_dist.rvs(random_state = numpy_rng)
+        elements, num_subsets = sample_dirichlet_process(
+            rng = numpy_rng,
+            concentration = conc,
+            number_of_elements = number_of_elements,
+        )
+        samples.append(num_subsets)
+    return samples

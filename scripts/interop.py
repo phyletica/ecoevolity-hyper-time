@@ -394,7 +394,7 @@ def collect_prior_samples(
             f"Loaded {len(workers)} ecoevolity workers for {number_of_procs} processors\n"
         )
         for run_time, num_var_sites, state_log_path in (w.get() for w in workers):
-            log_raths.append(state_log_path)
+            log_paths.append(state_log_path)
     return log_paths
 
 def run_sumcoevolity(

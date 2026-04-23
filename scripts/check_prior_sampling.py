@@ -77,7 +77,7 @@ def process_parameter(
     parameter_name,
     parameter_settings,
     posterior_samples,
-    output_dir,
+    output_prefix,
     numpy_rng,
 ):
     if not eco_config.parameter_is_estimated(parameter_settings):
@@ -91,10 +91,7 @@ def process_parameter(
                 "but sampled {val}\n"
             )
     else:
-        plot_path = os.path.join(
-            output_dir,
-            f"prior-cdf-comparison-{parameter_name}.svg",
-        )
+        plot_path = f"{output_prefix}prior-cdf-comparison-{parameter_name}.svg"
         fig, ax, eline, mline = plot_cdf_comparison(
             prior_settings = parameter_settings["prior"],
             posterior_samples = posterior_samples,
@@ -104,10 +101,7 @@ def process_parameter(
         fig.savefig(plot_path, bbox_inches = "tight")
         plt.close(fig)
     
-        plot_path = os.path.join(
-            output_dir,
-            f"prior-qq-plot-{parameter_name}.svg",
-        )
+        plot_path = f"{output_prefix}prior-qq-plot-{parameter_name}.svg"
         fig, ax, qline = plot_qq(
             prior_settings = parameter_settings["prior"],
             posterior_samples = posterior_samples,
@@ -116,6 +110,52 @@ def process_parameter(
         ax.set(title = f"{parameter_name}")
         fig.savefig(plot_path, bbox_inches = "tight")
         plt.close(fig)
+
+def process_event_model_prior(
+    settings,
+    nevent_samples,
+    number_of_comparisons,
+    output_prefix,
+    numpy_rng,
+):
+    assert len(settings) == 1
+    model_prior_name = list(settings.keys())[0]
+    if model_prior_name == "fixed":
+        return
+    elif model_prior_name == "pitman_yor_process":
+        model_prior_parameters = settings[model_prior_name][
+                "parameters"]
+        prior_nevent_samples = eco_config.sample_hyper_pitman_yor_distribution(
+            numpy_rng = numpy_rng,
+            prior_parameters = model_prior_parameters,
+            number_of_elements = number_of_comparisons,
+            n = 100000,
+        )
+    elif model_prior_name == "dirichlet_process":
+        model_prior_parameters = settings[model_prior_name][
+                "parameters"]
+        prior_nevent_samples = eco_config.sample_hyper_dirichlet_distribution(
+            numpy_rng = numpy_rng,
+            prior_parameters = model_prior_parameters,
+            number_of_elements = number_of_comparisons,
+            n = 100000,
+        )
+    plot_path = f"{output_prefix}prior-cmf-comparison-nevents.svg"
+    fig = matplotlib.figure.Figure()
+    gs = fig.add_gridspec(nrows = 1, ncols = 1,
+            wspace = 0.0,
+            hspace = 0.0)
+    ax = fig.add_subplot(gs[0, 0])
+    emp_line, model_line = plotting.compare_nevents_samples_to_cdf(
+        ax = ax,
+        samples = nevent_samples,
+        prior_samples = prior_nevent_samples,
+        number_of_comparisons = number_of_comparisons,
+        include_chisquare_test = True,
+    )
+    fig.tight_layout()
+    fig.savefig(plot_path, bbox_inches = "tight")
+    plt.close(fig)
 
 def main_cli():
     parser = argparse.ArgumentParser(
@@ -163,7 +203,7 @@ def main_cli():
                     'each log file as burn in.'))
     parser.add_argument('-o', '--output-dir',
             action = 'store',
-            type = pycoevolity.argparse_utils.arg_is_dir,
+            type = project_utils.arg_is_dir_or_new_dir,
             help = ('The directory in which to put all output files.'))
     parser.add_argument('--seed',
             action = 'store',
@@ -197,6 +237,12 @@ def main_cli():
         seed = project_utils.get_safe_seed()
     rng.seed(seed)
     np_rng = project_utils.get_numpy_rng(seed)
+
+    config_name = os.path.splitext(os.path.basename(args.config_path))[0]
+    output_prefix = os.path.join(
+        output_dir,
+        f"{config_name}-",
+    )
 
     seeds = project_utils.get_safe_seeds(rng, n = args.number_of_runs)
 
@@ -235,9 +281,19 @@ def main_cli():
         )
 
     config = eco_config.get_yaml_config(args.config_path)
+    number_of_comparisons = len(config.get("comparisons"))
 
     model_prior_settings = config.get("event_model_prior")
     assert len(model_prior_settings) == 1
+
+    process_event_model_prior(
+        settings = model_prior_settings,
+        nevent_samples = posterior_sample.parameter_samples["number_of_events"],
+        number_of_comparisons = number_of_comparisons,
+        output_prefix = output_prefix,
+        numpy_rng = np_rng,
+    )
+
     model_prior_name = list(model_prior_settings.keys())[0]
     if not model_prior_name == "fixed":
         model_prior_parameters = model_prior_settings[model_prior_name][
@@ -248,7 +304,7 @@ def main_cli():
                 parameter_name = parameter_name,
                 parameter_settings = parameter_settings,
                 posterior_samples = values,
-                output_dir = output_dir,
+                output_prefix = output_prefix,
                 numpy_rng = np_rng,
             )
 
@@ -267,7 +323,7 @@ def main_cli():
             parameter_name = height_key,
             parameter_settings = event_time_settings,
             posterior_samples = values,
-            output_dir = output_dir,
+            output_prefix = output_prefix,
             numpy_rng = np_rng,
         )
 
@@ -285,7 +341,7 @@ def main_cli():
             parameter_name = leaf_pop_size_key,
             parameter_settings = leaf_population_size_settings,
             posterior_samples = values,
-            output_dir = output_dir,
+            output_prefix = output_prefix,
             numpy_rng = np_rng,
         )
 

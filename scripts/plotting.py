@@ -7,6 +7,8 @@ import scipy.stats as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+import pycoevolity
+
 
 def compare_samples_to_cdf(
     ax,
@@ -53,6 +55,61 @@ def compare_samples_to_cdf(
         ax.text(
             0.99, 0.02,
             ks_str,
+            horizontalalignment = "right",
+            verticalalignment = "bottom",
+            transform = ax.transAxes,
+            zorder = 500,
+            fontsize = 'small',
+            # bbox = {
+            #     'facecolor': 'white',
+            #     'edgecolor': 'white',
+            #     'pad': 2},
+        )
+    # ax.legend(bbox_to_anchor = (1.01, 0.5), loc = "center left")
+    ax.legend(loc = "center right")
+    return emp_line, mod_line
+
+def compare_nevents_samples_to_cdf(
+    ax,
+    samples,
+    prior_samples,
+    number_of_comparisons,
+    include_chisquare_test = True,
+):
+    emp_line = sns.ecdfplot(
+        x = samples,
+        ax = ax,
+        label = "Empirical",
+    )
+    mod_line = sns.ecdfplot(
+        x = prior_samples,
+        ax = ax,
+        label = "Model",
+    )
+    ax.set(
+        xlabel = "Number of events",
+        ylabel = "Cumulative probability",
+        xlim = (1, number_of_comparisons),
+    )
+    if include_chisquare_test:
+        x = list(range(1, number_of_comparisons + 1))
+        sample_freq_dict = pycoevolity.stats.get_freqs(samples)
+        prior_freq_dict = pycoevolity.stats.get_freqs(prior_samples)
+        for nevents in x:
+            if nevents not in sample_freq_dict:
+                sample_freq_dict[nevents] = 0.0
+            if nevents not in prior_freq_dict:
+                prior_freq_dict[nevents] = 0.0
+        sample_freqs = tuple(sample_freq_dict[i] for i in x)
+        prior_freqs = tuple(prior_freq_dict[i] for i in x)
+        res = st.chisquare(
+            f_obs = sample_freqs,
+            f_exp = prior_freqs,
+        )
+        chi_str = f"Chi2 = {res.statistic:.2g}\np = {res.pvalue:.2g}"
+        ax.text(
+            0.99, 0.02,
+            chi_str,
             horizontalalignment = "right",
             verticalalignment = "bottom",
             transform = ax.transAxes,
