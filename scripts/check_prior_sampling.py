@@ -140,6 +140,10 @@ def process_event_model_prior(
             number_of_elements = number_of_comparisons,
             n = 100000,
         )
+    else:
+        raise Exception(
+            f"Unsupported event_model_prior: {model_prior_name}"
+        )
     plot_path = f"{output_prefix}prior-cmf-comparison-nevents.svg"
     fig = matplotlib.figure.Figure()
     gs = fig.add_gridspec(nrows = 1, ncols = 1,
@@ -151,7 +155,7 @@ def process_event_model_prior(
         samples = nevent_samples,
         prior_samples = prior_nevent_samples,
         number_of_comparisons = number_of_comparisons,
-        include_chisquare_test = True,
+        include_ks_test = True,
     )
     fig.tight_layout()
     fig.savefig(plot_path, bbox_inches = "tight")

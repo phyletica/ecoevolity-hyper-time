@@ -19,6 +19,12 @@ def write_yaml_config(data, path):
     with open(path, 'w') as stream:
         yaml.dump(data, stream, Dumper = Dumper)
 
+def get_value(setting):
+    try:
+        return setting["value"]
+    except Exception as e:
+        return setting
+
 def get_gamma_shape_scale(mean, sd):
     variance = sd**2
     shape = (mean**2) / variance
@@ -110,16 +116,16 @@ def vet_hyper_gamma_dist_params(prior_parameters):
 
 def get_fixed_gamma_distribution(prior_parameters):
     vet_gamma_dist_params(prior_parameters)
-    shape = float(prior_parameters["shape"])
+    shape = float(get_value(prior_parameters["shape"]))
     if "scale" in prior_parameters:
         assert not parameter_is_estimated(prior_parameters["scale"])
-        scale = float(prior_parameters["scale"])
+        scale = float(get_value(prior_parameters["scale"]))
     elif "mean" in prior_parameters:
         assert not parameter_is_estimated(prior_parameters["mean"])
-        scale = float(prior_parameters["mean"]) / shape
+        scale = float(get_value(prior_parameters["mean"])) / shape
     if "offset" in prior_parameters:
         assert not parameter_is_estimated(prior_parameters["offset"])
-        offset = float(prior_parameters["offset"])
+        offset = float(get_value(prior_parameters["offset"]))
         if offset != 0.0:
             raise Exception(
                 "This python wrapper doesn't support gamma offset\n"
@@ -131,8 +137,8 @@ def get_fixed_beta_distribution(prior_parameters):
     vet_beta_dist_params(prior_parameters)
     assert not parameter_is_estimated(prior_parameters["alpha"])
     assert not parameter_is_estimated(prior_parameters["beta"])
-    a = float(prior_parameters["alpha"])
-    b = float(prior_parameters["beta"])
+    a = float(get_value(prior_parameters["alpha"]))
+    b = float(get_value(prior_parameters["beta"]))
     dist = st.beta(a = a, b = b)
     return dist
 
@@ -141,13 +147,13 @@ def get_fixed_exponential_distribution(prior_parameters):
     scale = None
     if "rate" in prior_parameters:
         assert not parameter_is_estimated(prior_parameters["rate"])
-        scale = 1.0 / float(prior_parameters["rate"])
+        scale = 1.0 / float(get_value(prior_parameters["rate"]))
     elif "mean" in prior_parameters:
         assert not parameter_is_estimated(prior_parameters["mean"])
-        scale = float(prior_parameters["mean"])
+        scale = float(get_value(prior_parameters["mean"]))
     if "offset" in prior_parameters:
         assert not parameter_is_estimated(prior_parameters["offset"])
-        offset = float(prior_parameters["offset"])
+        offset = float(get_value(prior_parameters["offset"]))
         if offset != 0.0:
             raise Exception(
                 "This python wrapper doesn't support gamma offset\n"
@@ -159,8 +165,8 @@ def get_fixed_uniform_distribution(prior_parameters):
     vet_uniform_dist_params(prior_parameters)
     assert not parameter_is_estimated(prior_parameters["min"])
     assert not parameter_is_estimated(prior_parameters["max"])
-    mn = float(prior_parameters["min"])
-    mx = float(prior_parameters["max"])
+    mn = float(get_value(prior_parameters["min"]))
+    mx = float(get_value(prior_parameters["max"]))
     dist = st.uniform(mn, mx - mn)
     return dist
 
@@ -231,7 +237,7 @@ def sample_exponential_distribution(numpy_rng, prior_parameters, n = 100000):
             scale_dist = st.uniform(scale, 0.0)
     if "offset" in prior_parameters:
         assert not parameter_is_estimated(prior_parameters["offset"])
-        offset = float(prior_parameters["offset"])
+        offset = float(get_value(prior_parameters["offset"]))
         if offset != 0.0:
             raise Exception(
                 "This python wrapper doesn't support non-zero gamma offset\n"
