@@ -1,0 +1,6 @@
+dpp-conc-hypergamma-4-10-time-exp-02-pairs-20-sites-20000.yml       : Exp(mean = 0.2)
+dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml  : Exp(mean ~ Exp(mean = 0.2))
+dpp-conc-hypergamma-4-10-time-exp-001-pairs-20-sites-20000.yml      : Exp(mean = 0.01)
+dpp-conc-hypergamma-4-10-time-unif-02-pairs-20-sites-20000.yml      : Unif(0, 0.2)
+dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000.yml : Unif(0, Unif(0, 0.2))
+dpp-conc-hypergamma-4-10-time-unif-002-pairs-20-sites-20000.yml     : Unif(0, 0.02)
