@@ -16,4 +16,4 @@ dependencies:
   - munkres>=1.1.1
   - pip
   - pip:
-    - git+https://github.com/phyletica/pycoevolity.git@master
+    - git+https://github.com/phyletica/pycoevolity.git@dev
