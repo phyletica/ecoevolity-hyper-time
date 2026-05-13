@@ -1,6 +1,6 @@
 #! /bin/bash
 
-ht_ecoevolity_commit="5559e75f"
+ht_ecoevolity_commit="c933f15b"
 
 ht_conda_env_name="hyper-time"
 
