@@ -1,0 +1,3 @@
+time_prior_parameter_0:
+    symbol: '\mu'
+    label: "time prior mean"
