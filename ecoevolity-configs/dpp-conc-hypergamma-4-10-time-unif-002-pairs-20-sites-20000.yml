@@ -29,6 +29,8 @@ operator_settings:
     operators:
         ModelOperator:
             number_of_auxiliary_categories: 2
+        ConcentrationScaler:
+            weight: 10
 
 global_comparison_settings:
     ploidy: 2

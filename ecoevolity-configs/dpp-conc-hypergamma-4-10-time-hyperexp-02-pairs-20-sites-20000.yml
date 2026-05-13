@@ -29,6 +29,11 @@ operator_settings:
     operators:
         ModelOperator:
             number_of_auxiliary_categories: 2
+        ConcentrationScaler:
+            weight: 10
+        TimePriorParameterScaler-0:
+            parameter_name: mean
+            weight: 10
 
 global_comparison_settings:
     ploidy: 2
