@@ -31,25 +31,7 @@ def compress_output_path(log_path, output_dir = None):
     compress_file(log_path, gz_log_path)
     return gz_log_path
 
-# def parse_sim_results(results):
-#     sim_configs = results["simulation_configs"]
-#     inf_configs = results["inference_configs"]
-#     nchains = results["number_of_chains"]
-#     burnin = results["burnin"]
-#     for sim_conf, sims in results["simulations"].items():
-#         assert sim_conf in sim_configs
-#         for true_vals_path, inf_results in sims.items():
-#             for inf_conf, rep_results in inf_results.items():
-#                 assert inf_conf in inf_configs
-#                 assert len(rep_results["chains"]) == nchains
-#                 # At this point I think it is worth simply using pycoevolity's
-#                 # posterior code, which means we need to specify/fix burnin
-#                 # from the beginning and use it here, and assemble one
-#                 # posterior sample and summary across chaings
-#                 # We cannot serialize pycoevolity posterior classes to json, so
-#                 # we need to decide how to store results
-
-def load_results_json(in_stream):
+def load_json(in_stream):
     return json.load(in_stream)
 
 def get_ecoevolity_dir(dir_to_check = None):
@@ -244,32 +226,29 @@ def get_comparison_map(
             )
     return to_simco_map
 
-def create_sim_configs(sim_config_paths, inference_config_paths):
+def create_sim_configs(sim_config_path, inference_config_paths):
+    s_conf = eco_config.get_yaml_config(sim_config_path)
+    s_conf_path_prefix = os.path.splitext(sim_config_path)[0]
     sim_infer_config_paths = []
-    for s_conf_path in sim_config_paths:
-        s_conf = eco_config.get_yaml_config(s_conf_path)
-        s_conf_path_prefix = os.path.splitext(s_conf_path)[0]
-        sim_infer_confs = []
-        for infer_conf_path in inference_config_paths:
-            i_conf = eco_config.get_yaml_config(infer_conf_path)
-            i_conf_name = os.path.splitext(os.path.basename(infer_conf_path))[0]
-            i_out_path = f"{s_conf_path_prefix}-{i_conf_name}.yml"
-            inf_to_sim_indices = get_comparison_map(
-                simcoevolity_config_comparisons = s_conf["comparisons"],
-                inference_config_comparisons = i_conf["comparisons"],
-            )
-            for i_idx, s_idx in inf_to_sim_indices.items():
-                i_conf["comparisons"][i_idx]["comparison"]["path"]                      = s_conf["comparisons"][s_idx]["comparison"]["path"]
-                # Ploidy is really a modeling choice
-                # i_conf["comparisons"][i_idx]["ploidy"]                    = s_conf["comparisons"][s_idx]["ploidy"]
-                i_conf["comparisons"][i_idx]["comparison"]["genotypes_are_diploid"]     = s_conf["comparisons"][s_idx]["comparison"]["genotypes_are_diploid"]
-                i_conf["comparisons"][i_idx]["comparison"]["markers_are_dominant"]      = s_conf["comparisons"][s_idx]["comparison"]["markers_are_dominant"]
-                i_conf["comparisons"][i_idx]["comparison"]["population_name_delimiter"] = s_conf["comparisons"][s_idx]["comparison"]["population_name_delimiter"]
-                i_conf["comparisons"][i_idx]["comparison"]["population_name_is_prefix"] = s_conf["comparisons"][s_idx]["comparison"]["population_name_is_prefix"]
-                i_conf["comparisons"][i_idx]["comparison"]["constant_sites_removed"]    = s_conf["comparisons"][s_idx]["comparison"]["constant_sites_removed"]
-            eco_config.write_yaml_config(i_conf, i_out_path)
-            sim_infer_confs.append((i_out_path, infer_conf_path))
-        sim_infer_config_paths.append(tuple(sim_infer_confs))
+    for infer_conf_path in inference_config_paths:
+        i_conf = eco_config.get_yaml_config(infer_conf_path)
+        i_conf_name = os.path.splitext(os.path.basename(infer_conf_path))[0]
+        i_out_path = f"{s_conf_path_prefix}-{i_conf_name}.yml"
+        inf_to_sim_indices = get_comparison_map(
+            simcoevolity_config_comparisons = s_conf["comparisons"],
+            inference_config_comparisons = i_conf["comparisons"],
+        )
+        for i_idx, s_idx in inf_to_sim_indices.items():
+            i_conf["comparisons"][i_idx]["comparison"]["path"]                      = s_conf["comparisons"][s_idx]["comparison"]["path"]
+            # Ploidy is really a modeling choice
+            # i_conf["comparisons"][i_idx]["ploidy"]                    = s_conf["comparisons"][s_idx]["ploidy"]
+            i_conf["comparisons"][i_idx]["comparison"]["genotypes_are_diploid"]     = s_conf["comparisons"][s_idx]["comparison"]["genotypes_are_diploid"]
+            i_conf["comparisons"][i_idx]["comparison"]["markers_are_dominant"]      = s_conf["comparisons"][s_idx]["comparison"]["markers_are_dominant"]
+            i_conf["comparisons"][i_idx]["comparison"]["population_name_delimiter"] = s_conf["comparisons"][s_idx]["comparison"]["population_name_delimiter"]
+            i_conf["comparisons"][i_idx]["comparison"]["population_name_is_prefix"] = s_conf["comparisons"][s_idx]["comparison"]["population_name_is_prefix"]
+            i_conf["comparisons"][i_idx]["comparison"]["constant_sites_removed"]    = s_conf["comparisons"][s_idx]["comparison"]["constant_sites_removed"]
+        eco_config.write_yaml_config(i_conf, i_out_path)
+        sim_infer_config_paths.append((i_out_path, infer_conf_path))
     return sim_infer_config_paths
 
 def run_simcoevolity(
@@ -339,27 +318,34 @@ def run_simcoevolity(
         )
     run_time, num_var_sites = parse_info_from_output(result.stderr)
 
-
-    config_paths = glob.glob(
-        f"{full_prefix}simcoevolity-sim-[0-9]*-config.yml"
-    )
-    assert len(config_paths) == number_of_replicates
     true_val_paths = glob.glob(
         f"{full_prefix}simcoevolity-sim-[0-9]*-true-values.txt"
     )
     assert len(true_val_paths) == number_of_replicates
+    sim_numbers = [p.split("-")[-3] for p in true_val_paths]
+    config_paths = []
+    true_conf_paths = []
+    for sim_num in sim_numbers:
+        true_val_path = f"{full_prefix}simcoevolity-sim-{sim_num}-true-values.txt"
+        assert os.path.isfile(true_val_path)
+        conf_path = f"{full_prefix}simcoevolity-sim-{sim_num}-config.yml"
+        assert os.path.isfile(conf_path)
+        config_paths.append(conf_path)
+        sim_infer_config_paths = create_sim_configs(
+            sim_config_path = conf_path,
+            inference_config_paths = infer_config_paths,
+        )
+        true_conf_paths.append(
+            (true_val_path, tuple(sim_infer_config_paths))
+        )
 
-    sim_infer_config_paths = create_sim_configs(
-        sim_config_paths = config_paths,
-        inference_config_paths = infer_config_paths,
-    )
-    true_conf_paths = tuple(
-        zip(true_val_paths, sim_infer_config_paths, strict = True))
+    assert len(config_paths) == number_of_replicates
+    assert len(true_conf_paths) == number_of_replicates
 
     for path in config_paths:
         os.remove(path)
 
-    return run_time, true_conf_paths
+    return run_time, tuple(true_conf_paths)
 
 def collect_prior_samples(
     seeds,

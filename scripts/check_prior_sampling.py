@@ -38,7 +38,7 @@ def plot_cdf_comparison(
         hspace = 0.0,
     )
     ax = fig.add_subplot(gs[0, 0])
-    empirical_line, model_line = plotting.compare_samples_to_cdf(
+    empirical_line, model_line = plotting.ax_compare_samples_to_cdf(
         ax = ax,
         samples = posterior_samples,
         prob_dist = prior_distribution,
@@ -65,7 +65,7 @@ def plot_qq(
             wspace = 0.0,
             hspace = 0.0)
     ax = fig.add_subplot(gs[0, 0])
-    qline = plotting.qq(
+    qline = plotting.ax_qq(
         ax = ax,
         samples = posterior_samples,
         prob_dist = prior_distribution,
@@ -150,7 +150,7 @@ def process_event_model_prior(
             wspace = 0.0,
             hspace = 0.0)
     ax = fig.add_subplot(gs[0, 0])
-    emp_line, model_line = plotting.compare_nevents_samples_to_cdf(
+    emp_line, model_line = plotting.ax_compare_nevents_samples_to_cdf(
         ax = ax,
         samples = nevent_samples,
         prior_samples = prior_nevent_samples,

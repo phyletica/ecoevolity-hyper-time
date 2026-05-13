@@ -70,3 +70,17 @@ def arg_is_dir_or_new_dir(path):
     else:
         msg = '{0!r} is not a directory nor is its parent'.format(path)
     raise argparse.ArgumentTypeError(msg)
+
+def process_output_dir_arg(output_dir):
+    if not output_dir:
+        output_dir = os.curdir
+    else:
+        if not os.path.exists(output_dir):
+            try:
+                os.mkdir(output_dir)
+            except Exception as e:
+                sys.stderr.write(
+                    f"ERROR: Could not create output directory '{output_dir}'\n"
+                )
+                raise e
+    return output_dir
