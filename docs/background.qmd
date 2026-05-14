@@ -263,10 +263,29 @@ In theory, we can do this for any parameter of the prior distribution
 on divergence times
 (*e.g.*, shape, scale, mean, standard deviation, min, max, etc.).
 
-### Terminology of hierarchical Bayesian models
+### What's "hyper"? Terminology of hierarchical Bayesian models
 
 In the parlance of Bayesian statistics,
 when we estimate the parameter of a prior distribution, we
 call it a ***hyperparameter***.
 The prior distribution we place on a hyperparameter (i.e., the prior on the
 parameter of a prior) is called a ***hyperprior***.
+For this project, we will be exploring hyperpriors on divergence times in
+the
+[ecoevolity](https://phyletica.org/ecoevolity)
+software pacakge.
+Hence the name of this project.
+
+## In summary (tl;dr)
+
+In comparative biogeographic methods like msbayes and ecoevolity,
+prior distributions on divergence times with lots of uncertainty can
+create a strong penalty against models with more divergence-time parameters,
+and thus cause a downward bias in the number of divergence events across the
+taxa being compared.
+For this project, we will explore whether a hierarchical Bayesian approach can
+mitigate such a bias.
+Specifically, we will explore using hyperpriors on the parameters of the prior
+on divergence times to see if the model can learn about the divergence-time
+prior during the analysis and better calibrate the "penalty" against adding
+divergence-time parameters to the model.
