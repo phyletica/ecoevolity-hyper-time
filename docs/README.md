@@ -13,7 +13,8 @@ following quarto command from inside this directory:
 
 After running this command, the generated HTML files will be in the `_build`
 directory.
-To publish the documentation via GitHub Pages (via the gh-pages branch of the
-repo), use the following command from inside this directory:
+To publish the HTML documentation in the `_build` directory to GitHub Pages
+(via the gh-pages branch of the repo), use the following command from inside
+this directory:
 
-    quarto publish gh-pages
+    quarto publish gh-pages --no-render
