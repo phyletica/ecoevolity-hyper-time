@@ -1,4 +1,4 @@
-# Background
+# Background {#sec-background}
 
 The primary goal of this project is to improve comparative biogeographical
 estimation of shared (synchronous) population divergences or size changes

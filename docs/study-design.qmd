@@ -1,0 +1,35 @@
+# Study design {#sec-studydesign}
+
+The 
+[Background section](#sec-background)
+laid out the motivation for this study.
+In short, prior uncertainty about the timing of events (divergence times or
+population size changes) across taxa can create a strong penalty against
+comparative models with more event time parameters, leading to a downward bias
+in the number of evolutionary events shared across taxa (i.e., overclustering
+of taxa to a smaller number of events).
+In this study, we will use simualations to determine if a hiearchical Bayesian
+approach---specifically hyperpriors on the parameters of the prior on event
+times---can mitigate this bias.
+
+We will focus on divergence times in this study and will use that language
+below, rather than the more abstract "evolutionary event times".
+
+## Goals
+
+Using simulated comparative biogeographic data, we aim to:
+
+1.  [Demonstrate the downward bias on the number of divergence events created
+    by prior uncertainty about the timing of events.]{#goal-demo-bias}
+2.  [Assess if hyperpriors over the timing of divergence events mitigate the
+    bias.]{#goal-assess-hp}
+
+Below we expand on how we designed the study to address each goal.
+
+## Demonstrating bias imposed by vague divergence-time priors
+
+TODO
+
+## Assess hyperprior solution to bias
+
+TODO

@@ -31,6 +31,8 @@ book:
     - index.qmd
     - background.qmd
     - before-starting.qmd
+    - study-design.qmd
+    - validating-implementation.qmd
     - references.qmd
 
 bibliography: references.bib

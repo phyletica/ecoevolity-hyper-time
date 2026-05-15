@@ -1,0 +1,315 @@
+# Validating ecoevolity hyperpriors
+
+Before carrying out the
+[study design](#sec-studydesign),
+we need to validate that we've correctly implemented the hyperpriors on the
+parameters of the divergence-time priors in ecoevolity.
+We will do this in two ways:
+
+1.  ***Prior check***: Validate that ecoevolity samples from the specified
+    prior distribution when using no information from data.
+2.  ***Coverage check***: Validate that when ecoevolity analyzes data simulated
+    under a model with divergence-time hyperpriors, that the credible intervals
+    around parameter estimates include the true value the correct proportion of
+    the time.
+
+## Configuring ecoevolity to use hyperpriors on event times
+
+We've implemented a flexible way of placing priors on the parameters of the
+`event_time_prior` (the prior on the timing of divergence times and/or
+population size changes).
+You can see two examples of this in the following YAML-formatted ecoevolity
+config files in the project repo:
+
+1.  [`ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml`](https://github.com/phyletica/ecoevolity-hyper-time/blob/main/ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml)
+2.  [`ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000.yml`](https://github.com/phyletica/ecoevolity-hyper-time/blob/main/ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000.yml)
+
+In the first file, the following section configures the prior on divergence-time
+events:
+
+```yaml
+event_time_prior:
+    exponential_distribution:
+        mean:
+          value: 0.2
+          estimate: true
+          prior:
+              exponential_distribution:
+                  mean: 0.2
+```
+
+This tells ecoevolity to use an exponential distribution as the prior on
+divergence times, and the starting value for the mean of that exponential
+distribution is 0.2.
+It also tells ecoevolity to ***estimate*** the mean of the exponential prior on
+divergence times, and to place a hyperprior on the mean that is exponentially
+distributed with a mean of 0.2.
+
+The second file configures divergence times differently:
+
+```yaml
+event_time_prior:
+    uniform_distribution:
+        min:
+            value: 0.0
+            estimate: false
+        max:
+            value: 0.1
+            estimate: true
+            prior:
+                uniform_distribution:
+                    min: 0.0
+                    max: 0.2
+```
+
+This tells ecoevolity to use a uniform prior on divergence times with a uniform
+hyperprior on the maximum of that uniform distribution.
+We would not normally recommend using a uniform prior on divergence times.
+As described in the [study design section](#sec-studydesign),
+we are using the uniform prior to assess the original hypothesis for
+the downward bias for the number of divergence events
+[@Oaks2012;@Oaks2014reply].
+
+::: {#nte-samehp .callout-note}
+## Hyperprior does NOT need to match prior
+
+In the examples above, we use the same distribution for the prior and
+hyperprior.
+This is not a constraint of the ecoevolity implementation.
+Rather, it was our arbitrary choice for this study.
+:::
+
+### Check sampling from the prior distribution
+
+If working correctly, when ignoring data, the MCMC machinery should sample from
+the prior distrbution of the model specified in the config file.
+To check this, we have implemented the `pyco-eco-vet-prior` command-line tool
+in pycoevolity.
+To use this, first activate the project's conda environment:
+
+    conda activate hyper-time
+
+Next, navigate to the project directory (e.g., `cd ecoevolity-hyper-time`).
+
+#### Check sampling of model with exponential hyperprior
+
+To check the correct MCMC sampling of the prior distribution of the model with
+the exponentially distributed hyperprior on the mean of the divergence-time
+prior,
+you can run the following command:
+
+    pyco-eco-vet-prior \
+        --seed 1 \
+        --ecoevolity-dir ./bin \
+        --number-of-runs 40 \
+        --number-of-procs 8 \
+        --burnin 501 \
+        --step 4 \
+        --sparse-pop-size-plotting \
+        --output-dir ./check-exp-prior \
+        ./ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml
+
+After this finishes, you should see a new directory called `check-exp-prior`
+containing a bunch of SVG files.
+Each SVG file compares the expected prior distribution to the MCMC samples
+collected by ecoevolity for a single parameter from the model.
+The `-prior-cdf-` files compare the cumulative density of the prior and MCMC
+samples, and the `-prior-qq-` files compare the quantiles of the prior and MCMC
+samples.
+Let's take a look at some of these plots to see if the MCMC machinery in
+ecoevolity seems to be working correctly.
+
+::: {#fig-prior-hyper-exp-mean layout-ncol=2 layout-nrows=1}
+
+![](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cdf-comparison-mean.svg
+){
+    fig-alt="Comparing the cumulative density of the hyperprior on the mean divergence time vs MCMC sampling"
+    fig-align="center"
+}
+
+![](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-qq-plot-mean.svg
+){
+    fig-alt="Comparing the quantiles of the hyperprior on the mean divergence time vs MCMC sampling"
+    fig-align="center"
+}
+
+Comparing the MCMC sampling of ecoevolity (empirical) against the expected
+exponential hyperprior on the mean of the divergence-time prior (model).
+The left and right plots compare the cumulative density and quantiles,
+respectively, of the MCMC samples versus the expected hyperprior.
+The cumulative density plot includes the results of a Kolmogorov-Smirnov test,
+which was unable to reject that ecoevolity sampled from the expected
+distribution.
+:::
+
+::: {#fig-prior-hyper-exp-div-time layout-ncol=2 layout-nrows=1}
+
+![](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cdf-comparison-root_height_c1sp1.svg
+){
+    fig-alt="Comparing the cumulative density of the prior on the divergence time of the first pair of populations vs MCMC sampling"
+    fig-align="center"
+}
+
+![](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-qq-plot-root_height_c1sp1.svg
+){
+    fig-alt="Comparing the quantiles of the overall prior on the divergence time of the first pair of populations vs MCMC sampling"
+    fig-align="center"
+}
+
+Comparing the MCMC sampling of ecoevolity (empirical) against the expected
+prior on the divergence time of the first pair of populations (model).
+The left and right plots compare the cumulative density and quantiles,
+respectively, of the MCMC samples versus the expected prior.
+The cumulative density plot includes the results of a Kolmogorov-Smirnov test,
+which was unable to reject that ecoevolity sampled from the expected
+distribution.
+:::
+
+::: {#fig-prior-hyper-exp-concentration layout-ncol=2 layout-nrows=1}
+
+![](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cdf-comparison-concentration.svg
+){
+    fig-alt="Comparing the cumulative density of the prior on the concentration parameter of the Dirichlet process vs MCMC sampling"
+    fig-align="center"
+}
+
+![](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-qq-plot-concentration.svg
+){
+    fig-alt="Comparing the quantiles of the prior on the concentration parameter of the Dirichlet process vs MCMC sampling"
+    fig-align="center"
+}
+
+Comparing the MCMC sampling of ecoevolity (empirical) against the expected
+prior on the concentration parameter of the Dirichlet process (model).
+The left and right plots compare the cumulative density and quantiles,
+respectively, of the MCMC samples versus the expected prior.
+The cumulative density plot includes the results of a Kolmogorov-Smirnov test,
+which was unable to reject that ecoevolity sampled from the expected
+distribution.
+:::
+
+![
+Comparing the MCMC sampling of ecoevolity (empirical) against the expected
+prior on the number of divergence events (model). The left and right plots
+compare the cumulative mass and quantiles, respectively, of the MCMC samples
+versus the expected prior. The cumulative density plot includes the results of
+a Kolmogorov-Smirnov test, which was unable to reject that ecoevolity sampled
+from the expected distribution.
+](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cmf-comparison-nevents.svg
+){
+    #fig-prior-hyper-exp-nevents
+    fig-alt="Comparing the cumulative density of the prior on the number of divergence events vs MCMC sampling"
+    fig-align="center"
+}
+
+#### Check sampling of model with uniform hyperprior
+Let's also check the uniform hyperprior:
+
+    pyco-eco-vet-prior \
+        --seed 1 \
+        --ecoevolity-dir ./bin \
+        --number-of-runs 200 \
+        --number-of-procs 8 \
+        --burnin 1001 \
+        --step 10 \
+        --sparse-pop-size-plotting \
+        --output-dir ./check-unif-prior \
+        ./ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000.yml
+
+
+::: {#fig-prior-hyper-unif-mean layout-ncol=2 layout-nrows=1}
+
+![](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-cdf-comparison-mean.svg
+){
+    fig-alt="Comparing the cumulative density of the hyperprior on the mean divergence time vs MCMC sampling"
+    fig-align="center"
+}
+
+![](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-qq-plot-mean.svg
+){
+    fig-alt="Comparing the quantiles of the hyperprior on the mean divergence time vs MCMC sampling"
+    fig-align="center"
+}
+
+Comparing the MCMC sampling of ecoevolity (empirical) against the expected
+uniform hyperprior on the mean of the divergence-time prior (model).
+The left and right plots compare the cumulative density and quantiles,
+respectively, of the MCMC samples versus the expected hyperprior.
+The cumulative density plot includes the results of a Kolmogorov-Smirnov test,
+which was unable to reject that ecoevolity sampled from the expected
+distribution.
+:::
+
+::: {#fig-prior-hyper-unif-div-time layout-ncol=2 layout-nrows=1}
+
+![](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-cdf-comparison-root_height_c1sp1.svg
+){
+    fig-alt="Comparing the cumulative density of the prior on the divergence time of the first pair of populations vs MCMC sampling"
+    fig-align="center"
+}
+
+![](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-qq-plot-root_height_c1sp1.svg
+){
+    fig-alt="Comparing the quantiles of the overall prior on the divergence time of the first pair of populations vs MCMC sampling"
+    fig-align="center"
+}
+
+Comparing the MCMC sampling of ecoevolity (empirical) against the expected
+prior on the divergence time of the first pair of populations (model).
+The left and right plots compare the cumulative density and quantiles,
+respectively, of the MCMC samples versus the expected prior.
+The cumulative density plot includes the results of a Kolmogorov-Smirnov test,
+which was unable to reject that ecoevolity sampled from the expected
+distribution.
+:::
+
+::: {#fig-prior-hyper-unif-concentration layout-ncol=2 layout-nrows=1}
+
+![](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-cdf-comparison-concentration.svg
+){
+    fig-alt="Comparing the cumulative density of the prior on the concentration parameter of the Dirichlet process vs MCMC sampling"
+    fig-align="center"
+}
+
+![](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-qq-plot-concentration.svg
+){
+    fig-alt="Comparing the quantiles of the prior on the concentration parameter of the Dirichlet process vs MCMC sampling"
+    fig-align="center"
+}
+
+Comparing the MCMC sampling of ecoevolity (empirical) against the expected
+prior on the concentration parameter of the Dirichlet process (model).
+The left and right plots compare the cumulative density and quantiles,
+respectively, of the MCMC samples versus the expected prior.
+The cumulative density plot includes the results of a Kolmogorov-Smirnov test,
+which was unable to reject that ecoevolity sampled from the expected
+distribution.
+:::
+
+![
+Comparing the MCMC sampling of ecoevolity (empirical) against the expected
+prior on the number of divergence events (model). The left and right plots
+compare the cumulative mass and quantiles, respectively, of the MCMC samples
+versus the expected prior. The cumulative density plot includes the results of
+a Kolmogorov-Smirnov test, which was unable to reject that ecoevolity sampled
+from the expected distribution.
+](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-cmf-comparison-nevents.svg
+){
+    #fig-prior-hyper-unif-nevents
+    fig-alt="Comparing the cumulative density of the prior on the number of divergence events vs MCMC sampling"
+    fig-align="center"
+}
