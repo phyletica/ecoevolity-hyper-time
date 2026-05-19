@@ -27,7 +27,8 @@ config files in the project repo:
 In the first file, the following section configures the prior on divergence-time
 events:
 
-```yaml
+```{#lst-exphyperprior .yaml
+    lst-cap="Exponential hyperprior on the prior mean of divergence times"}
 event_time_prior:
     exponential_distribution:
         mean:
@@ -47,7 +48,8 @@ distributed with a mean of 0.2.
 
 The second file configures divergence times differently:
 
-```yaml
+```{#lst-unifhyperprior .yaml
+    lst-cap="Uniform hyperprior on the prior maximum of divergence times"}
 event_time_prior:
     uniform_distribution:
         min:
@@ -79,10 +81,11 @@ This is not a constraint of the ecoevolity implementation.
 Rather, it was our arbitrary choice for this study.
 :::
 
-### Check sampling from the prior distribution
+## Check sampling from the prior distribution
 
-If working correctly, when ignoring data, the MCMC machinery should sample from
-the prior distrbution of the model specified in the config file.
+If working correctly, when ignoring data, the MCMC machinery of ecoevolity
+should sample from the prior distrbution of the model specified in the config
+file.
 To check this, we have implemented the `pyco-eco-vet-prior` command-line tool
 in pycoevolity.
 To use this, first activate the project's conda environment:
@@ -91,7 +94,7 @@ To use this, first activate the project's conda environment:
 
 Next, navigate to the project directory (e.g., `cd ecoevolity-hyper-time`).
 
-#### Check sampling of model with exponential hyperprior
+### Check sampling of model with exponential hyperprior
 
 To check the correct MCMC sampling of the prior distribution of the model with
 the exponentially distributed hyperprior on the mean of the divergence-time
@@ -109,8 +112,69 @@ you can run the following command:
         --output-dir ./check-exp-prior \
         ./ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml
 
-After this finishes, you should see a new directory called `check-exp-prior`
-containing a bunch of SVG files.
+The last (positional) argument is the path to the ecoevolity config file we
+looked at above.
+Here's a breakdown of what the other keyword arguments are telling
+`pyco-eco-vet-prior` to do:
+
+`--seed 1`
+:   The number to seed the random number generator; this makes the results
+    repeatable.
+
+`--ecoevolity-dir ./bin`
+:   The directory containing the ecoevolity programs we want
+    `pyco-eco-vet-prior` to use.
+    The script we ran to setup the project environment installed a specific
+    version of ecoevolity to the `bin` folder.
+
+`--number-of-procs 8`
+:   The number of parallel processes to use when running the ecoevolity MCMC
+    chains.
+
+`--number-of-runs 40`
+:   Run 40 independent MCMC chains.
+    The config file specifies the length and sample frequency of each chaing.
+    Ecoevolity will ignore data, so these run quite fast.
+
+`--burnin 501`
+:   The number of samples to ignore from the beginning of each MCMC chain.
+
+`--step 4`
+:   This tells `pyco-eco-vet-prior` that we only want to use every 4th MCMC
+    sample (after ignoring the burnin samples).
+    This helps ensure the MCMC samples are effectively independent.
+
+`--sparse-pop-size-plotting`
+:   This tells `pyco-eco-vet-prior` that we only want to plot the results of
+    the effective population size parameters for the first and last pair
+    of populations.
+    In the config file, we place the same prior on the effective population
+    size across all the comparisons, so there's no need to plot all of them.
+
+`--output-dir ./check-exp-prior`
+:   The directory where we want all the plots to be written.
+
+::: {#nte-priorsamplingexp .callout-note}
+## Why so many chains?
+
+In the command above, we run a lot of MCMC chains (40), remove a large number
+of samples from each as burning (501), and only keep every 4th MCMC sample.
+There are 2 reasons for this:
+
+1.  Ecoevolity chains run quickly when ignoring data, so we might as well get a
+    large number of effectively independent samples.
+2.  Sampling the hyperprior on divergence times is tricky when there are no
+    data. With no data to inform the divergence times, there is a lot of
+    covariance among the mean of the prior on the divergence times, the
+    divergence times themselves, and the concentration parameter of the
+    Dirichlet process.
+    Sampling this degree of covariance with (mostly) uni-dimensional MCMC moves
+    is not very efficient, and sometimes requires generous burnin and
+    well-spaced samples from the MCMC chains.
+:::
+
+After the `pyco-eco-vet-prior` run finishes, you should see a new directory
+called `check-exp-prior` containing a bunch of SVG files.
 Each SVG file compares the expected prior distribution to the MCMC samples
 collected by ecoevolity for a single parameter from the model.
 The `-prior-cdf-` files compare the cumulative density of the prior and MCMC
@@ -119,8 +183,17 @@ samples.
 Let's take a look at some of these plots to see if the MCMC machinery in
 ecoevolity seems to be working correctly.
 
-::: {#fig-prior-hyper-exp-mean layout-ncol=2 layout-nrows=1}
+@fig-prior-hyper-exp-mean shows that the MCMC samples match the hyperprior
+distribution on the mean of the exponentially distributed prior on divergence
+times.
+The cumulative density of the MCMC samples and prior are right on top of each
+other (left), and the quantiles of the samples and prior fall along the 1:1
+line of the QQ plot (right).
+A Kolmogorov-Smirnov test was unable to differentiate the MCMC samples from the
+expected prior distribution; the D statistic and p-value are given in the lower
+right of the cumulative density plot (left) of @fig-prior-hyper-exp-mean.
 
+::: {#fig-prior-hyper-exp-mean layout-ncol=2 layout-nrows=1}
 ![](
     ./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cdf-comparison-mean.svg
 ){
@@ -144,8 +217,11 @@ which was unable to reject that ecoevolity sampled from the expected
 distribution.
 :::
 
-::: {#fig-prior-hyper-exp-div-time layout-ncol=2 layout-nrows=1}
+When we look at the divergence time of the first pair of populations, again,
+the MCMC samples match the expected prior distribution
+(@fig-prior-hyper-exp-div-time).
 
+::: {#fig-prior-hyper-exp-div-time layout-ncol=2 layout-nrows=1}
 ![](
     ./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cdf-comparison-root_height_c1sp1.svg
 ){
@@ -169,8 +245,11 @@ which was unable to reject that ecoevolity sampled from the expected
 distribution.
 :::
 
-::: {#fig-prior-hyper-exp-concentration layout-ncol=2 layout-nrows=1}
+The concentration parameter of the Dirichlet process shows the same results;
+the MCMC samples match the prior on this parameter
+(@fig-prior-hyper-exp-concentration).
 
+::: {#fig-prior-hyper-exp-concentration layout-ncol=2 layout-nrows=1}
 ![](
     ./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cdf-comparison-concentration.svg
 ){
@@ -194,13 +273,17 @@ which was unable to reject that ecoevolity sampled from the expected
 distribution.
 :::
 
+If we look at the number of divergence events,
+the MCMC samples match the prior distribution
+(@fig-prior-hyper-exp-nevents).
+
 ![
-Comparing the MCMC sampling of ecoevolity (empirical) against the expected
-prior on the number of divergence events (model). The left and right plots
-compare the cumulative mass and quantiles, respectively, of the MCMC samples
-versus the expected prior. The cumulative density plot includes the results of
-a Kolmogorov-Smirnov test, which was unable to reject that ecoevolity sampled
-from the expected distribution.
+    Comparing the MCMC sampling of ecoevolity (empirical) against the expected
+    prior on the number of divergence events (model). The left and right plots
+    compare the cumulative mass and quantiles, respectively, of the MCMC
+    samples versus the expected prior. The cumulative density plot includes the
+    results of a Kolmogorov-Smirnov test, which was unable to reject that
+    ecoevolity sampled from the expected distribution.
 ](
     ./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cmf-comparison-nevents.svg
 ){
@@ -209,8 +292,17 @@ from the expected distribution.
     fig-align="center"
 }
 
-#### Check sampling of model with uniform hyperprior
-Let's also check the uniform hyperprior:
+The `pyco-eco-vet-prior` tool produces more plots that we won't look at here,
+but they all show the same pattern of the MCMC samples closely matching the
+expected prior distribution.
+
+### Check sampling of model with uniform hyperprior
+
+Let's also check the MCMC sampling of the
+other model we looked at above with a
+[uniform hyperprior on the prior maximum of divergence times](#lst-unifhyperprior).
+Again, we will use the `pyco-eco-vet-prior` tool of the pycoevolity software
+package:
 
     pyco-eco-vet-prior \
         --seed 1 \
@@ -224,24 +316,48 @@ Let's also check the uniform hyperprior:
         ./ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000.yml
 
 
-::: {#fig-prior-hyper-unif-mean layout-ncol=2 layout-nrows=1}
+::: {#nte-priorsamplingunif .callout-note}
+## Soo many chains!
 
+Similar to what we talked about above in @nte-priorsamplingexp,
+we are running a lot of MCMC chains (200), removing a large number of
+samples from each as burning (1001), and only keeping every 10th MCMC
+sample.
+This is because the uniform hyperprior on divergence times is particularly
+difficult to sample when there are no data to inform the divergence times.
+The covariance among the divergence times, the mean of their exponential
+prior, and concentration parameter of the Dirichlet process is massive.
+Despite this, the MCMC sampling is fast when there are no data, so it
+doesn't take very long to collect the samples.
+:::
+
+Similar to what we saw above,
+Figures
+[-@fig-prior-hyper-unif-max],
+[-@fig-prior-hyper-unif-div-time],
+[-@fig-prior-hyper-unif-concentration],
+and
+[-@fig-prior-hyper-unif-nevents].
+show that the MCMC samples collected by ecoevolity closely match the expected
+prior distribution across the model's parameters.
+
+::: {#fig-prior-hyper-unif-max layout-ncol=2 layout-nrows=1}
 ![](
-    ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-cdf-comparison-mean.svg
+    ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-cdf-comparison-max.svg
 ){
     fig-alt="Comparing the cumulative density of the hyperprior on the mean divergence time vs MCMC sampling"
     fig-align="center"
 }
 
 ![](
-    ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-qq-plot-mean.svg
+    ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-qq-plot-max.svg
 ){
     fig-alt="Comparing the quantiles of the hyperprior on the mean divergence time vs MCMC sampling"
     fig-align="center"
 }
 
 Comparing the MCMC sampling of ecoevolity (empirical) against the expected
-uniform hyperprior on the mean of the divergence-time prior (model).
+uniform hyperprior on the maximum of the divergence-time prior (model).
 The left and right plots compare the cumulative density and quantiles,
 respectively, of the MCMC samples versus the expected hyperprior.
 The cumulative density plot includes the results of a Kolmogorov-Smirnov test,
@@ -250,7 +366,6 @@ distribution.
 :::
 
 ::: {#fig-prior-hyper-unif-div-time layout-ncol=2 layout-nrows=1}
-
 ![](
     ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-cdf-comparison-root_height_c1sp1.svg
 ){
@@ -275,7 +390,6 @@ distribution.
 :::
 
 ::: {#fig-prior-hyper-unif-concentration layout-ncol=2 layout-nrows=1}
-
 ![](
     ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-cdf-comparison-concentration.svg
 ){
@@ -300,12 +414,12 @@ distribution.
 :::
 
 ![
-Comparing the MCMC sampling of ecoevolity (empirical) against the expected
-prior on the number of divergence events (model). The left and right plots
-compare the cumulative mass and quantiles, respectively, of the MCMC samples
-versus the expected prior. The cumulative density plot includes the results of
-a Kolmogorov-Smirnov test, which was unable to reject that ecoevolity sampled
-from the expected distribution.
+    Comparing the MCMC sampling of ecoevolity (empirical) against the expected
+    prior on the number of divergence events (model). The left and right plots
+    compare the cumulative mass and quantiles, respectively, of the MCMC
+    samples versus the expected prior. The cumulative density plot includes the
+    results of a Kolmogorov-Smirnov test, which was unable to reject that
+    ecoevolity sampled from the expected distribution.
 ](
     ./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-cmf-comparison-nevents.svg
 ){
@@ -313,3 +427,28 @@ from the expected distribution.
     fig-alt="Comparing the cumulative density of the prior on the number of divergence events vs MCMC sampling"
     fig-align="center"
 }
+
+## Checking coverage
+
+The results above show that ecoevolity correctly samples from the prior
+distribution when data are ignored.
+This verifies the MCMC machinery is working, however, it does not confirm
+the likelihood machinery is working.
+To further confirm that the MCMC and likelihood code are working together
+correctly, we will check the coverage behavior of ecoevolity when analyzing
+simulate data.
+
+When a Bayesian model is correctly specified (i.e., the data being analyzed
+were generated under the specified prior distribution),
+The nominal credible intervals of parameter estimates should match their
+coverage frequency.
+For example, a 95% credible interval should contain the true parameter value
+95% of the time.
+To test this,
+for each of the models we looked at above that place an exponential and uniform
+hyperprior on divergence times,
+we will simulate a bunch of data sets under the model and analyze those data
+sets under the same model.
+We will then check to see if the credible intervals on parameters contain the
+true value the correct proportion of time (barring sampling error from having a
+finite number of data sets and MCMC samples).
