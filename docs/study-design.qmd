@@ -45,6 +45,8 @@ If our hypothesis about the cause of the downward bias on the number
 of divergence time is correct,
 we expect the results of these analyses to show a tendency to underestimate the
 number of divergence events across pairs of populations.
+Note, we will also analyze each dataset under the true (more informative) prior
+distribution to serve as a best-case scenario for comparison.
 
 We will do this using two different types of distributions on divergence times:
 exponential and uniform.
@@ -103,23 +105,35 @@ a model with a hyperprior on a parameter of the prior on divergence times.
 
 To analyze the data sets simulated under the distribution of divergence times
 of
-$\tau$ ~ Exponential(mean = 0.01)
+$\tau$ ~ Exponential(mean = 0.01),
 we will use a prior on divergence times of
-$\tau$ ~ Exponential(mean ~ Exponential(mean = 0.2)).
+
+$$
+\tau \sim \text{Exponential}(\text{mean} \sim
+    \text{Exponential}(\text{mean} = 0.2))
+    \text{.}
+$$
+
 That is, we will place an exponentially distributed hyperprior on the mean of
-the prior on divergence times.
-Note, this prior expresses much greater uncertainty about the timing of
+the exponential prior on divergence times.
+Note, this prior expresses *much* greater uncertainty about the timing of
 divergences than the prior above ($\tau$ ~ Exponential(mean = 0.2)),
-but will allow the data to inform the model about what the mean of the prior on
-divergence times "should be."
+but will allow the data to inform the model about the mean of the prior on
+divergence times during the analysis
 
 ### Uniform hyperprior
 
 To analyze the data sets simulated under the distribution of divergence times
 of
-$\tau$ ~ Uniform(0, 0.02)
+$\tau$ ~ Uniform(0, 0.02),
 we will use a prior on divergence times of
-$\tau$ ~ Uniform(0, max ~ Uniform(0.2)).
+
+$$
+\tau \sim \text{Uniform}(0, \text{max} \sim
+    \text{Uniform}(0, 0.2))
+    \text{.}
+$$
+
 This places
 a uniformly distributed hyperprior on the maximum of
 the uniform prior on divergence times.

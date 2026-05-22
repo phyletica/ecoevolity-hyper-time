@@ -81,7 +81,7 @@ If you are using, micromamba, use this command instead:
 micromamba activate hyper-time
 ```
 
-<--
+<!--
 If you don't have Git, but have installed a conda package manager,
 the easiest way to get Git will be via conda.
 

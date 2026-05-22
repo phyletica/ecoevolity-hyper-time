@@ -1,0 +1,83 @@
+# Project Tour {#sec-tour}
+
+Let's take a tour of the project repository.
+We assume you have cloned the project repository
+as described in the
+[setting up section](#sec-setup)
+of the documentation.
+For the tour, `cd` into the project.
+For example (assuming you cloned the repo in your home folder):
+
+```default
+cd ~/ecoevolity-hyper-time
+```
+
+Here's an overview of the contents of the project:
+
+`README.md` file
+:   This markdown-formatted file contains some basic information about the
+    project, including the license.
+
+`conda-env.yml` file
+:   This is a YAML-formatted text file that specifies the project's conda
+    environment.
+    This environment is created when you run the `setup_project_env.sh`
+    script.
+
+`project_utils.sh` shell file
+:   This Bash file contains information that is used by other Bash scripts,
+    like the specific commit ID of ecoevolity that needs to be installed,
+    the name of the project's conda environment, and what conda
+    program to use (i.e., conda, mamba, or micromamba).
+
+`setup_project_env.sh` script
+:   This is a Bash script that will
+
+    1.  Create a conda environment with all of the required software for this
+        project.
+    2.  Compile and install (locally, within the project directory)
+        a specific commit of ecoevolity.
+
+    See the [setup section](#sec-setup) of the documentation for instructions
+    on using this script to setup the working environment for this project.
+
+`data` directory
+:   This directory contains data files in a file format (YAML) recognized
+    by ecoevolity.
+
+    All of the files with the naming scheme of
+    `comp##-#species-##genomes-#####chars.txt` are "dummy" data files
+    that will be used by the `simcoevolity` tool to simulate datasets.
+    They are fully valid data files for ecoevolity, but are only meant to serve
+    the purpose of "telling" `simcoevolity` the size of datasets to simulate.
+
+`docs` directory
+:   This directory contains the markdown-formatted source files that are used
+    by quarto to create the HTML files for the project's documentation
+    website, which is hosted via GitHub Pages.
+
+`ecoevolity-configs` directory
+:   This directory contains all of the configuration files
+    needed for the ecoevolity simulations and analyses.
+    These configuration files specify where the data files are located, and all
+    of the settings for analysis.
+
+    These configs are discussed in the
+    [study design](#sec-studydesign)
+    and
+    [hyper prior validation](#sec-val)
+    sections of the documentation.
+
+`plotting-configs` directory
+:   This directory contains some YAML-formatted files that are used
+    when plotting some of the results for the project.
+
+`scripts` directory
+:   This contains some Bash scripts for some of the longer running
+    analyses for the project, so they can be easily submitted to the queueing
+    system of an HPC cluster.
+
+`bin` directory
+:   This directory is created when you run the `setup_project_env.sh`
+    script, and contains the compiled and executable programs of the
+    ecoevolity package.

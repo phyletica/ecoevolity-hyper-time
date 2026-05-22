@@ -32,8 +32,10 @@ book:
     - background.qmd
     - before-starting.qmd
     - setting-up.qmd
+    - project-tour.qmd
     - study-design.qmd
     - validating-implementation.qmd
+    - study-execution.qmd
     - references.qmd
 
 bibliography: references.bib

@@ -1,4 +1,4 @@
-# Validating ecoevolity hyperpriors
+# Validating ecoevolity hyperpriors {#sec-val}
 
 Before carrying out the
 [study design](#sec-studydesign),
@@ -94,7 +94,7 @@ To use this, first activate the project's conda environment:
 conda activate hyper-time
 ```
 
-Next, navigate to the project directory (e.g., `cd ecoevolity-hyper-time`).
+Next, navigate to the project directory (e.g., `cd ~/ecoevolity-hyper-time`).
 
 ### Check sampling of model with exponential hyperprior
 
@@ -470,7 +470,7 @@ environment and navigate to the project folder:
     
 ```default
 conda activate hyper-time
-cd ecoevolity-hyper-time
+cd ~/ecoevolity-hyper-time
 ```
 
 Then, use the following command to generate simulated data sets and setup
@@ -649,7 +649,7 @@ the true value approximately 50% of the time.
 Each plot will be annotated with the proportion of simulation replicates for
 which the true value of the parameter fell within the 50% CI.
 This annotation will look something like
-$p(\tau \in 0.5 \textrm{CI} = 0.48)$.
+$p(\tau \in 0.5 \text{CI} = 0.48)$.
 
 Given we have a finite sample of simulation replicates, we don't expect the
 proportion for which the CI contains the truth to be exactly 0.5.

@@ -104,13 +104,19 @@ shared by all 3 pairs.
 Bayes' rule tells us that the posterior probability density of $\tau$ is
 proportional to the likelihood multiplied by the prior probability density
 
-$$ p(\tau | D) = \frac{ p(D | \tau) p(\tau)}{ p(D) } $$,
+$$
+p(\tau | D) = \frac{ p(D | \tau) p(\tau)}{ p(D) }
+\text{,}
+$$
 
 where $D$ is the data.
 The normalizing constant in the denominator ($p(D)$) is the marginal
 probability of the data under our model:
 
-$$ p(D) = \int_{\tau} p(D | \tau) p(\tau) d\tau $$.
+$$
+p(D) = \int_{\tau} p(D | \tau) p(\tau) d\tau
+\text{.}
+$$
 
 This is an average over the entire parameter space of the likelihood weighted
 by the prior.
@@ -124,11 +130,17 @@ To see this, let's first add some notation to our equations above to make it
 explicit that the posterior is for our simple 1-parameter model, which we'll
 denote $M_1$:
 
-$$ p(\tau | D, M_1) = \frac{ p(D | \tau, M_1) p(\tau | M_1)}{ p(D | M_1) } $$
+$$
+p(\tau | D, M_1) = \frac{ p(D | \tau, M_1) p(\tau | M_1)}{ p(D | M_1) }
+\text{,}
+$$
 
 where
 
-$$ p(D | M_1) = \int_{\tau} p(D | \tau, M_1) p(\tau | M_1) d\tau $$.
+$$
+p(D | M_1) = \int_{\tau} p(D | \tau, M_1) p(\tau | M_1) d\tau
+\text{.}
+$$
 
 These equations are identical to the ones above.
 We've just added some bookkeeping to make it explicit which model we're talking
@@ -137,11 +149,17 @@ about.
 Now, let's consider a 3-parameter model, $M_2$, in which all 3 pairs diverge
 independently:
 
-$$ p(\tau_1, \tau_2, \tau_3 | D, M_2) = \frac{ p(D | \tau_1, \tau_2, \tau_3, M_2) p(\tau_1 | M_2) p(\tau_2 | M_2) p(\tau_3 | M_2)}{ p(D | M_2) } $$
+$$
+p(\tau_1, \tau_2, \tau_3 | D, M_2) = \frac{ p(D | \tau_1, \tau_2, \tau_3, M_2) p(\tau_1 | M_2) p(\tau_2 | M_2) p(\tau_3 | M_2)}{ p(D | M_2) }
+\text{,}
+$$
 
 where
 
-$$ p(D | M_2) = \int_{\tau_1}\int_{\tau_2}\int_{\tau_3} p(D | \tau_1, \tau_2, \tau_3, M_2) p(\tau_1 | M_2) p(\tau_2 | M_2) p(\tau_3 | M_2) d\tau_1 d\tau_2 d\tau_3 $$.
+$$
+p(D | M_2) = \int_{\tau_1}\int_{\tau_2}\int_{\tau_3} p(D | \tau_1, \tau_2, \tau_3, M_2) p(\tau_1 | M_2) p(\tau_2 | M_2) p(\tau_3 | M_2) d\tau_1 d\tau_2 d\tau_3
+\text{.}
+$$
 
 Notice, for the marginal likelihood of $M_2$, we are now averaging over three
 prior densities.
@@ -156,7 +174,10 @@ role.
 Bayesian model choice is also based on Bayes' rule, but now we are interested
 in the posterior probability of each model:
 
-$$ p(M_1 | D) = \frac{ p(D | M_1) p(M_1)}{ p(D | M_1)p(M_1) + p(D | M_2)p(M_2) } $$.
+$$
+p(M_1 | D) = \frac{ p(D | M_1) p(M_1)}{ p(D | M_1)p(M_1) + p(D | M_2)p(M_2) }
+\text{.}
+$$
 
 Notice, the marginal likelihood of the model is now in the ***numerator***
 of Bayes' rule; it's no longer just a normalizing constant!
@@ -187,10 +208,10 @@ up, which we will model as a random outcome from a binomial distribution.
 Before seeing the coin and flipping it, let's say we want to compare
 four models that vary in our prior assumptions about the coin's rate of heads:
 
--   $M_1$: All values are equally probable; $\theta \sim \textrm{Beta}(1,1)$
--   $M_2$: It might be a trick coin, but we don't know if it's weighted toward heads or tails; $\theta \sim \textrm{Beta}(0.6,0.6)$
--   $M_3$: The coin is probably fair; $\theta \sim \textrm{Beta}(5,5)$
--   $M_4$: The coin is probably weighted toward tails; $\theta \sim \textrm{Beta}(1,5)$
+-   $M_1$: All values are equally probable; $\theta \sim \text{Beta}(1,1)$
+-   $M_2$: It might be a trick coin, but we don't know if it's weighted toward heads or tails; $\theta \sim \text{Beta}(0.6,0.6)$
+-   $M_3$: The coin is probably fair; $\theta \sim \text{Beta}(5,5)$
+-   $M_4$: The coin is probably weighted toward tails; $\theta \sim \text{Beta}(1,5)$
 
 If we happen to flip 50/100 heads, @fig-coinflip (from @Oaks2018marginal) shows
 what our posterior distributions of $\theta$ will look like, along with the
@@ -237,11 +258,17 @@ parameters.
 Dropping the $M_2$ notation from above for simplicity, our hierarchical
 3-parameter model will look like
 
-$$ p(\tau_1, \tau_2, \tau_3, \mu | D) = \frac{ p(D | \tau_1, \tau_2, \tau_3) p(\tau_1 | \mu) p(\tau_2 | \mu) p(\tau_3 | \mu) p(\mu)}{ p(D) } $$
+$$
+p(\tau_1, \tau_2, \tau_3, \mu | D) = \frac{ p(D | \tau_1, \tau_2, \tau_3) p(\tau_1 | \mu) p(\tau_2 | \mu) p(\tau_3 | \mu) p(\mu)}{ p(D) }
+\text{,}
+$$
 
 where
 
-$$ p(D) = \int_{\tau_1}\int_{\tau_2}\int_{\tau_3}\int_{\mu} p(D | \tau_1, \tau_2, \tau_3) p(\tau_1 | \mu) p(\tau_2 | \mu) p(\tau_3 | \mu) p(\mu) d\tau_1 d\tau_2 d\tau_3 d\mu $$.
+$$
+p(D) = \int_{\tau_1}\int_{\tau_2}\int_{\tau_3}\int_{\mu} p(D | \tau_1, \tau_2, \tau_3) p(\tau_1 | \mu) p(\tau_2 | \mu) p(\tau_3 | \mu) p(\mu) d\tau_1 d\tau_2 d\tau_3 d\mu
+\text{.}
+$$
 
 Notice that $\mu$ (the mean of the divergence-time prior) is one-level removed
 from the data.

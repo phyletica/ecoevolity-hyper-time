@@ -1,0 +1,156 @@
+# Study execution {#sec-studyexecution}
+
+Here, we lay out how to execute the study
+described in the
+[Study Design Section](#sec-studydesign).
+
+## Analyses with exponential time priors
+
+### Prepare simulated data sets
+
+First we will generate data sets simulated under the
+model with divergence times distributed as
+$\tau \sim \text{Exponential}(\text{mean} = 0.01)$,
+and prepare the analyses of these data sets
+under the following models:
+
+-   $\tau \sim \text{Exponential}(\text{mean} = 0.01)$
+-   $\tau \sim \text{Exponential}(\text{mean} = 0.2)$
+-   $\tau \sim \text{Exponential}(\text{mean} \sim \text{Exponential}(\text{mean} = 0.2))$
+
+To do this, we will use the following command:
+
+```default
+pyco-eco-prep-sims \
+    --seed 1 \
+    --ecoevolity-dir bin \
+    --sim-config ecoevolity-configs/dpp-conc-hypergamma-4-10-time-exp-001-pairs-20-sites-20000.yml \
+    --number-of-sims 100 \
+    --number-of-chains 4 \
+    --number-of-procs 4 \
+    --burnin 201 \
+    --output-dir exp-hyperprior-sim-study \
+    ecoevolity-configs/dpp-conc-hypergamma-4-10-time-exp-001-pairs-20-sites-20000.yml \
+    ecoevolity-configs/dpp-conc-hypergamma-4-10-time-exp-02-pairs-20-sites-20000.yml \
+    ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml
+```
+
+### Analyze simulated data sets
+
+Next, we will analyze all the data sets.
+For each simulated data set, we will analyze it under three models, each with 4
+MCMC chains.
+That is a total of 1200 `ecoevolity` analyses that will be run.
+In the command below, we spread those analyses across 40 parallel processes.
+You can adjust this number of processes depending on how many CPUs to which you
+have access and how fast you would like them to finish.
+
+We also have the following command in the bash script
+`scripts/exp-hp-sim-study-analyze-sims.sh`
+so that it can be easily submitted to an HPC queue.
+
+```default
+pyco-eco-analyze-sims \
+    --ecoevolity-dir bin \
+    --number-of-procs 40 \
+    exp-hyperprior-sim-study/simulation-data.json
+```
+
+### Summarize the results
+
+```default
+pyco-eco-sum-sims \
+    --number-of-procs 8 \
+    --cred-interval-percent 95 \
+    --config-label-file ecoevolity-configs/config-labels.yml \
+    exp-hyperprior-sim-study/simulation-data.json
+```
+
+Again, you can adjust the number of processes if you have fewer CPUs available
+or want to increase the number to speed things up.
+
+### Plot the results
+
+```default
+pyco-eco-viz-sims \
+    --nevents-cred-level 0.95 \
+    --parameter-file plotting-configs/uniform-plotting-parameters.yml \
+    --prefix exp-hp-sim-study- \
+    --config-label-order 'Exp(mean = 0.2); Exp(mean ~ Exp(mean = 0.2)); Exp(mean = 0.01)' \
+    --comparison 'Exp(mean = 0.2)' 'Exp(mean ~ Exp(mean = 0.2))' \
+    --comparison 'Exp(mean ~ Exp(mean = 0.2))' 'Exp(mean = 0.01)' \
+    exp-hyperprior-sim-study/results-summary.tsv.gz
+```
+
+## Analyses with uniform time priors
+
+### Prepare simulated data sets
+
+As above, we will start by generating data sets simulated under the model with
+divergence times distributed as
+$\tau \sim \text{Uniform}(0, 0.02)$,
+and prepare the analyses of these data sets
+under the following models:
+
+-   $\tau \sim \text{Uniform}(0, 0.02)$
+-   $\tau \sim \text{Uniform}(0, 0.2)$
+-   $\tau \sim \text{Uniform}(0, \text{max} \sim \text{Uniform}(0, 0.2))$
+
+To do this, we will use the following command:
+
+```default
+pyco-eco-prep-sims \
+    --seed 1 \
+    --ecoevolity-dir bin \
+    --sim-config ecoevolity-configs/dpp-conc-hypergamma-4-10-time-unif-002-pairs-20-sites-20000.yml \
+    --number-of-sims 100 \
+    --number-of-chains 4 \
+    --number-of-procs 4 \
+    --burnin 201 \
+    --output-dir unif-hyperprior-sim-study \
+    ecoevolity-configs/dpp-conc-hypergamma-4-10-time-unif-002-pairs-20-sites-20000.yml \
+    ecoevolity-configs/dpp-conc-hypergamma-4-10-time-unif-02-pairs-20-sites-20000.yml \
+    ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000.yml
+```
+
+### Analyze simulated data sets
+
+Next, we will use `pyco-eco-analyze-sims` to run
+1200 `ecoevolity` analyses of the simulated datasets
+(100 data sets $\times$ 3 models $\times$ 4 MCMC chains)
+You can adjust this number of processes depending on how many CPUs to which you
+have access and how fast you would like them to finish.
+
+The following command is in the bash script
+`scripts/unif-hp-sim-study-analyze-sims.sh`
+so that it can be easily submitted to an HPC queue.
+
+```default
+pyco-eco-analyze-sims \
+    --ecoevolity-dir bin \
+    --number-of-procs 40 \
+    unif-hyperprior-sim-study/simulation-data.json
+```
+
+### Summarize the results
+
+```default
+pyco-eco-sum-sims \
+    --number-of-procs 8 \
+    --cred-interval-percent 95 \
+    --config-label-file ecoevolity-configs/config-labels.yml \
+    unif-hyperprior-sim-study/simulation-data.json
+```
+
+### Plot the results
+
+```default
+pyco-eco-viz-sims \
+    --nevents-cred-level 0.95 \
+    --parameter-file plotting-configs/uniform-plotting-parameters.yml \
+    --prefix unif-hp-sim-study- \
+    --config-label-order 'Unif(0, 0.2); Unif(0, Unif(0, 0.2)); Unif(0, 0.02)' \
+    --comparison 'Unif(0, 0.2)' 'Unif(0, Unif(0, 0.2))' \
+    --comparison 'Unif(0, Unif(0, 0.2))' 'Unif(0, 0.02)' \
+    unif-hyperprior-sim-study/results-summary.tsv.gz
+```

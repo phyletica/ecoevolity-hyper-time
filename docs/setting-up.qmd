@@ -1,4 +1,4 @@
-# Setting up the project
+# Setting up the project {#sec-setup}
 
 If you haven't already, you should familiarize yourself
 with the
@@ -7,7 +7,7 @@ and
 [Before Starting](#sec-beforestarting)
 sections of the documentation.
 
-## Cloning the project repo
+## Cloning the project repo {#sec-clone}
 
 Open up a terminal and navigate to where you want to keep the project's
 directory (folder).
@@ -50,8 +50,8 @@ and download and install a specific version (git commit) of the ecoevolity
 software package.
 
 ```default
-bash setup_project_env.sh`
+bash setup_project_env.sh
 ```
 
-All of the ecoevolity programs will get installed into a `bin` directory within
+All of the ecoevolity programs will be installed into a `bin` directory within
 the project folder.
