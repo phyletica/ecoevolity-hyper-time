@@ -7,5 +7,5 @@ source ../project_utils.sh
 "$ht_conda_exe" run -n "$ht_conda_env_name" pyco-eco-analyze-sims \
     --ecoevolity-dir ../bin \
     --number-of-procs 40 \
-    ../coverage-check-exp-hyperprior/simulation-data.json \
-    1>cov-check-exp-analyze-sims.sh.out 2>&1
+    ../exp-hyperprior-sim-study/simulation-data.json \
+    1>exp-hp-sim-study-analyze-sims.sh.out 2>&1
