@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Jamie Oaks">
-<meta name="author" content="João Fentanes Machado">
 
-<title>Time Hyper Prior Project</title>
+<title>4&nbsp; Project Tour – Time Hyper Prior Project</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -35,7 +68,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./background.html" rel="next">
+<link href="./study-design.html" rel="next">
+<link href="./setting-up.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -87,7 +121,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">About</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./project-tour.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Project Tour</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -114,7 +148,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">About</span></a>
   </div>
 </li>
@@ -138,7 +172,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./project-tour.html" class="sidebar-item-text sidebar-link">
+  <a href="./project-tour.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Project Tour</span></span></a>
   </div>
 </li>
@@ -171,56 +205,22 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#about" id="toc-about" class="nav-link active" data-scroll-target="#about">About</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Time Hyper Prior Project</h1>
+<h1 class="title"><span id="sec-tour" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Project Tour</span></span></h1>
 </div>
 
 
-<div class="quarto-title-meta-author">
-  <div class="quarto-title-meta-heading">Authors</div>
-  <div class="quarto-title-meta-heading">Affiliations</div>
-  
-    <div class="quarto-title-meta-contents">
-    <p class="author"><a href="https://phyletica.org">Jamie Oaks</a> <a href="https://orcid.org/0000-0002-3757-3836" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            <a href="https://aumnh.auburn.edu/">
-            Auburn University Museum of Natural History
-            </a>
-          </p>
-        <p class="affiliation">
-            <a href="https://www.auburn.edu/cosam/departments/biology/index.htm">
-            Auburn University Department of Biological Sciences
-            </a>
-          </p>
-      </div>
-    <div class="quarto-title-meta-contents">
-    <p class="author">João Fentanes Machado </p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            Universidade Federal de São Paulo
-          </p>
-      </div>
-  </div>
 
 <div class="quarto-title-meta">
 
-      
+    
   
     
   </div>
@@ -230,18 +230,60 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="about" class="level1 unnumbered">
-<h1 class="unnumbered">About</h1>
-<p>This is a project of the <a href="https://phyletica.org">Phyletica Lab</a> to experiment with ways of improving comparative biogeographical estimates of shared times of divergence or population-size change across taxa.</p>
-<p>The goal of this documentation is to:</p>
+<p>Let’s take a tour of the project repository. We assume you have cloned the project repository as described in the <a href="setting-up.html">setting up section</a> of the documentation. For the tour, <code>cd</code> into the project. For example (assuming you cloned the repo in your home folder):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cd ~/ecoevolity-hyper-time</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Here’s an overview of the contents of the project:</p>
+<dl>
+<dt><code>README.md</code> file</dt>
+<dd>
+This markdown-formatted file contains some basic information about the project, including the license.
+</dd>
+<dt><code>conda-env.yml</code> file</dt>
+<dd>
+This is a YAML-formatted text file that specifies the project’s conda environment. This environment is created when you run the <code>setup_project_env.sh</code> script.
+</dd>
+<dt><code>project_utils.sh</code> shell file</dt>
+<dd>
+This Bash file contains information that is used by other Bash scripts, like the specific commit ID of ecoevolity that needs to be installed, the name of the project’s conda environment, and what conda program to use (i.e., conda, mamba, or micromamba).
+</dd>
+<dt><code>setup_project_env.sh</code> script</dt>
+<dd>
+This is a Bash script that will
 <ol type="1">
-<li>Aid members of the project to work collaboratively</li>
-<li>Allow others to follow allong with the project, reproduce our findings, and learn how to use and interpret the models we are testing.</li>
+<li>Create a conda environment with all of the required software for this project.</li>
+<li>Compile and install (locally, within the project directory) a specific commit of ecoevolity.</li>
 </ol>
-<p>The ultimate arbiter of the project’s full history is the <a href="https://github.com/phyletica/ecoevolity-hyper-time">project repository</a>.</p>
+See the <a href="setting-up.html">setup section</a> of the documentation for instructions on using this script to setup the working environment for this project.
+</dd>
+<dt><code>data</code> directory</dt>
+<dd>
+This directory contains data files in a file format (YAML) recognized by ecoevolity.
+All of the files with the naming scheme of <code>comp##-#species-##genomes-#####chars.txt</code> are “dummy” data files that will be used by the <code>simcoevolity</code> tool to simulate datasets. They are fully valid data files for ecoevolity, but are only meant to serve the purpose of “telling” <code>simcoevolity</code> the size of datasets to simulate.
+</dd>
+<dt><code>docs</code> directory</dt>
+<dd>
+This directory contains the markdown-formatted source files that are used by quarto to create the HTML files for the project’s documentation website, which is hosted via GitHub Pages.
+</dd>
+<dt><code>ecoevolity-configs</code> directory</dt>
+<dd>
+This directory contains all of the configuration files needed for the ecoevolity simulations and analyses. These configuration files specify where the data files are located, and all of the settings for analysis.
+These configs are discussed in the <a href="study-design.html">study design</a> and <a href="validating-implementation.html">hyper prior validation</a> sections of the documentation.
+</dd>
+<dt><code>plotting-configs</code> directory</dt>
+<dd>
+This directory contains some YAML-formatted files that are used when plotting some of the results for the project.
+</dd>
+<dt><code>scripts</code> directory</dt>
+<dd>
+This contains some Bash scripts for some of the longer running analyses for the project, so they can be easily submitted to the queueing system of an HPC cluster.
+</dd>
+<dt><code>bin</code> directory</dt>
+<dd>
+This directory is created when you run the <code>setup_project_env.sh</code> script, and contains the compiled and executable programs of the ecoevolity package.
+</dd>
+</dl>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -653,10 +695,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./setting-up.html" class="pagination-link" aria-label="Setting up the project">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting up the project</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./background.html" class="pagination-link" aria-label="Background">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Background</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./study-design.html" class="pagination-link" aria-label="Study design">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Study design</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>References – Time Hyper Prior Project</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -49,18 +52,17 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./before-starting.html" rel="prev">
+<link href="./study-execution.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-a4ad429e298093b4b9ba8ae84350c9ec.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d9062f9ff3f240aa87260cd8920e6451.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -147,6 +149,36 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./setting-up.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting up the project</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./project-tour.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Project Tour</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./study-design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Study design</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./validating-implementation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Validating ecoevolity hyperpriors</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./study-execution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Study execution</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">References</span></a>
   </div>
@@ -181,12 +213,18 @@ div.csl-indent {
 </header>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-Hickerson2006" class="csl-entry" role="listitem">
 Hickerson, Michael J., Eli A. Stahl, and H. A. Lessios. 2006.
 <span>“Test for Simultaneous Divergence Using Approximate
 <span>B</span>ayesian Computation.”</span> <em>Evolution</em> 60 (12):
 2435–53.
+</div>
+<div id="ref-Hickerson2013" class="csl-entry" role="listitem">
+Hickerson, Michael J., Graham N. Stone, Konrad Lohse, et al. 2014.
+<span>“Recommendations for Using msBayes to Incorporate Uncertainty in
+Selecting an <span>ABC</span> Model Prior: A Response to
+<span>O</span>aks Et Al.”</span> <em>Evolution</em> 68 (1): 284–94. <a href="https://doi.org/10.1111/evo.12241">https://doi.org/10.1111/evo.12241</a>.
 </div>
 <div id="ref-Huang2011" class="csl-entry" role="listitem">
 Huang, Wen, Naoki Takebayashi, Yan Qi, and Michael J. Hickerson. 2011.
@@ -194,6 +232,11 @@ Huang, Wen, Naoki Takebayashi, Yan Qi, and Michael J. Hickerson. 2011.
 <span>B</span>ayesian Comparative Phylogeographic Inference from
 Multiple Taxa and Multiple Loci with Rate Heterogeneity.”</span> <em>BMC
 Bioinformatics</em> 12: 1. <a href="https://doi.org/10.1186/1471-2105-12-1">https://doi.org/10.1186/1471-2105-12-1</a>.
+</div>
+<div id="ref-Oaks2014dpp" class="csl-entry" role="listitem">
+Oaks, Jamie R. 2014. <span>“An Improved Approximate-Bayesian
+Model-Choice Method for Estimating Shared Evolutionary History.”</span>
+<em><span>BMC</span> Evolutionary Biology</em> 14 (July): 150. <a href="https://doi.org/10.1186/1471-2148-14-150">https://doi.org/10.1186/1471-2148-14-150</a>.
 </div>
 <div id="ref-Oaks2018ecoevolity" class="csl-entry" role="listitem">
 Oaks, Jamie R. 2019. <span>“Full <span>B</span>ayesian Comparative
@@ -210,7 +253,7 @@ Oaks, Jamie R., Nadia L’Bahy, and Kerry A. Cobb. 2020. <span>“Insights
 from a General, Full-Likelihood <span>B</span>ayesian Approach to
 Inferring Shared Evolutionary Events from Genomic Data: Inferring Shared
 Demographic Events Is Challenging.”</span> <em>Evolution</em> 74 (10):
-2184–2206. <a href="https://doi.org/10.1111/evo.14052">https://doi.org/10.1111/evo.14052</a>.
+2184–206. <a href="https://doi.org/10.1111/evo.14052">https://doi.org/10.1111/evo.14052</a>.
 </div>
 <div id="ref-Oaks2014reply" class="csl-entry" role="listitem">
 Oaks, Jamie R., Charles W. Linkem, and Jeet Sukumaran. 2014.
@@ -226,8 +269,7 @@ Across an Island Archipelago.”</span> <em>Evolution</em> 73 (6):
 1151–67. <a href="https://doi.org/10.1111/evo.13754">https://doi.org/10.1111/evo.13754</a>.
 </div>
 <div id="ref-Oaks2012" class="csl-entry" role="listitem">
-Oaks, Jamie R., Jeet Sukumaran, Jacob A. Esselstyn, Charles W. Linkem,
-Cameron D. Siler, Mark T. Holder, and Rafe M. Brown. 2013.
+Oaks, Jamie R., Jeet Sukumaran, Jacob A. Esselstyn, et al. 2013.
 <span>“Evidence for Climate-Driven Diversification? A Caution for
 Interpreting <span>ABC</span> Inferences of Simultaneous Historical
 Events.”</span> <em>Evolution</em> 67 (4): 991–1010. <a href="https://doi.org/10.1111/j.1558-5646.2012.01840.x">https://doi.org/10.1111/j.1558-5646.2012.01840.x</a>.
@@ -646,8 +688,8 @@ Events.”</span> <em>Evolution</em> 67 (4): 991–1010. <a href="https://doi.or
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./before-starting.html" class="pagination-link" aria-label="Before starting">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Before starting</span></span>
+      <a href="./study-execution.html" class="pagination-link" aria-label="Study execution">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Study execution</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

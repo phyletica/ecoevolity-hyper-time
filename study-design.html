@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Jamie Oaks">
-<meta name="author" content="João Fentanes Machado">
 
-<title>Time Hyper Prior Project</title>
+<title>5&nbsp; Study design – Time Hyper Prior Project</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,7 +23,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -35,7 +52,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./background.html" rel="next">
+<link href="./validating-implementation.html" rel="next">
+<link href="./project-tour.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -75,6 +93,35 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -87,7 +134,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">About</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./study-design.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Study design</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -114,7 +161,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">About</span></a>
   </div>
 </li>
@@ -144,7 +191,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./study-design.html" class="sidebar-item-text sidebar-link">
+  <a href="./study-design.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Study design</span></span></a>
   </div>
 </li>
@@ -176,7 +223,17 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#about" id="toc-about" class="nav-link active" data-scroll-target="#about">About</a></li>
+  <li><a href="#goals" id="toc-goals" class="nav-link active" data-scroll-target="#goals"><span class="header-section-number">5.1</span> Goals</a></li>
+  <li><a href="#demonstrating-bias-imposed-by-vague-divergence-time-priors" id="toc-demonstrating-bias-imposed-by-vague-divergence-time-priors" class="nav-link" data-scroll-target="#demonstrating-bias-imposed-by-vague-divergence-time-priors"><span class="header-section-number">5.2</span> Demonstrating bias imposed by vague divergence-time priors</a>
+  <ul class="collapse">
+  <li><a href="#demonsrating-bias-with-exponentially-distributed-divergence-times" id="toc-demonsrating-bias-with-exponentially-distributed-divergence-times" class="nav-link" data-scroll-target="#demonsrating-bias-with-exponentially-distributed-divergence-times"><span class="header-section-number">5.2.1</span> Demonsrating bias with exponentially distributed divergence times</a></li>
+  <li><a href="#demonsrating-bias-with-uniformly-distributed-divergence-times" id="toc-demonsrating-bias-with-uniformly-distributed-divergence-times" class="nav-link" data-scroll-target="#demonsrating-bias-with-uniformly-distributed-divergence-times"><span class="header-section-number">5.2.2</span> Demonsrating bias with uniformly distributed divergence times</a></li>
+  </ul></li>
+  <li><a href="#assess-hyperprior-solution-to-bias" id="toc-assess-hyperprior-solution-to-bias" class="nav-link" data-scroll-target="#assess-hyperprior-solution-to-bias"><span class="header-section-number">5.3</span> Assess hyperprior solution to bias</a>
+  <ul class="collapse">
+  <li><a href="#exponential-hyperprior" id="toc-exponential-hyperprior" class="nav-link" data-scroll-target="#exponential-hyperprior"><span class="header-section-number">5.3.1</span> Exponential hyperprior</a></li>
+  <li><a href="#uniform-hyperprior" id="toc-uniform-hyperprior" class="nav-link" data-scroll-target="#uniform-hyperprior"><span class="header-section-number">5.3.2</span> Uniform hyperprior</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -185,42 +242,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Time Hyper Prior Project</h1>
+<h1 class="title"><span id="sec-studydesign" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Study design</span></span></h1>
 </div>
 
 
-<div class="quarto-title-meta-author">
-  <div class="quarto-title-meta-heading">Authors</div>
-  <div class="quarto-title-meta-heading">Affiliations</div>
-  
-    <div class="quarto-title-meta-contents">
-    <p class="author"><a href="https://phyletica.org">Jamie Oaks</a> <a href="https://orcid.org/0000-0002-3757-3836" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            <a href="https://aumnh.auburn.edu/">
-            Auburn University Museum of Natural History
-            </a>
-          </p>
-        <p class="affiliation">
-            <a href="https://www.auburn.edu/cosam/departments/biology/index.htm">
-            Auburn University Department of Biological Sciences
-            </a>
-          </p>
-      </div>
-    <div class="quarto-title-meta-contents">
-    <p class="author">João Fentanes Machado </p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            Universidade Federal de São Paulo
-          </p>
-      </div>
-  </div>
 
 <div class="quarto-title-meta">
 
-      
+    
   
     
   </div>
@@ -230,17 +259,77 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="about" class="level1 unnumbered">
-<h1 class="unnumbered">About</h1>
-<p>This is a project of the <a href="https://phyletica.org">Phyletica Lab</a> to experiment with ways of improving comparative biogeographical estimates of shared times of divergence or population-size change across taxa.</p>
-<p>The goal of this documentation is to:</p>
+<p>The <a href="background.html">Background section</a> laid out the motivation for this study. In short, prior uncertainty about the timing of events (divergence times or population size changes) across taxa can create a strong penalty against comparative models with more event time parameters, leading to a downward bias in the number of evolutionary events shared across taxa (i.e., overclustering of taxa to a smaller number of events). In this study, we will use simualations to determine if a hiearchical Bayesian approach—specifically hyperpriors on the parameters of the prior on event times—can mitigate this bias.</p>
+<p>We will focus on divergence times in this study and will use that language below, rather than the more abstract “evolutionary event times”.</p>
+<section id="goals" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="goals"><span class="header-section-number">5.1</span> Goals</h2>
+<p>Using simulated comparative biogeographic data, we aim to:</p>
 <ol type="1">
-<li>Aid members of the project to work collaboratively</li>
-<li>Allow others to follow allong with the project, reproduce our findings, and learn how to use and interpret the models we are testing.</li>
+<li><span id="goal-demo-bias">Demonstrate the downward bias on the number of divergence events created by prior uncertainty about the timing of events.</span></li>
+<li><span id="goal-assess-hp">Assess if hyperpriors over the timing of divergence events mitigate the bias.</span></li>
 </ol>
-<p>The ultimate arbiter of the project’s full history is the <a href="https://github.com/phyletica/ecoevolity-hyper-time">project repository</a>.</p>
+<p>Below we expand on how we designed the study to address each goal.</p>
+</section>
+<section id="demonstrating-bias-imposed-by-vague-divergence-time-priors" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="demonstrating-bias-imposed-by-vague-divergence-time-priors"><span class="header-section-number">5.2</span> Demonstrating bias imposed by vague divergence-time priors</h2>
+<p>As described in the <a href="background.html">Background section</a>, the prior on the divergence times acts as a “penalty” against models with more divergence-time parameters. When we don’t have much prior information about the divergence times of the taxa we are comparing, a “vague” prior distribution to represent this lack of information can make this penalty quite strong and create a tendency for the method to favor models with fewer divergence times (i.e., overclustering taxa to divergence events).</p>
+<p>To demonstrate this with simulated data, we will simulate data under a more informative distribution on divergence times and then analyze those data sets using a more “vague” prior on divergence times. If our hypothesis about the cause of the downward bias on the number of divergence time is correct, we expect the results of these analyses to show a tendency to underestimate the number of divergence events across pairs of populations. Note, we will also analyze each dataset under the true (more informative) prior distribution to serve as a best-case scenario for comparison.</p>
+<p>We will do this using two different types of distributions on divergence times: exponential and uniform.</p>
+<section id="demonsrating-bias-with-exponentially-distributed-divergence-times" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="demonsrating-bias-with-exponentially-distributed-divergence-times"><span class="header-section-number">5.2.1</span> Demonsrating bias with exponentially distributed divergence times</h3>
+<p>First, we will use exponentially distributed divergence times. An exponential distribution seems like a reasonable choice for divergence times across taxa, because the waiting times between random events tend to be exponentially distributed.</p>
+<p>We will simulate data sets with 20 pairs of populations under an exponential distribution on divergence times with a mean of 0.01 substitutions per site. Then, we will analyze each of these data sets using an exponential prior on divergence times with a mean of 0.2 subtitutions per site. So, the true distribution of divergence times will be <span class="math inline">\(\tau\)</span> ~ Exponential(mean = 0.01) and the prior used in analyses will be <span class="math inline">\(\tau\)</span> ~ Exponential(mean = 0.2).</p>
+</section>
+<section id="demonsrating-bias-with-uniformly-distributed-divergence-times" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="demonsrating-bias-with-uniformly-distributed-divergence-times"><span class="header-section-number">5.2.2</span> Demonsrating bias with uniformly distributed divergence times</h3>
+<p>We will also use uniformly distributed divergence times. I don’t think the uniform distribution is a very good prior for divergence times, because</p>
+<ol type="1">
+<li>the hard bounds risk the chance of excluding the true divergenct times, and</li>
+<li>there are no good theoretical reasons to expect divergence times to be uniformly distributed.</li>
+</ol>
+<p>However, the downward bias in estimating the number of divergence events across taxa was first recognized and causes first proposed in the context of uniform priors on divergence times <span class="citation" data-cites="Oaks2012 Hickerson2013 Oaks2014reply Oaks2014dpp">(<a href="references.html#ref-Oaks2012" role="doc-biblioref">Oaks et al. 2013</a>, <a href="references.html#ref-Oaks2014reply" role="doc-biblioref">2014</a>; <a href="references.html#ref-Hickerson2013" role="doc-biblioref">Hickerson et al. 2014</a>; <a href="references.html#ref-Oaks2014dpp" role="doc-biblioref">Oaks 2014</a>)</span>.</p>
+<p>We will simulate data sets, each with 20 pairs of populations, under a uniform distribution on divergence times with a minimum and maximum of 0 and 0.02 substitutions per site. We will then analyze each of these data sets using a uniform prior on divergence times with a min and max of 0 and 0.2 substitutions per site. So, the true distribution of divergence times will be <span class="math inline">\(\tau\)</span> ~ Uniform(0, 0.02) and the prior used in analyses will be <span class="math inline">\(\tau\)</span> ~ Uniform(0, 0.2).</p>
+</section>
+</section>
+<section id="assess-hyperprior-solution-to-bias" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="assess-hyperprior-solution-to-bias"><span class="header-section-number">5.3</span> Assess hyperprior solution to bias</h2>
+<p>After demonstrating the underestimation of the number of divergences, we will assess if it can be mitigated using hyperpriors on divergence times that express as much (or more) prior uncertainty about the timing of divergences as the poorly performing “vague” priors. We will do this by analyzing the same data sets simulated above under a model with a hyperprior on a parameter of the prior on divergence times.</p>
+<section id="exponential-hyperprior" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="exponential-hyperprior"><span class="header-section-number">5.3.1</span> Exponential hyperprior</h3>
+<p>To analyze the data sets simulated under the distribution of divergence times of <span class="math inline">\(\tau\)</span> ~ Exponential(mean = 0.01), we will use a prior on divergence times of</p>
+<p><span class="math display">\[
+\tau \sim \text{Exponential}(\text{mean} \sim
+    \text{Exponential}(\text{mean} = 0.2))
+    \text{.}
+\]</span></p>
+<p>That is, we will place an exponentially distributed hyperprior on the mean of the exponential prior on divergence times. Note, this prior expresses <em>much</em> greater uncertainty about the timing of divergences than the prior above (<span class="math inline">\(\tau\)</span> ~ Exponential(mean = 0.2)), but will allow the data to inform the model about the mean of the prior on divergence times during the analysis</p>
+</section>
+<section id="uniform-hyperprior" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="uniform-hyperprior"><span class="header-section-number">5.3.2</span> Uniform hyperprior</h3>
+<p>To analyze the data sets simulated under the distribution of divergence times of <span class="math inline">\(\tau\)</span> ~ Uniform(0, 0.02), we will use a prior on divergence times of</p>
+<p><span class="math display">\[
+\tau \sim \text{Uniform}(0, \text{max} \sim
+    \text{Uniform}(0, 0.2))
+    \text{.}
+\]</span></p>
+<p>This places a uniformly distributed hyperprior on the maximum of the uniform prior on divergence times. This expresses as much uncertainty as the prior used above, but allows the data to inform the model about the upper limit on the divergence-time prior.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-Hickerson2013" class="csl-entry" role="listitem">
+Hickerson, Michael J., Graham N. Stone, Konrad Lohse, et al. 2014. <span>“Recommendations for Using msBayes to Incorporate Uncertainty in Selecting an <span>ABC</span> Model Prior: A Response to <span>O</span>aks Et Al.”</span> <em>Evolution</em> 68 (1): 284–94. <a href="https://doi.org/10.1111/evo.12241">https://doi.org/10.1111/evo.12241</a>.
+</div>
+<div id="ref-Oaks2014dpp" class="csl-entry" role="listitem">
+Oaks, Jamie R. 2014. <span>“An Improved Approximate-Bayesian Model-Choice Method for Estimating Shared Evolutionary History.”</span> <em><span>BMC</span> Evolutionary Biology</em> 14 (July): 150. <a href="https://doi.org/10.1186/1471-2148-14-150">https://doi.org/10.1186/1471-2148-14-150</a>.
+</div>
+<div id="ref-Oaks2014reply" class="csl-entry" role="listitem">
+Oaks, Jamie R., Charles W. Linkem, and Jeet Sukumaran. 2014. <span>“Implications of Uniformly Distributed, Empirically Informed Priors for Phylogeographical Model Selection: A Reply to Hickerson Et Al.”</span> <em>Evolution</em> 68 (December): 3607–17. <a href="https://doi.org/10.1111/evo.12523">https://doi.org/10.1111/evo.12523</a>.
+</div>
+<div id="ref-Oaks2012" class="csl-entry" role="listitem">
+Oaks, Jamie R., Jeet Sukumaran, Jacob A. Esselstyn, et al. 2013. <span>“Evidence for Climate-Driven Diversification? A Caution for Interpreting <span>ABC</span> Inferences of Simultaneous Historical Events.”</span> <em>Evolution</em> 67 (4): 991–1010. <a href="https://doi.org/10.1111/j.1558-5646.2012.01840.x">https://doi.org/10.1111/j.1558-5646.2012.01840.x</a>.
+</div>
+</div>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -653,10 +742,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./project-tour.html" class="pagination-link" aria-label="Project Tour">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Project Tour</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./background.html" class="pagination-link" aria-label="Background">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Background</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./validating-implementation.html" class="pagination-link" aria-label="Validating ecoevolity hyperpriors">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Validating ecoevolity hyperpriors</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

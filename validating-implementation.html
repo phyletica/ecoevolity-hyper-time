@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>6&nbsp; Validating ecoevolity hyperpriors – Time Hyper Prior Project</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./study-execution.html" rel="next">
+<link href="./study-design.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-d9062f9ff3f240aa87260cd8920e6451.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./validating-implementation.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Validating ecoevolity hyperpriors</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Time Hyper Prior Project</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./background.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Background</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./before-starting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Before starting</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./setting-up.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Setting up the project</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./project-tour.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Project Tour</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./study-design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Study design</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./validating-implementation.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Validating ecoevolity hyperpriors</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./study-execution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Study execution</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#configuring-ecoevolity-to-use-hyperpriors-on-event-times" id="toc-configuring-ecoevolity-to-use-hyperpriors-on-event-times" class="nav-link active" data-scroll-target="#configuring-ecoevolity-to-use-hyperpriors-on-event-times"><span class="header-section-number">6.1</span> Configuring ecoevolity to use hyperpriors on event times</a></li>
+  <li><a href="#check-sampling-from-the-prior-distribution" id="toc-check-sampling-from-the-prior-distribution" class="nav-link" data-scroll-target="#check-sampling-from-the-prior-distribution"><span class="header-section-number">6.2</span> Check sampling from the prior distribution</a>
+  <ul class="collapse">
+  <li><a href="#check-sampling-of-model-with-exponential-hyperprior" id="toc-check-sampling-of-model-with-exponential-hyperprior" class="nav-link" data-scroll-target="#check-sampling-of-model-with-exponential-hyperprior"><span class="header-section-number">6.2.1</span> Check sampling of model with exponential hyperprior</a></li>
+  <li><a href="#check-sampling-of-model-with-uniform-hyperprior" id="toc-check-sampling-of-model-with-uniform-hyperprior" class="nav-link" data-scroll-target="#check-sampling-of-model-with-uniform-hyperprior"><span class="header-section-number">6.2.2</span> Check sampling of model with uniform hyperprior</a></li>
+  </ul></li>
+  <li><a href="#checking-credible-interval-coverage" id="toc-checking-credible-interval-coverage" class="nav-link" data-scroll-target="#checking-credible-interval-coverage"><span class="header-section-number">6.3</span> Checking credible interval coverage</a>
+  <ul class="collapse">
+  <li><a href="#checking-coverage-for-the-exponential-hyperprior" id="toc-checking-coverage-for-the-exponential-hyperprior" class="nav-link" data-scroll-target="#checking-coverage-for-the-exponential-hyperprior"><span class="header-section-number">6.3.1</span> Checking coverage for the exponential hyperprior</a></li>
+  <li><a href="#checking-coverage-for-the-uniform-hyperprior" id="toc-checking-coverage-for-the-uniform-hyperprior" class="nav-link" data-scroll-target="#checking-coverage-for-the-uniform-hyperprior"><span class="header-section-number">6.3.2</span> Checking coverage for the uniform hyperprior</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-val" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Validating ecoevolity hyperpriors</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Before carrying out the <a href="study-design.html">study design</a>, we need to validate that we’ve correctly implemented the hyperpriors on the parameters of the divergence-time priors in ecoevolity. We will do this in two ways:</p>
+<ol type="1">
+<li><strong><em>Prior check</em></strong>: Validate that ecoevolity samples from the specified prior distribution when using no information from data.</li>
+<li><strong><em>Coverage check</em></strong>: Validate that when ecoevolity analyzes data simulated under a model with divergence-time hyperpriors, that the credible intervals around parameter estimates include the true value the correct proportion of the time.</li>
+</ol>
+<section id="configuring-ecoevolity-to-use-hyperpriors-on-event-times" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="configuring-ecoevolity-to-use-hyperpriors-on-event-times"><span class="header-section-number">6.1</span> Configuring ecoevolity to use hyperpriors on event times</h2>
+<p>We’ve implemented a flexible way of placing priors on the parameters of the <code>event_time_prior</code> (the prior on the timing of divergence times and/or population size changes). You can see two examples of this in the following YAML-formatted ecoevolity config files in the project repo:</p>
+<ol type="1">
+<li><a href="https://github.com/phyletica/ecoevolity-hyper-time/blob/main/ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml"><code>ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml</code></a></li>
+<li><a href="https://github.com/phyletica/ecoevolity-hyper-time/blob/main/ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000.yml"><code>ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000.yml</code></a></li>
+</ol>
+<p>In the first file, the following section configures the prior on divergence-time events:</p>
+<div id="lst-exphyperprior" class="yaml listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-exphyperprior-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;6.1: Exponential hyperprior on the prior mean of divergence times
+</figcaption>
+<div aria-describedby="lst-exphyperprior-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">event_time_prior</span><span class="kw">:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">exponential_distribution</span><span class="kw">:</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">mean</span><span class="kw">:</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.2</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">estimate</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">prior</span><span class="kw">:</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">              </span><span class="fu">exponential_distribution</span><span class="kw">:</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">                  </span><span class="fu">mean</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<p>This tells ecoevolity to use an exponential distribution as the prior on divergence times, and the starting value for the mean of that exponential distribution is 0.2. It also tells ecoevolity to <strong><em>estimate</em></strong> the mean of the exponential prior on divergence times, and to place a hyperprior on the mean that is exponentially distributed with a mean of 0.2.</p>
+<p>The second file configures divergence times differently:</p>
+<div id="lst-unifhyperprior" class="yaml listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-unifhyperprior-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;6.2: Uniform hyperprior on the prior maximum of divergence times
+</figcaption>
+<div aria-describedby="lst-unifhyperprior-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">event_time_prior</span><span class="kw">:</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">uniform_distribution</span><span class="kw">:</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">min</span><span class="kw">:</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">            </span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.0</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">            </span><span class="fu">estimate</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">max</span><span class="kw">:</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">            </span><span class="fu">value</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.1</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">            </span><span class="fu">estimate</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">            </span><span class="fu">prior</span><span class="kw">:</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">                </span><span class="fu">uniform_distribution</span><span class="kw">:</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at">                    </span><span class="fu">min</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.0</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at">                    </span><span class="fu">max</span><span class="kw">:</span><span class="at"> </span><span class="fl">0.2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<p>This tells ecoevolity to use a uniform prior on divergence times with a uniform hyperprior on the maximum of that uniform distribution. We would not normally recommend using a uniform prior on divergence times. As described in the <a href="study-design.html">study design section</a>, we are using the uniform prior to assess the original hypothesis for the downward bias for the number of divergence events <span class="citation" data-cites="Oaks2012 Oaks2014reply">(<a href="references.html#ref-Oaks2012" role="doc-biblioref">Oaks et al. 2013</a>, <a href="references.html#ref-Oaks2014reply" role="doc-biblioref">2014</a>)</span>.</p>
+<div id="nte-samehp" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note&nbsp;6.1: Hyperprior does NOT need to match prior
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the examples above, we use the same distribution for the prior and hyperprior. This is not a constraint of the ecoevolity implementation. Rather, it was our arbitrary choice for this study.</p>
+</div>
+</div>
+</section>
+<section id="check-sampling-from-the-prior-distribution" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="check-sampling-from-the-prior-distribution"><span class="header-section-number">6.2</span> Check sampling from the prior distribution</h2>
+<p>If working correctly, when ignoring data, the MCMC machinery of ecoevolity should sample from the prior distrbution of the model specified in the config file. To check this, we have implemented the <code>pyco-eco-vet-prior</code> command-line tool in pycoevolity. To use this, first activate the project’s conda environment:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>conda activate hyper-time</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Next, navigate to the project directory (e.g., <code>cd ~/ecoevolity-hyper-time</code>).</p>
+<section id="check-sampling-of-model-with-exponential-hyperprior" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="check-sampling-of-model-with-exponential-hyperprior"><span class="header-section-number">6.2.1</span> Check sampling of model with exponential hyperprior</h3>
+<p>To check the correct MCMC sampling of the prior distribution of the model with the exponentially distributed hyperprior on the mean of the divergence-time prior, you can run the following command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pyco-eco-vet-prior \</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    --seed 1 \</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    --ecoevolity-dir bin \</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    --number-of-runs 40 \</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    --number-of-procs 8 \</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    --burnin 501 \</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    --step 4 \</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    --sparse-pop-size-plotting \</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    --output-dir check-exp-prior \</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The last (positional) argument is the path to the ecoevolity config file we looked at above. Here’s a breakdown of what the other keyword arguments are telling <code>pyco-eco-vet-prior</code> to do:</p>
+<dl>
+<dt><code>--seed 1</code></dt>
+<dd>
+The number to seed the random number generator; this makes the results repeatable.
+</dd>
+<dt><code>--ecoevolity-dir bin</code></dt>
+<dd>
+The directory containing the ecoevolity programs we want <code>pyco-eco-vet-prior</code> to use. The script we ran to setup the project environment installed a specific version of ecoevolity to the <code>bin</code> folder.
+</dd>
+<dt><code>--number-of-procs 8</code></dt>
+<dd>
+The number of parallel processes to use when running the ecoevolity MCMC chains.
+</dd>
+<dt><code>--number-of-runs 40</code></dt>
+<dd>
+Run 40 independent MCMC chains. The config file specifies the length and sample frequency of each chaing. Ecoevolity will ignore data, so these run quite fast.
+</dd>
+<dt><code>--burnin 501</code></dt>
+<dd>
+The number of samples to ignore from the beginning of each MCMC chain.
+</dd>
+<dt><code>--step 4</code></dt>
+<dd>
+This tells <code>pyco-eco-vet-prior</code> that we only want to use every 4th MCMC sample (after ignoring the burnin samples). This helps ensure the MCMC samples are effectively independent.
+</dd>
+<dt><code>--sparse-pop-size-plotting</code></dt>
+<dd>
+This tells <code>pyco-eco-vet-prior</code> that we only want to plot the results of the effective population size parameters for two comparisons. In the config file, we place the same prior on the effective population size across all the comparisons, so there’s no need to plot all of them.
+</dd>
+<dt><code>--output-dir check-exp-prior</code></dt>
+<dd>
+The directory where we want all the plots to be written.
+</dd>
+</dl>
+<div id="nte-priorsamplingexp" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note&nbsp;6.2: Why so many chains?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the command above, we run a lot of MCMC chains (40), remove a large number of samples from each as burning (501), and only keep every 4th MCMC sample. There are 2 reasons for this:</p>
+<ol type="1">
+<li>Ecoevolity chains run quickly when ignoring data, so we might as well get a large number of effectively independent samples.</li>
+<li>Sampling the hyperprior on divergence times is tricky when there are no data. With no data to inform the divergence times, there is a lot of covariance among the mean of the prior on the divergence times, the divergence times themselves, and the concentration parameter of the Dirichlet process. Sampling this degree of covariance with (mostly) uni-dimensional MCMC moves is not very efficient, and sometimes requires generous burnin and well-spaced samples from the MCMC chains.</li>
+</ol>
+</div>
+</div>
+<p>After the <code>pyco-eco-vet-prior</code> run finishes, you should see a new directory called <code>check-exp-prior</code> containing a bunch of SVG files. Each SVG file compares the expected prior distribution to the MCMC samples collected by ecoevolity for a single parameter from the model. The <code>-prior-cdf-</code> files compare the cumulative density of the prior and MCMC samples, and the <code>-prior-qq-</code> files compare the quantiles of the prior and MCMC samples. Let’s take a look at some of these plots to see if the MCMC machinery in ecoevolity seems to be working correctly.</p>
+<p><a href="#fig-prior-hyper-exp-mean" class="quarto-xref">Figure&nbsp;<span>6.1</span></a> shows that the MCMC samples match the hyperprior distribution on the mean of the exponentially distributed prior on divergence times. The cumulative density of the MCMC samples and prior are right on top of each other (left), and the quantiles of the samples and prior fall along the 1:1 line of the QQ plot (right). A Kolmogorov-Smirnov test was unable to differentiate the MCMC samples from the expected prior distribution; the D statistic and p-value are given in the lower right of the cumulative density plot (left) of <a href="#fig-prior-hyper-exp-mean" class="quarto-xref">Figure&nbsp;<span>6.1</span></a>.</p>
+<div id="fig-prior-hyper-exp-mean" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-prior-hyper-exp-mean-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cdf-comparison-mean.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the cumulative density of the hyperprior on the mean divergence time vs MCMC sampling"></p>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-qq-plot-mean.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the quantiles of the hyperprior on the mean divergence time vs MCMC sampling"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prior-hyper-exp-mean-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.1: Comparing the MCMC sampling of ecoevolity (empirical) against the expected exponential hyperprior on the mean of the divergence-time prior (model). The left and right plots compare the cumulative density and quantiles, respectively, of the MCMC samples versus the expected hyperprior. The cumulative density plot includes the results of a Kolmogorov-Smirnov test, which was unable to reject that ecoevolity sampled from the expected distribution.
+</figcaption>
+</figure>
+</div>
+<p>When we look at the divergence time of the first pair of populations, again, the MCMC samples match the expected prior distribution (<a href="#fig-prior-hyper-exp-div-time" class="quarto-xref">Figure&nbsp;<span>6.2</span></a>).</p>
+<div id="fig-prior-hyper-exp-div-time" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-prior-hyper-exp-div-time-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cdf-comparison-root_height_c1sp1.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the cumulative density of the prior on the divergence time of the first pair of populations vs MCMC sampling"></p>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-qq-plot-root_height_c1sp1.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the quantiles of the overall prior on the divergence time of the first pair of populations vs MCMC sampling"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prior-hyper-exp-div-time-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.2: Comparing the MCMC sampling of ecoevolity (empirical) against the expected prior on the divergence time of the first pair of populations (model). The left and right plots compare the cumulative density and quantiles, respectively, of the MCMC samples versus the expected prior. The cumulative density plot includes the results of a Kolmogorov-Smirnov test, which was unable to reject that ecoevolity sampled from the expected distribution.
+</figcaption>
+</figure>
+</div>
+<p>The concentration parameter of the Dirichlet process shows the same results; the MCMC samples match the prior on this parameter (<a href="#fig-prior-hyper-exp-concentration" class="quarto-xref">Figure&nbsp;<span>6.3</span></a>).</p>
+<div id="fig-prior-hyper-exp-concentration" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-prior-hyper-exp-concentration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cdf-comparison-concentration.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the cumulative density of the prior on the concentration parameter of the Dirichlet process vs MCMC sampling"></p>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-qq-plot-concentration.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the quantiles of the prior on the concentration parameter of the Dirichlet process vs MCMC sampling"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prior-hyper-exp-concentration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.3: Comparing the MCMC sampling of ecoevolity (empirical) against the expected prior on the concentration parameter of the Dirichlet process (model). The left and right plots compare the cumulative density and quantiles, respectively, of the MCMC samples versus the expected prior. The cumulative density plot includes the results of a Kolmogorov-Smirnov test, which was unable to reject that ecoevolity sampled from the expected distribution.
+</figcaption>
+</figure>
+</div>
+<p>If we look at the number of divergence events, the MCMC samples match the prior distribution (<a href="#fig-prior-hyper-exp-nevents" class="quarto-xref">Figure&nbsp;<span>6.4</span></a>).</p>
+<div id="fig-prior-hyper-exp-nevents" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" alt="Comparing the cumulative density of the prior on the number of divergence events vs MCMC sampling">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-prior-hyper-exp-nevents-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cmf-comparison-nevents.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the cumulative density of the prior on the number of divergence events vs MCMC sampling">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prior-hyper-exp-nevents-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.4: Comparing the MCMC sampling of ecoevolity (empirical) against the expected prior on the number of divergence events (model). The left and right plots compare the cumulative mass and quantiles, respectively, of the MCMC samples versus the expected prior. The cumulative density plot includes the results of a Kolmogorov-Smirnov test, which was unable to reject that ecoevolity sampled from the expected distribution.
+</figcaption>
+</figure>
+</div>
+<p>The <code>pyco-eco-vet-prior</code> tool produces more plots that we won’t look at here, but they all show the same pattern of the MCMC samples closely matching the expected prior distribution.</p>
+</section>
+<section id="check-sampling-of-model-with-uniform-hyperprior" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="check-sampling-of-model-with-uniform-hyperprior"><span class="header-section-number">6.2.2</span> Check sampling of model with uniform hyperprior</h3>
+<p>Let’s also check the MCMC sampling of the other model we looked at above with a <a href="#lst-unifhyperprior">uniform hyperprior on the prior maximum of divergence times</a>. Again, we will use the <code>pyco-eco-vet-prior</code> tool of the pycoevolity software package:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pyco-eco-vet-prior \</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    --seed 1 \</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    --ecoevolity-dir bin \</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    --number-of-runs 200 \</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    --number-of-procs 8 \</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    --burnin 1001 \</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    --step 10 \</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    --sparse-pop-size-plotting \</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    --output-dir check-unif-prior \</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="nte-priorsamplingunif" class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note&nbsp;6.3: Soo many chains!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Similar to what we talked about above in <a href="#nte-priorsamplingexp" class="quarto-xref">Note&nbsp;<span>6.2</span></a>, we are running a lot of MCMC chains (200), removing a large number of samples from each as burning (1001), and only keeping every 10th MCMC sample. This is because the uniform hyperprior on divergence times is particularly difficult to sample when there are no data to inform the divergence times. The covariance among the divergence times, the mean of their exponential prior, and concentration parameter of the Dirichlet process is massive. Despite this, the MCMC sampling is fast when there are no data, so it doesn’t take very long to collect the samples.</p>
+</div>
+</div>
+<p>Similar to what we saw above, Figures <a href="#fig-prior-hyper-unif-max" class="quarto-xref"><span>6.5</span></a>, <a href="#fig-prior-hyper-unif-div-time" class="quarto-xref"><span>6.6</span></a>, <a href="#fig-prior-hyper-unif-concentration" class="quarto-xref"><span>6.7</span></a>, and <a href="#fig-prior-hyper-unif-nevents" class="quarto-xref"><span>6.8</span></a>. show that the MCMC samples collected by ecoevolity closely match the expected prior distribution across the model’s parameters.</p>
+<div id="fig-prior-hyper-unif-max" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-prior-hyper-unif-max-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-cdf-comparison-max.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the cumulative density of the hyperprior on the mean divergence time vs MCMC sampling"></p>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-qq-plot-max.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the quantiles of the hyperprior on the mean divergence time vs MCMC sampling"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prior-hyper-unif-max-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.5: Comparing the MCMC sampling of ecoevolity (empirical) against the expected uniform hyperprior on the maximum of the divergence-time prior (model). The left and right plots compare the cumulative density and quantiles, respectively, of the MCMC samples versus the expected hyperprior. The cumulative density plot includes the results of a Kolmogorov-Smirnov test, which was unable to reject that ecoevolity sampled from the expected distribution.
+</figcaption>
+</figure>
+</div>
+<div id="fig-prior-hyper-unif-div-time" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-prior-hyper-unif-div-time-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-cdf-comparison-root_height_c1sp1.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the cumulative density of the prior on the divergence time of the first pair of populations vs MCMC sampling"></p>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-qq-plot-root_height_c1sp1.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the quantiles of the overall prior on the divergence time of the first pair of populations vs MCMC sampling"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prior-hyper-unif-div-time-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.6: Comparing the MCMC sampling of ecoevolity (empirical) against the expected prior on the divergence time of the first pair of populations (model). The left and right plots compare the cumulative density and quantiles, respectively, of the MCMC samples versus the expected prior. The cumulative density plot includes the results of a Kolmogorov-Smirnov test, which was unable to reject that ecoevolity sampled from the expected distribution.
+</figcaption>
+</figure>
+</div>
+<div id="fig-prior-hyper-unif-concentration" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-prior-hyper-unif-concentration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-cdf-comparison-concentration.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the cumulative density of the prior on the concentration parameter of the Dirichlet process vs MCMC sampling"></p>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-qq-plot-concentration.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the quantiles of the prior on the concentration parameter of the Dirichlet process vs MCMC sampling"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prior-hyper-unif-concentration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.7: Comparing the MCMC sampling of ecoevolity (empirical) against the expected prior on the concentration parameter of the Dirichlet process (model). The left and right plots compare the cumulative density and quantiles, respectively, of the MCMC samples versus the expected prior. The cumulative density plot includes the results of a Kolmogorov-Smirnov test, which was unable to reject that ecoevolity sampled from the expected distribution.
+</figcaption>
+</figure>
+</div>
+<div id="fig-prior-hyper-unif-nevents" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" alt="Comparing the cumulative density of the prior on the number of divergence events vs MCMC sampling">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-prior-hyper-unif-nevents-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./images/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000-prior-cmf-comparison-nevents.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Comparing the cumulative density of the prior on the number of divergence events vs MCMC sampling">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prior-hyper-unif-nevents-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.8: Comparing the MCMC sampling of ecoevolity (empirical) against the expected prior on the number of divergence events (model). The left and right plots compare the cumulative mass and quantiles, respectively, of the MCMC samples versus the expected prior. The cumulative density plot includes the results of a Kolmogorov-Smirnov test, which was unable to reject that ecoevolity sampled from the expected distribution.
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="checking-credible-interval-coverage" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="checking-credible-interval-coverage"><span class="header-section-number">6.3</span> Checking credible interval coverage</h2>
+<p>The results above show that ecoevolity correctly samples from the prior distribution when data are ignored. This verifies the MCMC machinery is working, however, it does not confirm the likelihood machinery is working in lockstep with the MCMC code. To confirm that the MCMC and likelihood code are working together correctly, we will check the coverage behavior of ecoevolity when analyzing simulated data.</p>
+<p>When a Bayesian model is correctly specified (i.e., the data being analyzed were generated under the prior distribution of the model), The nominal credible intervals of parameter estimates should match their coverage frequency. For example, a 95% credible interval of a parameter should contain the true value 95% of the time. To test this, for each of the models we looked at above that place an exponential and uniform hyperprior on divergence times, we will simulate a bunch of data sets under the model and analyze those data sets under the same model. We will then check to see if the credible intervals on parameters contain the true value the correct proportion of time (barring sampling error from having a finite number of data sets and MCMC samples).</p>
+<section id="checking-coverage-for-the-exponential-hyperprior" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="checking-coverage-for-the-exponential-hyperprior"><span class="header-section-number">6.3.1</span> Checking coverage for the exponential hyperprior</h3>
+<section id="prepare-the-simulated-data-sets" class="level4" data-number="6.3.1.1">
+<h4 data-number="6.3.1.1" class="anchored" data-anchor-id="prepare-the-simulated-data-sets"><span class="header-section-number">6.3.1.1</span> Prepare the simulated data sets</h4>
+<p>To streamline orchestrating such ecoevolity simulations and analyses, we implemented several command-line tools in pycoevolity. The first tool we need to use is <code>pyco-eco-prep-sims</code>, which uses <code>simcoevolity</code> to generate simulated data sets, and sets up (but does not run) the <code>ecoevolity</code> analyses of those data. Before we run <code>pyco-eco-prep-sims</code>, make sure you activate the project’s conda environment and navigate to the project folder:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>conda activate hyper-time</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>cd ~/ecoevolity-hyper-time</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then, use the following command to generate simulated data sets and setup analyses of them for the model with an exponentially distributed hyperprior on divergence times (this took less than a minute to finish on my laptop):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pyco-eco-prep-sims \</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    --seed 1 \</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    --ecoevolity-dir bin \</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    --sim-config ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml \</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    --number-of-sims 100 \</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    --number-of-chains 4 \</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    --number-of-procs 4 \</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    --burnin 201 \</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    --output-dir coverage-check-exp-hyperprior \</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Let’s breakdown those command arguments:</p>
+<dl>
+<dt><code>ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml</code></dt>
+<dd>
+The last (positional) argument specifies the ecoevolity configs (just one in this case) we want to use to analyze all the simulated data.
+</dd>
+<dt><code>--seed 1</code></dt>
+<dd>
+The number to use to seed the (pseudo)random number generator.
+</dd>
+<dt><code>--ecoevolity-dir bin</code></dt>
+<dd>
+The path to the ecoevolity programs we want to use.
+</dd>
+<dt><code>--sim-config ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000.yml</code></dt>
+<dd>
+The ecoevolity config we want to use to simulate data sets.
+</dd>
+<dt><code>--number-of-sims 100</code></dt>
+<dd>
+The number of data sets to simulate for each simulation config (just one config in this case).
+</dd>
+<dt><code>--number-of-chains 4</code></dt>
+<dd>
+The number of <code>ecoevolity</code> runs (MCMC chains) we want to run on each simulated data set. This command will not run these analyses, but will set them up for the next command we use below.
+</dd>
+<dt><code>--number-of-procs 4</code></dt>
+<dd>
+The number of parallel processes to use to simulate the data sets. Simulating the data is pretty fast, so this usually doesn’t need to be large number.
+</dd>
+<dt><code>--burnin 201</code></dt>
+<dd>
+The number of MCMC samples to remove from each <code>ecoevolity</code> run (MCMC chain). Again, this is only used to setup the <code>ecoevolity</code> analyses that we will run uing the next command below.
+</dd>
+<dt><code>--output-dir coverage-check-exp-hyperprior</code></dt>
+<dd>
+The directory (“folder”) in which to put all the output files.
+</dd>
+</dl>
+<p>Note, to produce identical results with <code>pyco-eco-prep-sims</code>, you have to specify both the same random seed (<code>--seed</code>) and the same number of processes (<code>--number-of-procs</code>)</p>
+</section>
+<section id="analyze-the-simulated-data-sets" class="level4" data-number="6.3.1.2">
+<h4 data-number="6.3.1.2" class="anchored" data-anchor-id="analyze-the-simulated-data-sets"><span class="header-section-number">6.3.1.2</span> Analyze the simulated data sets</h4>
+<p>Next, we will analyze all the the simulated data sets using the <code>pyco-eco-analyze-sims</code> command-line tool. This command can take a lot longer to run. Above, we requested to generate 100 simulated data sets and to analyze each using 4 independent <code>ecoevolity</code> runs. So, that is a total of 400 <code>ecoevolity</code> analyses that <code>pyco-eco-analyze-sims</code> will orchestrate. On my machine, each <code>ecoevolity</code> analysis (MCMC chain) takes 6–15 minutes. Given 400 analyses, that is about 65 hours of computation, but we can spread them across parallel processes. For example, if we use 10 processes, all the analyses should take about 6 hours, 20 processes should take about 3 hours, etc.</p>
+<p>Here’s an example <code>pyco-eco-analyze-sims</code> command to use. You can adjust the number of processes based on how many CPUs you have available and how impatient you are. Regardless of the number of processes you specify, you will get identical results (it will just take more or less time):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pyco-eco-analyze-sims \</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    --ecoevolity-dir bin \</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    --number-of-procs 40 \</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    coverage-check-exp-hyperprior/simulation-data.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Because this command specifies a large number of processes and will take a while to run, we put it in a bash script so we can easily submit it to the queue of our HPC cluster. If you want to do the same, you can find that script in <code>scripts</code> directory of the project repo: <code>scripts/cov-check-exp-analyze-sims.sh</code>.</p>
+<p>When <code>pyco-eco-analyze-sims</code> finishes, you can double check that all the analyses finished successfully by simply running the same command again, and you should see confirmation messages that all the <code>ecoevolity</code> and <code>sumcoevolity</code> analyses were already complete. For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>$ pyco-eco-analyze-sims --ecoevolity-dir bin --number-of-procs 40 coverage-check-exp-hyperprior/simulation-data.json </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Using ecoevolity programs found in '/mmfs1/scratch/jro0014/ecoevolity-hyper-time/bin'</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>Starting ecoevolity analyses of simulated datasets...</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>All ecoevolity analyses of simulated data sets were already complete.</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>Running sumcoevolity on ecoevolity results...</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>All sumcoevolity analyses of ecoevolity results were already complete.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If <code>pyco-eco-analyze-sims</code> finds any analyses that didn’t finish successfully, it will re-run them.</p>
+</section>
+<section id="summarize-the-results" class="level4" data-number="6.3.1.3">
+<h4 data-number="6.3.1.3" class="anchored" data-anchor-id="summarize-the-results"><span class="header-section-number">6.3.1.3</span> Summarize the results</h4>
+<p>Next, we will use the <code>pyco-eco-sum-sims</code> tool to parse and summarize the results of all the analyses into a tabular file for plotting.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pyco-eco-sum-sims \</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    --number-of-procs 8 \</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    --cred-interval-percent 50 \</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    --config-label-file ecoevolity-configs/config-labels.yml \</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    coverage-check-exp-hyperprior/simulation-data.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You can adjust the number of processes to use based on the CPUs you have available. This took less than 2 minutes to run on my laptop using 8 processes. Let’s breakdown the command’s arguments:</p>
+<dl>
+<dt><code>coverage-check-exp-hyperprior/simulation-data.json</code></dt>
+<dd>
+The last positional argument is the path to the JSON-formatted file with all the information about the simulated data sets and their analyses.
+</dd>
+<dt><code>--number-of-procs 8</code></dt>
+<dd>
+Use 8 parallel processes for parsing and summarizing the results of the analyses of each simulated data set. In our case, we will be parsing the results of 100 analyses (each with 4 MCMC chains). Parsing the results is reasonably fast, so you usually don’t need to use a large number of processes.
+</dd>
+<dt><code>--cred-interval-percent 50</code></dt>
+<dd>
+The width of the credible intervals to use when summarizing the results. Here, we are using 50% credible intervals, and we will use these to check if they contain the true parameter values 50% of the time (barring sampling error).
+</dd>
+<dt><code>--config-label-file ecoevolity-configs/config-labels.yml</code></dt>
+<dd>
+A YAML-formatted file that specifies labels we would like to use to represent the models (ecoevolity config files) we used to simulate and analyze the data.
+</dd>
+</dl>
+<p>When finished, <code>pyco-eco-sum-sims</code> will write a gzipped summary table of all the results to <code>coverage-check-exp-hyperprior/results-summary.tsv.gz</code>. We will use this in the next (and last) step to plot the results.</p>
+</section>
+<section id="plot-the-results" class="level4" data-number="6.3.1.4">
+<h4 data-number="6.3.1.4" class="anchored" data-anchor-id="plot-the-results"><span class="header-section-number">6.3.1.4</span> Plot the results</h4>
+<p>To use <code>pyco-eco-viz-sims</code> to plot the results, you can use the following command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pyco-eco-viz-sims \</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    --nevents-cred-level 0.5 \</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    --parameter-file plotting-configs/exponential-plotting-parameters.yml \</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    --prefix exp-hp-cov-check- \</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    coverage-check-exp-hyperprior/results-summary.tsv.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Because we are using 50% credible intervals (CI) on parameters, if the ecoevolity implementation is working correctly, these intervals should include the true value approximately 50% of the time. Each plot will be annotated with the proportion of simulation replicates for which the true value of the parameter fell within the 50% CI. This annotation will look something like <span class="math inline">\(p(\tau \in 0.5 \text{CI} = 0.48)\)</span>.</p>
+<p>Given we have a finite sample of simulation replicates, we don’t expect the proportion for which the CI contains the truth to be exactly 0.5. To get a sense of how much variation around 0.5 we should expect to see due to sampling error, we can use a binomial test. A binomial test for 100 simulation replicates will be nonsignificant (have a p-value is greater than 0.05) when the proportion of replicates for which the true value falls within the CI is from 0.4 to 0.6. So, as long as we are seeing values between 0.4 and and 0.6, this indicates ecoevolity is working correctly. This is somewhat conservative too, because we also have sampling error due to finite MCMC samples that is not accounted for by the binomial test.</p>
+</section>
+</section>
+<section id="checking-coverage-for-the-uniform-hyperprior" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="checking-coverage-for-the-uniform-hyperprior"><span class="header-section-number">6.3.2</span> Checking coverage for the uniform hyperprior</h3>
+<p>To check the coverage for the model with a uniform hyperprior on divergence times, we can repeat the same steps as above, but simply change the path to the ecoevolity config file.</p>
+<section id="prepare-the-simulated-data-sets-1" class="level4" data-number="6.3.2.1">
+<h4 data-number="6.3.2.1" class="anchored" data-anchor-id="prepare-the-simulated-data-sets-1"><span class="header-section-number">6.3.2.1</span> Prepare the simulated data sets</h4>
+<p>To reproduce the same results, make sure you use the same seed and number of processes.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pyco-eco-prep-sims \</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    --seed 1 \</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    --ecoevolity-dir bin \</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    --sim-config ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000.yml \</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    --number-of-sims 100 \</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    --number-of-chains 4 \</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    --number-of-procs 4 \</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    --burnin 201 \</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    --output-dir coverage-check-unif-hyperprior \</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    ecoevolity-configs/dpp-conc-hypergamma-4-10-time-hyperunif-02-pairs-20-sites-20000.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="analyze-the-simulated-data-sets-1" class="level4" data-number="6.3.2.2">
+<h4 data-number="6.3.2.2" class="anchored" data-anchor-id="analyze-the-simulated-data-sets-1"><span class="header-section-number">6.3.2.2</span> Analyze the simulated data sets</h4>
+<p>As above, you can adjust the number of parallel processes depending on the number of CPUs you have available (and your level of patience).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pyco-eco-analyze-sims \</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    --ecoevolity-dir bin \</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    --number-of-procs 40 \</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    coverage-check-unif-hyperprior/simulation-data.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="summarize-the-results-1" class="level4" data-number="6.3.2.3">
+<h4 data-number="6.3.2.3" class="anchored" data-anchor-id="summarize-the-results-1"><span class="header-section-number">6.3.2.3</span> Summarize the results</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pyco-eco-sum-sims \</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    --number-of-procs 8 \</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    --cred-interval-percent 50 \</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    --config-label-file ecoevolity-configs/config-labels.yml \</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    coverage-check-unif-hyperprior/simulation-data.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This takes less than 2 minutes on my laptop, but if you’re impatient and have CPUs to spare, you can increase the number of processes.</p>
+</section>
+<section id="plot-the-results-1" class="level4" data-number="6.3.2.4">
+<h4 data-number="6.3.2.4" class="anchored" data-anchor-id="plot-the-results-1"><span class="header-section-number">6.3.2.4</span> Plot the results</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>pyco-eco-viz-sims \</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    --nevents-cred-level 0.5 \</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    --parameter-file plotting-configs/uniform-plotting-parameters.yml \</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    --prefix unif-hp-cov-check- \</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    coverage-check-unif-hyperprior/results-summary.tsv.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Again, we want to check that the 50% coverage intervals for parameters contain the true value about 40-60% of the time.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-Oaks2014reply" class="csl-entry" role="listitem">
+Oaks, Jamie R., Charles W. Linkem, and Jeet Sukumaran. 2014. <span>“Implications of Uniformly Distributed, Empirically Informed Priors for Phylogeographical Model Selection: A Reply to Hickerson Et Al.”</span> <em>Evolution</em> 68 (December): 3607–17. <a href="https://doi.org/10.1111/evo.12523">https://doi.org/10.1111/evo.12523</a>.
+</div>
+<div id="ref-Oaks2012" class="csl-entry" role="listitem">
+Oaks, Jamie R., Jeet Sukumaran, Jacob A. Esselstyn, et al. 2013. <span>“Evidence for Climate-Driven Diversification? A Caution for Interpreting <span>ABC</span> Inferences of Simultaneous Historical Events.”</span> <em>Evolution</em> 67 (4): 991–1010. <a href="https://doi.org/10.1111/j.1558-5646.2012.01840.x">https://doi.org/10.1111/j.1558-5646.2012.01840.x</a>.
+</div>
+</div>
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            // default icon
+            link.classList.add("external");
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./study-design.html" class="pagination-link" aria-label="Study design">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Study design</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./study-execution.html" class="pagination-link" aria-label="Study execution">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Study execution</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
