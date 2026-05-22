@@ -1,1 +1,4 @@
 bin/
+
+/.quarto/
+**/*.quarto_ipynb
