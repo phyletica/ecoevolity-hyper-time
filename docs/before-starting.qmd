@@ -1,4 +1,4 @@
-# Before starting
+# Before starting {#sec-beforestarting}
 
 There's some required software for working on this project,
 which we'll cover in the next section.
@@ -44,6 +44,45 @@ line:
 
 To clone the project Git repository, you will need Git.
 If you don't have Git, but have installed a conda package manager,
+you can setup the project's conda environment, which includes Git.
+
+To do this, first download the YAML-formatted file that specifies the project's
+conda environment. You can do this using `curl`:
+
+```default
+curl -L -O https://raw.githubusercontent.com/phyletica/ecoevolity-hyper-time/refs/heads/main/conda-env.yml
+```
+
+Or using `wget`:
+
+```default
+wget https://raw.githubusercontent.com/phyletica/ecoevolity-hyper-time/refs/heads/main/conda-env.yml
+```
+
+Once downloaded, you can create the project's conda environment using the
+following command.
+Note, you can swap out `conda` for `mamba` or `micromamba` if you prefer using
+one of those tools.
+
+```default
+conda env create --file conda-env.yml --yes
+```
+
+Once this finishes, you can activate the project's conda environment (which
+includes `git`) with:
+
+```default
+conda activate hyper-time
+```
+
+If you are using, micromamba, use this command instead:
+
+```default
+micromamba activate hyper-time
+```
+
+<--
+If you don't have Git, but have installed a conda package manager,
 the easiest way to get Git will be via conda.
 
 ```default
@@ -56,6 +95,7 @@ which git is installed:
 ```default
 conda activate git-env
 ```
+-->
 
 ## Required skills {#sec-reqskills}
 

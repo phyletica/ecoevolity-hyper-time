@@ -1,0 +1,57 @@
+# Setting up the project
+
+If you haven't already, you should familiarize yourself
+with the
+[Background](#sec-background)
+and
+[Before Starting](#sec-beforestarting)
+sections of the documentation.
+
+## Cloning the project repo
+
+Open up a terminal and navigate to where you want to keep the project's
+directory (folder).
+In the documentation, we will assume you will keep it in your home folder:
+
+```default
+cd ~
+```
+
+If you already created the project's conda environment to have access to
+`git`, go ahead and use one of the following commands to activate the project's
+conda environment. If you are using conda, enter:
+
+```default
+conda activate hyper-time
+```
+
+If you are using micromamba, use:
+
+```default
+micromamba activate hyper-time
+```
+
+If you haven't created the project's conda environment yet, don't worry,
+we will be doing that in the next section.
+
+Clone the git repository for this project and then `cd` into the newly
+downloaded project directory:
+
+```default
+git clone git@github.com:phyletica/ecoevolity-hyper-time.git
+cd ecoevolity-hyper-time
+```
+
+## Setting up the project
+
+Next, we will run the `setup_project_env.sh` Bash script.
+This will create the project's conda environment (if it doesn't already exist),
+and download and install a specific version (git commit) of the ecoevolity
+software package.
+
+```default
+bash setup_project_env.sh`
+```
+
+All of the ecoevolity programs will get installed into a `bin` directory within
+the project folder.

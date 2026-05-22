@@ -28,8 +28,101 @@ Below we expand on how we designed the study to address each goal.
 
 ## Demonstrating bias imposed by vague divergence-time priors
 
-TODO
+As described in the
+[Background section](#sec-background),
+the prior on the divergence times acts as a "penalty" against models with more
+divergence-time parameters.
+When we don't have much prior information about the divergence times of the
+taxa we are comparing, a "vague" prior distribution to represent this lack of
+information can make this penalty quite strong and create a tendency for the
+method to favor models with fewer divergence times (i.e., overclustering taxa
+to divergence events).
+
+To demonstrate this with simulated data, we will simulate data under a more
+informative distribution on divergence times and then analyze those data sets
+using a more "vague" prior on divergence times.
+If our hypothesis about the cause of the downward bias on the number
+of divergence time is correct,
+we expect the results of these analyses to show a tendency to underestimate the
+number of divergence events across pairs of populations.
+
+We will do this using two different types of distributions on divergence times:
+exponential and uniform.
+
+### Demonsrating bias with exponentially distributed divergence times
+
+First, we will use exponentially distributed divergence times.
+An exponential distribution seems like a reasonable choice for divergence times
+across taxa, because the waiting times between random events tend to be
+exponentially distributed.
+
+We will simulate data sets with 20 pairs of populations under an exponential
+distribution on divergence times with a mean of 0.01 substitutions per site.
+Then, we will analyze each of these data sets using an exponential prior on
+divergence times with a mean of 0.2 subtitutions per site.
+So, the true distribution of divergence times will be
+$\tau$ ~ Exponential(mean = 0.01)
+and the prior used in analyses will be
+$\tau$ ~ Exponential(mean = 0.2).
+
+### Demonsrating bias with uniformly distributed divergence times
+
+We will also use uniformly distributed divergence times.
+I don't think the uniform distribution is a very good prior for divergence
+times, because
+
+1.  the hard bounds risk the chance of excluding the true divergenct times, and 
+2.  there are no good theoretical reasons to expect divergence times to be
+    uniformly distributed.
+
+However, the downward bias in estimating the number of divergence events across
+taxa was first recognized and causes first proposed in the context of uniform
+priors on divergence times
+[@Oaks2012; @Hickerson2013; @Oaks2014reply; @Oaks2014dpp].
+
+We will simulate data sets, each with 20 pairs of populations, under a uniform
+distribution on divergence times with a minimum and maximum of 0 and 0.02
+substitutions per site.
+We will then analyze each of these data sets using a uniform prior on
+divergence times with a min and max of 0 and 0.2 substitutions per site.
+So, the true distribution of divergence times will be
+$\tau$ ~ Uniform(0, 0.02)
+and the prior used in analyses will be
+$\tau$ ~ Uniform(0, 0.2).
 
 ## Assess hyperprior solution to bias
 
-TODO
+After demonstrating the underestimation of the number of divergences, we will
+assess if it can be mitigated using hyperpriors on divergence times that
+express as much (or more) prior uncertainty about the timing of divergences as
+the poorly performing "vague" priors.
+We will do this by analyzing the same data sets simulated above under
+a model with a hyperprior on a parameter of the prior on divergence times.
+
+### Exponential hyperprior
+
+To analyze the data sets simulated under the distribution of divergence times
+of
+$\tau$ ~ Exponential(mean = 0.01)
+we will use a prior on divergence times of
+$\tau$ ~ Exponential(mean ~ Exponential(mean = 0.2)).
+That is, we will place an exponentially distributed hyperprior on the mean of
+the prior on divergence times.
+Note, this prior expresses much greater uncertainty about the timing of
+divergences than the prior above ($\tau$ ~ Exponential(mean = 0.2)),
+but will allow the data to inform the model about what the mean of the prior on
+divergence times "should be."
+
+### Uniform hyperprior
+
+To analyze the data sets simulated under the distribution of divergence times
+of
+$\tau$ ~ Uniform(0, 0.02)
+we will use a prior on divergence times of
+$\tau$ ~ Uniform(0, max ~ Uniform(0.2)).
+This places
+a uniformly distributed hyperprior on the maximum of
+the uniform prior on divergence times.
+This expresses as much uncertainty as the prior used above,
+but allows the data to inform the model about the upper limit
+on the divergence-time prior.
