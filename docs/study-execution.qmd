@@ -74,7 +74,7 @@ or want to increase the number to speed things up.
 ```default
 pyco-eco-viz-sims \
     --nevents-cred-level 0.95 \
-    --parameter-file plotting-configs/uniform-plotting-parameters.yml \
+    --parameter-file plotting-configs/exponential-plotting-parameters.yml \
     --prefix exp-hp-sim-study- \
     --config-label-order 'Exp(mean = 0.2); Exp(mean ~ Exp(mean = 0.2)); Exp(mean = 0.01)' \
     --comparison 'Exp(mean = 0.2)' 'Exp(mean ~ Exp(mean = 0.2))' \
