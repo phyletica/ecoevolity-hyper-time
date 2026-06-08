@@ -1,4 +1,7 @@
 /.quarto/
 **/*.quarto_ipynb
 /_build/
+/_docs/
+/_ms/
+/site_libs/
 update-bib.sh
