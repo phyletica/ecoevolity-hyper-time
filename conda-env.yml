@@ -7,6 +7,7 @@ dependencies:
   - cxx-compiler=1.11.0
   - cmake=4.2.3
   - quarto
+  - librsvg # Used by quarto to convert svg images to pdf
   - python>=3.8
   - pyyaml
   - scipy
