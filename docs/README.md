@@ -6,11 +6,17 @@ Quarto is included in the project conda environment, so to build and/or publish
 the documentation using the quarto commands below, you can activate the project
 conda environment:
 
+    conda activate hyper-time
+
+Or, if you are using micromamba:
+
     micromamba activate hyper-time
 
 ## Building and publishing the project's documentation
 
-To build the html documentation from the source files, you can use the
+The source content for the documentation is in the `.qmd` markdown-formatted
+files in this directory.
+To build the html documentation from these source files, you can use the
 following quarto command from inside this directory:
 
     quarto render --profile docs --to html
@@ -25,13 +31,13 @@ this directory:
 
 ## Building the project's manuscript
 
-To build the project's manuscript, use:
+The source content for the project's manuscript is in the `manuscript.qmd`
+markdown-formatted file.
+To render the manuscript in PDF, HTML, and docx formats, use:
 
     quarto render --profile ms
 
-This will render the manuscript source content (in the `manuscript.qmd` file)
-into PDF, HTML, and docx formats. The outputs will be in the
-`_ms` directory.
+The PDF, HTML, and docx output files will be in the `_ms` directory.
 
 **NOTE**: don't `publish` the manuscript to `gh-pages`, because this would
 overwrite the documentation.
