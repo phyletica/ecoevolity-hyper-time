@@ -1,0 +1,91 @@
+---
+title: Calibrating selection of comparative biogeographic models with hyperpriors
+authors:
+  - name: João Fentanes Machado
+    affiliation:
+      - id: fsp
+        name: Universidade Federal de São Paulo
+        city: São Paulo
+        country: Brazil
+  - name: Jamie Oaks
+    orcid: 0000-0002-3757-3836
+    url: https://phyletica.org
+    corresponding: true
+    email: joaks@auburn.edu
+    affiliation:
+      - id: aumnh
+        name: Auburn University Museum of Natural History
+        city: Auburn
+        state: AL
+        country: USA
+        url: https://aumnh.auburn.edu/
+      - id: audbs
+        name: Auburn University Department of Biological Sciences
+        city: Auburn
+        state: AL
+        country: USA
+        url: https://www.auburn.edu/cosam/departments/biology/index.htm
+abstract: |
+  The abstract goes here.
+keywords:
+  - biogeography
+  - comparative phylogeography
+  - Bayesian model choise
+  - Bayesian hyperprior
+number-sections: true
+---
+
+## Introduction
+
+Bayesian model choice offers a way to determine the probability of
+divergence models.
+Such a Bayesian approach has been used with
+simulation-based [@Hickerson2006;@Huang2011]
+and
+full-likelihood [@Oaks2018ecoevolity;@Oaks2019codemog]
+methods.
+It has been shown that these methods can be biased toward over-clustering
+(i.e., underestimating the number of divergence times)
+[@Oaks2012;@Oaks2014reply].
+
+@Oaks2014reply proposed this tendency to prefer models with too few
+divergence-time parameters was caused by the prior probability density placed
+on the divergence times.
+In Bayesian model choice, the likelihood of a model is averaged over the
+priors, making the prior a "penalty" for adding parameters to the model.
+Let's cover some basics of Bayesian inference to gain some intuition for why
+this is.
+
+## Methods
+
+## Results
+
+### Validating MCMC sampling from prior distribution
+
+If we look at the number of divergence events,
+the MCMC samples match the prior distribution
+(@fig-prior-hyper-exp-nevents).
+
+![
+    Comparing the MCMC sampling of ecoevolity (empirical) against the expected
+    prior on the number of divergence events (model). The left and right plots
+    compare the cumulative mass and quantiles, respectively, of the MCMC
+    samples versus the expected prior. The cumulative density plot includes the
+    results of a Kolmogorov-Smirnov test, which was unable to reject that
+    ecoevolity sampled from the expected distribution.
+](
+    ./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cmf-comparison-nevents.svg
+){
+    #fig-prior-hyper-exp-nevents
+    fig-alt="Comparing the cumulative density of the prior on the number of divergence events vs MCMC sampling"
+    fig-align="center"
+}
+
+## Discussion
+
+## References
+
+::: {#refs}
+:::
+
+# Supporting Information

@@ -1,0 +1,21 @@
+license: "CC BY"
+
+project:
+  type: manuscript
+  output-dir: _ms
+  render:
+    - "manuscript.qmd"
+
+manuscript:
+  article: manuscript.qmd
+
+execute:
+  freeze: true
+
+format:
+  pdf:
+    latex-output-dir: _ms
+    output-file: manuscript.pdf
+    documentclass: scrartcl
+  docx: default
+  jats: default
