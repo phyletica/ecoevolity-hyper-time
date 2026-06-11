@@ -36,7 +36,9 @@ number-sections: true
 ---
 
 ## Introduction
-
+Reconstructing the timing of evolutionary events is essential for elucidating fundamental processes in ecology and evolution,
+such as the drivers of lineage diversification, the formation of biogeographic patterns, and the mechanisms underlying biodiversity
+assembly across regional landscapes.
 Bayesian model choice offers a way to determine the probability of
 divergence models.
 Such a Bayesian approach has been used with
