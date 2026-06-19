@@ -32,10 +32,14 @@ def convert_time_prior(config, mu_rate):
     config["event_time_prior"]["exponential_distribution"].pop("rate")
 
     new_mean = exp_mean / mu_rate
-    config["event_time_prior"]["exponential_distribution"]["value"] = new_mean
-    config["event_time_prior"]["exponential_distribution"]["estimate"] = "true" 
-    config["event_time_prior"]["exponential_distribution"]["prior"] = {
-        "exponential_distribution" : new_mean,
+    config["event_time_prior"]["exponential_distribution"]["mean"] = {
+        "value" : new_mean,
+        "estimate" : "true",
+        "prior" : {
+            "exponential_distribution" : {
+                "mean" : new_mean,
+            },
+        }
     }
 
 def convert_comparison_parameters(config, mu_rate):

@@ -9,10 +9,12 @@ event_model_prior:
             scale: 56.1
 event_time_prior:
   exponential_distribution:
-    value: 13.147026147419524
-    estimate: 'true'
-    prior:
-      exponential_distribution: 13.147026147419524
+    mean:
+      value: 13.147026147419524
+      estimate: 'true'
+      prior:
+        exponential_distribution:
+          mean: 13.147026147419524
 mcmc_settings:
   chain_length: 150000
   sample_frequency: 100
