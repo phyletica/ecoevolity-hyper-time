@@ -1,0 +1,174 @@
+event_model_prior:
+  dirichlet_process:
+    parameters:
+      concentration:
+        estimate: true
+        prior:
+          gamma_distribution:
+            shape: 1.1
+            scale: 56.1
+event_time_prior:
+  exponential_distribution:
+    value: 13.147026147419524
+    estimate: 'true'
+    prior:
+      exponential_distribution: 13.147026147419524
+mcmc_settings:
+  chain_length: 150000
+  sample_frequency: 100
+operator_settings:
+  auto_optimize: true
+  auto_optimize_delay: 1000
+  operators:
+    ConcentrationScaler:
+      weight: 8.0
+      scale: 1.5
+    ModelOperator:
+      weight: 12.0
+      number_of_auxiliary_categories: 4
+    TimeSizeRateMixer:
+      weight: 6.0
+      scale: 0.04
+    TimeSizeRateScaler:
+      weight: 0.0
+      scale: 0.02
+    EventTimeScaler:
+      weight: 1.0
+      scale: 0.04
+    TimePriorParameterScaler-0:
+      parameter_name: mean
+      weight: 10.0
+global_comparison_settings:
+  ploidy: 2
+  genotypes_are_diploid: true
+  markers_are_dominant: false
+  population_name_delimiter: ' '
+  population_name_is_prefix: false
+  constant_sites_removed: false
+  equal_population_sizes: false
+  parameters:
+    root_relative_population_size:
+      estimate: true
+      prior:
+        gamma_distribution:
+          shape: 100.0
+          scale: 0.01
+          offset: 0.0
+    freq_1:
+      value: 0.5
+      estimate: false
+  operators:
+    RootPopulationSizeScaler:
+      weight: 1.0
+      scale: 0.05
+    LeafPopulationSizeScaler:
+      weight: 1.0
+      scale: 0.05
+    TimeRootSizeMixer:
+      weight: 3.0
+      scale: 0.02
+comparisons:
+- comparison:
+    path: ../data/G-crombota-rossi-BabuyanClaro-Calayan.nex.yml
+    parameters:
+      population_size:
+        estimate: true
+        prior:
+          gamma_distribution:
+            shape: 4.0
+            mean: 10.51762091793562
+        value: 10.51762091793562
+      mutation_rate:
+        value: 0.0003803141443497769
+        estimate: false
+- comparison:
+    path: ../data/G-gigante-gigante-NorthGigante-SouthGigante.nex.yml
+    parameters:
+      population_size:
+        estimate: true
+        prior:
+          gamma_distribution:
+            shape: 4.0
+            mean: 10.51762091793562
+        value: 10.51762091793562
+      mutation_rate:
+        value: 0.0003803141443497769
+        estimate: false
+- comparison:
+    path: ../data/G-mindorensis-mindorensis-Lubang-Luzon.nex.yml
+    parameters:
+      population_size:
+        estimate: true
+        prior:
+          gamma_distribution:
+            shape: 4.0
+            mean: 10.51762091793562
+        value: 10.51762091793562
+      mutation_rate:
+        value: 0.0003803141443497769
+        estimate: false
+- comparison:
+    path: ../data/G-mindorensis-mindorensis-Masbate-Panay.nex.yml
+    parameters:
+      population_size:
+        estimate: true
+        prior:
+          gamma_distribution:
+            shape: 4.0
+            mean: 10.51762091793562
+        value: 10.51762091793562
+      mutation_rate:
+        value: 0.0003803141443497769
+        estimate: false
+- comparison:
+    path: ../data/G-mindorensis-mindorensis-Negros-Panay.nex.yml
+    parameters:
+      population_size:
+        estimate: true
+        prior:
+          gamma_distribution:
+            shape: 4.0
+            mean: 10.51762091793562
+        value: 10.51762091793562
+      mutation_rate:
+        value: 0.0003803141443497769
+        estimate: false
+- comparison:
+    path: ../data/G-porosus-porosus-Batan-Sabtang.nex.yml
+    parameters:
+      population_size:
+        estimate: true
+        prior:
+          gamma_distribution:
+            shape: 4.0
+            mean: 10.51762091793562
+        value: 10.51762091793562
+      mutation_rate:
+        value: 0.0003803141443497769
+        estimate: false
+- comparison:
+    path: ../data/G-romblon-romblon-Romblon-Tablas.nex.yml
+    parameters:
+      population_size:
+        estimate: true
+        prior:
+          gamma_distribution:
+            shape: 4.0
+            mean: 10.51762091793562
+        value: 10.51762091793562
+      mutation_rate:
+        value: 0.0003803141443497769
+        estimate: false
+- comparison:
+    path: ../data/G-sp_a-sp_b-Dalupiri-CamiguinNorte.nex.yml
+    parameters:
+      population_size:
+        estimate: true
+        prior:
+          gamma_distribution:
+            shape: 4.0
+            mean: 10.51762091793562
+        value: 10.51762091793562
+      mutation_rate:
+        value: 0.0003803141443497769
+        estimate: false
