@@ -38,38 +38,106 @@ number-sections: true
 ## Introduction
 Reconstructing the timing of evolutionary events is fundamental for understanding key processes in comparative phylogeography,
 including the mechanisms driving lineage diversification, the emergence of biogeographic patterns, and the assembly of biodiversity
-across regional landscapes. Divergence-time estimates provide a temporal framework for reconstructing the evolutionary history of populations
-and species, allowing researchers to investigate how geological, climatic, and ecological processes have shaped biodiversity patterns and
-whether different lineages have responded synchronously to shared historical events. Bayesian approaches have become widely used for estimating
-divergence times because they allow the integration of prior knowledge while explicitly accounting for uncertainty in evolutionary parameters.
-Within this framework
+across regional landscapes. A central question in comparative phylogeography is whether codistributed lineages have responded synchronously
+to shared historical events or whether each lineage has a unique divergence history [@Avise2000; @Hickerson2010]. Distinguishing between these
+scenarios requires accurate estimates of divergence times across multiple co-distributed population pairs, as well as robust statistical methods
+for inferring whether those divergence times are shared or independent. 
 
-Such a Bayesian approach has been used with
-simulation-based [@Hickerson2006;@Huang2011]
-and
-full-likelihood [@Oaks2018ecoevolity;@Oaks2019codemog]
-methods.
-It has been shown that these methods can be biased toward over-clustering
-(i.e., underestimating the number of divergence times)
-[@Oaks2012;@Oaks2014reply].
+Bayesian approachs have become the standard for estimating divergence times because they provide a principled framework for integrating prior
+biological knowledge while explicitly propagating uncertainty across all model parameters [@Drummond2007; @Yang2006] - VER ESSAS DUAS CITAÇÕES.
+In the context of comparative phylogeography, Bayesian methods have been developed to simultaneously estimate divergence times across multiple
+taxon pairs and infer the degree to which those divergences are clustered in time,  that is, whether lineages diverged synchronously or 
+asynchronously [@Hickerson2006; @Oaks2018ecoevolity]. Both simulation-based [@Hickerson2006; @Huang2011] and full-likelihood [@Oaks2018ecoevolity;
+@Oaks2019codemog] implementations of this framework have been proposed, enabling increasingly rigorous tests of synchronous divergence hypotheses.
 
-@Oaks2014reply proposed this tendency to prefer models with too few
-divergence-time parameters was caused by the prior probability density placed
-on the divergence times.
-In Bayesian model choice, the likelihood of a model is averaged over the
-priors, making the prior a "penalty" for adding parameters to the model.
-Let's cover some basics of Bayesian inference to gain some intuition for why
-this is.
+However, these methods can be biased toward over-clustering divergence events (i.e., underestimating the number of divergence times)
+[@Oaks2012; @Oaks2014reply]. This bias leads to spurious inferences of synchronous divergence, with potentially misleading implications for our
+understanding of the historical processes structuring biodiversity. @Oaks2014reply proposed this tendency to prefer models with too few
+divergence-time parameters was caused by the prior probability density placed on the divergence times. In Bayesian model choice, the likelihood
+of a model is averaged over the priors, making the prior a "penalty" for adding parameters to the model. When the prior on divergence times
+is broad, as is necessary when there is genuine prior uncertainty about when lineages diverged, it places low prior probability density on any
+specific divergence time, imposing a strong implicit penalty against models that infer many distinct events. As a result, models that collapse
+multiple divergence times into fewer shared events are systematically favored, not because the data support synchrony, but because the broad 
+prior penalizes complexity.
+
+Likelihood and ABC methods for estimating synchronous divergences are sensitive to the prior probability density placed on the divergence times
+of the population pairs[@Siler2012;@Oaks2014reply;@Oaks2014dpp;@Oaks2019codemog]. A prior with a large variance to express prior uncertainty
+about divergence times can act as a strong penalty against models with more divergence times among the pairs of populations, causing the
+analysis to over-cluster taxa to shared divergences. Yet specifying a narrow prior requires strong a priori knowledge about divergence times
+that is rarely available in practice, creating a difficult trade-off between expressing appropriate uncertainty and avoiding inferential bias.
+A natural solution to this problem is to move the uncertainty up one level in the model hierarchy: rather than fixing the parameters of the
+divergence-time prior, one can place hyperpriors over those parameters and allow the data themselves to inform the most appropriate prior
+during inference.
+
+Here, to overcome this limitationwe implement such a hierarchical model in ecoevolity [@Oaks2018ecoevolity], placing hyperpriors on the parameters of the divergence-time
+prior so that the scale and shape of that prior are estimated jointly with all other model parameters. This approach allows the model to
+adaptively learn an appropriate prior on divergence times from the data, avoiding the need to commit to a fixed prior whose breadth may
+systematically bias the analysis. Using simulated comparative biogeographic data and empirical genomic data from Philippine geckos, we
+(i) characterize the downward bias in the estimated number of divergence events caused by prior uncertainty about the timing of divergence,
+and (ii) evaluate whether hyperpriors on the divergence-time prior parameters effectively mitigate this bias and recover the true number of
+divergence events.
 
 ## Methods
+### Check sampling from the prior distribution
+
+
+### Ecoevolity implementation of hyperpriors on divergence-time prior parameters
+Prior to evaluating the performance of hyperpriors in mitigating divergence-time estimation bias, we
+validated the ecoevolity implementation of hyperpriors on divergence-time prior parameters through two
+complementary checks. (i) Prior check: To confirm that ecoevolity correctly samples from the specified
+prior distribution in the absence of data, we ran the MCMC sampler with no likelihood contribution from
+the data, effectively sampling from the prior alone. Under this condition, the resulting marginal distributions
+of all parameters should match the analytically expected prior distributions. Significant deviations would indicate
+an implementation error in the prior specification or the sampler itself. (ii) Coverage check: To validate that the
+posterior credible intervals produced by ecoevolity achieve the correct nominal coverage when analyzing data simulated
+under a model with divergence-time hyperpriors, we simulated datasets under two hyperpriors on divergence times - τ ~ 
+Exponential(mean ~ Exponential(mean = 0.2)) and τ ~ Uniform(0, max ~ Uniform(0, 0.2)) - and analyzed each under the
+corresponding hyperprior model. For each parameter, we recorded whether the true value, used to simulate the data,
+fell within the 50% credible interval. Across all simulations, the proportion of times the true value was contained
+within the credible interval should approximate 0.5 if the implementation is correct. Systematic under or overcoverage
+would indicate miscalibration of the posterior. 
+
+We evaluated two families of divergence-time distributions: exponential,
+because waiting times for random events tend to be exponentially distributed, and uniform, because the downward bias in
+ estimating the number of divergence events was first recognized in the context of uniform priors on divergence times
+[@Oaks2012,@Oaks2014dpp,@Hickerson2013,@Oaks2014reply]
+For the exponential family, we simulated datasets each comprising 20 pairs of populations, each represented by biallelic
+codominant marker data summarized across 20,000 sites, under τ ~ Exponential(mean = 0.01) substitutions per site. Each dataset
+was then analyzed under three models: (i) a fixed vague prior τ ~ Exponential(mean = 0.2), which mismatches the true distribution;
+(ii) a hyperprior model τ ~ Exponential(mean ~ Exponential(mean = 0.2)), which places an exponentially distributed hyperprior on the
+mean of the divergence-time prior, expressing greater uncertainty while allowing the data to inform the prior scale; and (iii) the true
+distribution τ ~ Exponential(mean = 0.01), serving as a best-case reference for comparison.
+
+For the uniform family, we simulated datasets each comprising 20 pairs of populations, each represented by biallelic codominant marker data
+summarized across 20,000 sites, under τ ~ Uniform(0, 0.02) substitutions per site. Each dataset was analyzed under: (i) a fixed vague prior
+τ ~ Uniform(0, 0.2); (ii) a hyperprior model τ ~ Uniform(0, max ~ Uniform(0, 0.2)), which places a uniformly distributed hyperprior on the
+upper bound of the divergence-time prior, expressing equivalent uncertainty to the vague prior while allowing the data to inform the upper
+limit; and (iii) the true distribution τ ~ Uniform(0, 0.02) as a best-case reference. Model performance was assessed via the MAP estimate
+of the number of divergence events, the probability of underestimation p(k̂ < k), coverage of the 95% credible set p(k ∈ CS₀.₉₅), median
+posterior probability of the true event count, and mean model distance.
+
+
+### Empirical application using Philippine gekkonid datasets
+
+
 
 ## Results
 
 ### Validating MCMC sampling from prior distribution
 
-If we look at the number of divergence events,
-the MCMC samples match the prior distribution
-(@fig-prior-hyper-exp-nevents).
+To validate the ecoevolity implementation of divergence-time hyperpriors, if we look at the the MCMC samples 
+(@fig-prior-hyper-exp-nevents) we first confirmed that the MCMC sampler correctly recovers the specified prior
+distributions in the absence of data (Figure X). For the exponential hyperprior
+model, the empirical distribution of the time-prior mean showed excellent agreement
+with the expected Exponential(mean = 0.2) distribution (KS D = 0.0099, p = 0.28),
+and the marginal distribution of the number of divergence events was likewise
+consistent with the model expectation (KS D = 0.0076, p = 0.67). Similarly,
+for the uniform hyperprior model, the empirical distribution of the time-prior
+maximum closely matched the expected Uniform(0, 0.2) distribution (KS D = 0.012, p = 0.12),
+and the number of divergence events showed no significant deviation from the prior expectation
+(KS D = 0.0097, p = 0.35). In all cases, the Kolmogorov-Smirnov test failed to detect significant
+departures between empirical and expected distributions, confirming that ecoevolity correctly
+samples from the specified hyperprior distributions when likelihood contributions from the data are removed.
 
 ![
     Comparing the MCMC sampling of ecoevolity (empirical) against the expected
@@ -85,6 +153,35 @@ the MCMC samples match the prior distribution
     fig-alt="Comparing the cumulative density of the prior on the number of divergence events vs MCMC sampling"
     fig-align="center"
 }
+
+![
+    The cumulative density of the MCMC samples and the expected prior distribution of the model match
+    This is shown for the mean (A) and max (B) parameters for the exponential and uniform priors, respectively, on
+    divergence times and for the number of divergence events under the exponential (C) and uniform (D)
+    hyperpriors on divergence times. Each plot includes the results of a Kolmogorov-Smirnov test, which was
+    unable to reject that ecoevolity sampled from the expected distribution.
+](
+    ./images/fig1-priorcheck-mcmc.svg
+){
+    #fig1-priorcheck-mcmc
+    fig-alt="teste"
+    fig-align="center"
+}
+
+### Hyper prior estimates on divergence time using simulated data
+To validate the ecoevolity implementation of divergence-time hyperpriors, we
+first confirmed that the MCMC sampler correctly recovers the specified prior
+distributions in the absence of data (Figure X). For the exponential hyperprior
+model, the empirical distribution of the time-prior mean showed excellent agreement
+with the expected Exponential(mean = 0.2) distribution (KS D = 0.0099, p = 0.28),
+and the marginal distribution of the number of divergence events was likewise
+consistent with the model expectation (KS D = 0.0076, p = 0.67). Similarly,
+for the uniform hyperprior model, the empirical distribution of the time-prior
+maximum closely matched the expected Uniform(0, 0.2) distribution (KS D = 0.012, p = 0.12),
+and the number of divergence events showed no significant deviation from the prior expectation
+(KS D = 0.0097, p = 0.35). In all cases, the Kolmogorov-Smirnov test failed to detect significant
+departures between empirical and expected distributions, confirming that ecoevolity correctly
+samples from the specified hyperprior distributions when likelihood contributions from the data are removed.
 
 ## Discussion
 
