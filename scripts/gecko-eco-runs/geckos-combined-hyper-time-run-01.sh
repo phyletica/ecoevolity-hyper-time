@@ -7,7 +7,7 @@ project_dir="../.."
 source "${project_dir}/project_utils.sh"
 
 run=01
-nthreads=1
+nthreads=7
 config_file_prefix="geckos-combined-hyper-time"
 
 exe_path="${project_dir}/bin/ecoevolity"

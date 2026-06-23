@@ -7,7 +7,7 @@ project_dir="../.."
 source "${project_dir}/project_utils.sh"
 
 run=07
-nthreads=1
+nthreads=5
 config_file_prefix="geckos-combined"
 
 exe_path="${project_dir}/bin/ecoevolity"
