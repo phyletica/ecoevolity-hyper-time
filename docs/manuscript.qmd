@@ -26,7 +26,14 @@ authors:
         country: USA
         url: https://www.auburn.edu/cosam/departments/biology/index.htm
 abstract: |
-  The abstract goes here.
+  [...]In comparative biogeographic methods like msbayes and ecoevolity, prior distributions on divergence times with lots of uncertainty can create a strong
+  penalty against models with more divergence-time parameters, and thus cause a downward bias in the number of divergence events across the taxa being
+  compared. For this project, we will explore whether a hierarchical Bayesian approach can mitigate such a bias. Specifically, we will explore using
+  hyperpriors on the parameters of the prior on divergence times to see if the model can learn about the divergence-time prior during the analysis and
+  better calibrate the “penalty” against adding divergence-time parameters to the model.
+  
+  
+  
 keywords:
   - biogeography
   - comparative phylogeography
@@ -69,7 +76,7 @@ A natural solution to this problem is to move the uncertainty up one level in th
 divergence-time prior, one can place hyperpriors over those parameters and allow the data themselves to inform the most appropriate prior
 during inference.
 
-Here, to overcome this limitationwe implement such a hierarchical model in ecoevolity [@Oaks2018ecoevolity], placing hyperpriors on the parameters of the divergence-time
+Here, to overcome this limitation we implement such a hierarchical model in ecoevolity [@Oaks2018ecoevolity], placing hyperpriors on the parameters of the divergence-time
 prior so that the scale and shape of that prior are estimated jointly with all other model parameters. This approach allows the model to
 adaptively learn an appropriate prior on divergence times from the data, avoiding the need to commit to a fixed prior whose breadth may
 systematically bias the analysis. Using simulated comparative biogeographic data and empirical genomic data from Philippine geckos, we
@@ -78,10 +85,9 @@ and (ii) evaluate whether hyperpriors on the divergence-time prior parameters ef
 divergence events.
 
 ## Methods
-### Check sampling from the prior distribution
-
-
 ### Ecoevolity implementation of hyperpriors on divergence-time prior parameters
+
+#### Prior sampling validation and coverage analysis
 Prior to evaluating the performance of hyperpriors in mitigating divergence-time estimation bias, we
 validated the ecoevolity implementation of hyperpriors on divergence-time prior parameters through two
 complementary checks. (i) Prior check: To confirm that ecoevolity correctly samples from the specified
@@ -97,29 +103,31 @@ fell within the 50% credible interval. Across all simulations, the proportion of
 within the credible interval should approximate 0.5 if the implementation is correct. Systematic under or overcoverage
 would indicate miscalibration of the posterior. 
 
-We evaluated two families of divergence-time distributions: exponential,
-because waiting times for random events tend to be exponentially distributed, and uniform, because the downward bias in
- estimating the number of divergence events was first recognized in the context of uniform priors on divergence times
-[@Oaks2012,@Oaks2014dpp,@Hickerson2013,@Oaks2014reply]
-For the exponential family, we simulated datasets each comprising 20 pairs of populations, each represented by biallelic
-codominant marker data summarized across 20,000 sites, under τ ~ Exponential(mean = 0.01) substitutions per site. Each dataset
-was then analyzed under three models: (i) a fixed vague prior τ ~ Exponential(mean = 0.2), which mismatches the true distribution;
-(ii) a hyperprior model τ ~ Exponential(mean ~ Exponential(mean = 0.2)), which places an exponentially distributed hyperprior on the
-mean of the divergence-time prior, expressing greater uncertainty while allowing the data to inform the prior scale; and (iii) the true
-distribution τ ~ Exponential(mean = 0.01), serving as a best-case reference for comparison.
+### Demonstrating bias imposed by vague divergence-time priors
+To demonstrate this with simulated data, we simulated data under a more informative distribution on divergence times and then analyzed those data
+sets using a more “vague” prior on divergence times. If our hypothesis about the cause of the downward bias on the number of divergence time is correct,
+we expected the results of these analyses to show a tendency to underestimate the number of divergence events across pairs of populations. Note, we will also
+analyze each dataset under the true (more informative) prior distribution to serve as a best-case scenario for comparison.
 
-For the uniform family, we simulated datasets each comprising 20 pairs of populations, each represented by biallelic codominant marker data
-summarized across 20,000 sites, under τ ~ Uniform(0, 0.02) substitutions per site. Each dataset was analyzed under: (i) a fixed vague prior
-τ ~ Uniform(0, 0.2); (ii) a hyperprior model τ ~ Uniform(0, max ~ Uniform(0, 0.2)), which places a uniformly distributed hyperprior on the
-upper bound of the divergence-time prior, expressing equivalent uncertainty to the vague prior while allowing the data to inform the upper
-limit; and (iii) the true distribution τ ~ Uniform(0, 0.02) as a best-case reference. Model performance was assessed via the MAP estimate
-of the number of divergence events, the probability of underestimation p(k̂ < k), coverage of the 95% credible set p(k ∈ CS₀.₉₅), median
-posterior probability of the true event count, and mean model distance.
-
+We evaluated two families of divergence-time distributions: exponential, because waiting times for random events tend
+to be exponentially distributed, and uniform, because the downward bias in estimating the number of divergence events
+was first recognized in the context of uniform priors on divergence times [@Oaks2012,@Oaks2014dpp,@Hickerson2013,@Oaks2014reply]
+For the exponential family, we simulated datasets each comprising 20 pairs of populations, each represented by biallelic codominant
+marker data summarized across 20,000 sites, under τ ~ Exponential(mean = 0.01) substitutions per site. Each dataset was then analyzed
+under three models: (i) a fixed vague prior τ ~ Exponential(mean = 0.2), which mismatches the true distribution; (ii) a hyperprior model
+τ ~ Exponential(mean ~ Exponential (mean = 0.2)), which places an exponentially distributed hyperprior on the mean of the divergence-time
+prior, expressing greater uncertainty while allowing the data to inform the prior scale; and (iii) the true distribution τ ~ Exponential
+(mean = 0.01), serving as a best-case reference for comparison. For the uniform family, we simulated datasets each comprising 20 pairs of
+populations, each represented by biallelic codominant marker data summarized across 20,000 sites, under τ ~ Uniform(0, 0.02) substitutions
+per site. Each dataset was analyzed under: (i) a fixed vague prior τ ~ Uniform(0, 0.2); (ii) a hyperprior model τ ~ Uniform(0, max ~ Uniform
+(0, 0.2)), which places a uniformly distributed hyperprior on the upper bound of the divergence-time prior, expressing equivalent uncertainty
+to the vague prior while allowing the data to inform the upper limit; and (iii) the true distribution τ ~ Uniform(0, 0.02) as a best-case reference.
+Model performance was assessed via the MAP estimate of the number of divergence events, the probability of underestimation p(k̂ < k), coverage of the
+95% credible set p(k ∈ CS₀.₉₅), median posterior probability of the true event count, and mean model distance.
 
 ### Empirical application using Philippine gekkonid datasets
-
-
+We used restriction site-associated DNA sequencing (RADseq) data from species *Cyrtodactylus* and *Gekko* as biological models to asses the hyperprior
+on time prior.
 
 ## Results
 
@@ -140,21 +148,6 @@ departures between empirical and expected distributions, confirming that ecoevol
 samples from the specified hyperprior distributions when likelihood contributions from the data are removed.
 
 ![
-    Comparing the MCMC sampling of ecoevolity (empirical) against the expected
-    prior on the number of divergence events (model). The left and right plots
-    compare the cumulative mass and quantiles, respectively, of the MCMC
-    samples versus the expected prior. The cumulative density plot includes the
-    results of a Kolmogorov-Smirnov test, which was unable to reject that
-    ecoevolity sampled from the expected distribution.
-](
-    ./images/dpp-conc-hypergamma-4-10-time-hyperexp-02-pairs-20-sites-20000-prior-cmf-comparison-nevents.svg
-){
-    #fig-prior-hyper-exp-nevents
-    fig-alt="Comparing the cumulative density of the prior on the number of divergence events vs MCMC sampling"
-    fig-align="center"
-}
-
-![
     The cumulative density of the MCMC samples and the expected prior distribution of the model match
     This is shown for the mean (A) and max (B) parameters for the exponential and uniform priors, respectively, on
     divergence times and for the number of divergence events under the exponential (C) and uniform (D)
@@ -164,14 +157,24 @@ samples from the specified hyperprior distributions when likelihood contribution
     ./images/fig1-priorcheck-mcmc.svg
 ){
     #fig1-priorcheck-mcmc
-    fig-alt="teste"
+    fig-alt="MCMCsampling"
     fig-align="center"
 }
+
+### Coverage of credible intervals
+Coverage checks confirmed that ecoevolity accurately recovers hyperprior parameters and divergence times. Under the 
+exponential hyperprior, the time-prior mean showed near-nominal 50% credible interval coverage (p(μ ∈ CI₀.₅₀) = 0.55;
+RMSE = 0.058; Figure 9A), and divergence times were well-calibrated (p(τ ∈ CI₀.₅₀) = 0.49; RMSE = 0.065; Figure 9B).
+Under the uniform hyperprior, the time-prior upper bound was recovered with coverage close to nominal (p(x ∈ CI₀.₅₀)
+= 0.46; RMSE = 0.0087; Figure 9C), and divergence times showed near-perfect calibration (p(τ ∈ CI₀.₅₀) = 0.50; RMSE
+= 0.0011; Figure 9D), with no significant bias (p(τ̂ < τ) = 0.49; p = 0.51). These results confirm that ecoevolity
+produces accurate and well-calibrated estimates under both hyperprior specification 
+
 
 ### Hyper prior estimates on divergence time using simulated data
 To validate the ecoevolity implementation of divergence-time hyperpriors, we
 first confirmed that the MCMC sampler correctly recovers the specified prior
-distributions in the absence of data (Figure X). For the exponential hyperprior
+distributions in the absence of data (@ecoevolityperformance-simulated). For the exponential hyperprior
 model, the empirical distribution of the time-prior mean showed excellent agreement
 with the expected Exponential(mean = 0.2) distribution (KS D = 0.0099, p = 0.28),
 and the marginal distribution of the number of divergence events was likewise
@@ -182,6 +185,38 @@ and the number of divergence events showed no significant deviation from the pri
 (KS D = 0.0097, p = 0.35). In all cases, the Kolmogorov-Smirnov test failed to detect significant
 departures between empirical and expected distributions, confirming that ecoevolity correctly
 samples from the specified hyperprior distributions when likelihood contributions from the data are removed.
+
+![
+    Performance of ecoevolity under fixed and hyperprior divergence-time models. Heatmaps show the joint distribution
+    of the true versus MAP-estimated number of divergence events across simulation replicates for the exponential (A)
+    and uniform (B) prior families. Color intensity reflects the frequency of each true-MAP combination. For each prior
+    family, three models are compared: a fixed vague prior (left; Exp(mean = 0.2) and Unif(0, 0.2)), a hyperprior model 
+    (middle; Exp(mean ~ Exp(mean = 0.2)) and Unif(0, Unif(0, 0.2))), and the true reference prior used to simulate the data
+    (right; Exp(mean = 0.01) and Unif(0, 0.02)). Statistics reported in each panel include the probability of underestimation
+    p(k̂ < k), the proportion of true values falling within the 95% credible set p(k ∈ CS₀.₉₅), and the median posterior probability
+    of the true number of divergence events median p(k|D). (@ecoevolityperformance-simulated).
+](
+    ./images/hyperprior-ecoevolityperformance-simulated-data.svg
+){
+    #ecoevolityperformance-simulated
+    fig-alt="simulated data performance"
+    fig-align="center"
+}
+
+### Empirical application to Philippine Gekkonids
+We used restriction site-associated DNA sequencing (RADseq) data from species *Cyrtodactylus* and *Gekko*.
+Results: Big difference when using the hyperprior.
+(@gecko-nevents-time)
+
+![
+    Empirical dataset
+](
+    ./images/pycoevolity-nevents-time-empirical-dastaset.svg
+){
+    #gecko-nevents-time
+    fig-alt="gecko-nevents-time"
+    fig-align="center"
+}
 
 ## Discussion
 
