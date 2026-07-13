@@ -44,8 +44,8 @@ number-sections: true
 
 ## Introduction
 Reconstructing the timing of evolutionary events is fundamental for understanding key processes in comparative phylogeography,
-including the mechanisms driving lineage diversification, the emergence of biogeographic patterns, and the assembly of biodiversity
-across regional landscapes. A central question in comparative phylogeography is whether codistributed lineages have responded synchronously
+including the mechanisms driving lineage diversification, the emergence of biogeographic patterns, and the assembly of regional biodiversity. 
+A central question in comparative phylogeography is whether codistributed lineages have responded synchronously
 to shared historical events or whether each lineage has a unique divergence history [@Avise2000; @Hickerson2006MolEcol]. Distinguishing between these
 scenarios requires accurate estimates of divergence times across multiple co-distributed population pairs, as well as robust statistical methods
 for inferring whether those divergence times are shared or independent. 
@@ -57,24 +57,19 @@ taxon pairs and infer the degree to which those divergences are clustered in tim
 asynchronously [@Hickerson2006; @Oaks2018ecoevolity]. Both simulation-based [@Hickerson2006; @Huang2011] and full-likelihood [@Oaks2018ecoevolity;
 @Oaks2019codemog] implementations of this framework have been proposed, enabling increasingly rigorous tests of synchronous divergence hypotheses.
 
-However, these methods can be biased toward over-clustering divergence events (i.e., underestimating the number of divergence times)
-[@Oaks2012; @Oaks2014reply]. This bias leads to spurious inferences of synchronous divergence, with potentially misleading implications for our
-understanding of the historical processes structuring biodiversity. @Oaks2014reply proposed this tendency to prefer models with too few
-divergence-time parameters was caused by the prior probability density placed on the divergence times. In Bayesian model choice, the likelihood
-of a model is averaged over the priors, making the prior a "penalty" for adding parameters to the model. When the prior on divergence times
-is broad, as is necessary when there is genuine prior uncertainty about when lineages diverged, it places low prior probability density on any
-specific divergence time, imposing a strong implicit penalty against models that infer many distinct events. As a result, models that collapse
-multiple divergence times into fewer shared events are systematically favored, not because the data support synchrony, but because the broad 
-prior penalizes complexity.
-
-Likelihood and ABC methods for estimating synchronous divergences are sensitive to the prior probability density placed on the divergence times
-of the population pairs[@Siler2012;@Oaks2014reply;@Oaks2014dpp;@Oaks2019codemog]. A prior with a large variance to express prior uncertainty
-about divergence times can act as a strong penalty against models with more divergence times among the pairs of populations, causing the
-analysis to over-cluster taxa to shared divergences. Yet specifying a narrow prior requires strong a priori knowledge about divergence times
-that is rarely available in practice, creating a difficult trade-off between expressing appropriate uncertainty and avoiding inferential bias.
-A natural solution to this problem is to move the uncertainty up one level in the model hierarchy: rather than fixing the parameters of the
-divergence-time prior, one can place hyperpriors over those parameters and allow the data themselves to inform the most appropriate prior
-during inference.
+However, these methods can be biased toward over-clustering divergence events (i.e., underestimating the number of divergence times) [@Oaks2012;
+@Oaks2014reply]. This bias leads to spurious inferences of synchronous divergence, with potentially misleading implications for our understanding
+of the historical processes structuring biodiversity. @Oaks2014reply proposed this tendency to prefer models with too few divergence-time parameters
+was caused by the prior probability density placed on the divergence times of the population pairs [@Siler2012; @Oaks2014dpp; @Oaks2019codemog].
+In Bayesian model choice, the marginal likelihood of a model is averaged over the priors, making the prior a "penalty" for adding parameters to
+the model. When the prior on divergence times is broad, as is necessary when there is genuine prior uncertainty about when lineages diverged, it
+places low prior probability density on any specific divergence time, imposing a strong implicit penalty against models that infer many distinct
+events among the pairs of populations. As a result, models that collapse multiple divergence times into fewer shared events are systematically
+favored, not because the data support synchrony, but because the broad prior penalizes complexity. Specifying a narrower prior would reduce this
+penalty, but doing so requires strong a priori knowledge about divergence times that is rarely available in practice, creating a difficult trade-off
+between expressing appropriate uncertainty and avoiding inferential bias. A natural solution to this problem is to move the uncertainty up one level
+in the model hierarchy: rather than fixing the parameters of the divergence-time prior, one can place hyperpriors over those parameters and allow the
+data themselves to inform the most appropriate prior during inference.
 
 Here, to overcome this limitation we implement such a hierarchical model in ecoevolity [@Oaks2018ecoevolity], placing hyperpriors on the parameters of the divergence-time
 prior so that the scale and shape of that prior are estimated jointly with all other model parameters. This approach allows the model to
