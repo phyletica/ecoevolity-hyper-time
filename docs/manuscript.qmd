@@ -231,6 +231,17 @@ Results: Big difference when using the hyperprior.
 
 ## Discussion
 
+**ideas for discussion and text progression - draft**
+hyperpriors eliminate the downward bias on divergence events without requiring hyper-specific a priori knowledge
+
+Well-Calibrated Behavior and Posterior Robustness - MCMC sampling and Coverage of credible intervals? Simulated data analysis result
+
+Re-evaluating the Comparative Biogeography of Philippine Gekkonids?
+
+Broad Methodological Implications for the Field? - could be useful forpast works that inferred highly synchronized multi-taxa events via vague fixed priors.
+
+Scope and limitations?
+
 ## References
 
 ::: {#refs}
