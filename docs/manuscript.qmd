@@ -26,7 +26,7 @@ authors:
         country: USA
         url: https://www.auburn.edu/cosam/departments/biology/index.htm
 abstract: |
-  [...]In comparative biogeographic methods like msbayes and ecoevolity, prior distributions on divergence times with lots of uncertainty can create a strong
+  In comparative biogeographic methods like msbayes and ecoevolity, prior distributions on divergence times with lots of uncertainty can create a strong
   penalty against models with more divergence-time parameters, and thus cause a downward bias in the number of divergence events across the taxa being
   compared. For this project, we will explore whether a hierarchical Bayesian approach can mitigate such a bias. Specifically, we will explore using
   hyperpriors on the parameters of the prior on divergence times to see if the model can learn about the divergence-time prior during the analysis and
@@ -217,7 +217,7 @@ true prior (coverage = 0.98; Figure 11B, right panel).
 ### Empirical application to Philippine Gekkonids
 We used restriction site-associated DNA sequencing (RADseq) data from species *Cyrtodactylus* and *Gekko*.
 Results: Big difference when using the hyperprior.
-(@pycoevolity-only-nevents-time-empirical-dataset)
+(@fig-gecko-nevents-time)
 
 ![
     Empirical dataset
