@@ -155,7 +155,7 @@ samples from the specified hyperprior distributions when likelihood contribution
 }
 
 ### Coverage of credible intervals
-Coverage checks confirmed that ecoevolity accurately recovers hyperprior parameters and divergence times @fig-coverage-figure-2-pdf. Under the 
+Coverage checks confirmed that ecoevolity accurately recovers hyperprior parameters and divergence times @fig-coverage-figure-svg. Under the 
 exponential hyperprior, the time-prior mean showed near-nominal 50% credible interval coverage (p(μ ∈ CI₀.₅₀) = 0.55;
 RMSE = 0.058; Figure 9A), and divergence times were well-calibrated (p(τ ∈ CI₀.₅₀) = 0.49; RMSE = 0.065; Figure 9B).
 Under the uniform hyperprior, the time-prior upper bound was recovered with coverage close to nominal (p(x ∈ CI₀.₅₀)
@@ -171,26 +171,10 @@ produces accurate and well-calibrated estimates under both hyperprior specificat
     uniform hyperprior τ ~ Uniform(0, max ~ Uniform(0, 0.2)). The diagonal line represents perfect recovery. Statistics include
     the probability of underestimation, proportion of true values within the 50% credible interval, and root mean square error (RMSE).
 ](
-    ./images/coverage-pdf-bc-svg-corrupted.pdf
-){
-    #fig-coverage-figure-2-pdf
-    fig-alt="SVG-coverage-figure-is-working?"
-    fig-align="center"
-}
-
-test @fig-coverage-figure-2-svg
-![
-    Coverage check for the ecoevolity implementation of divergence-time hyperpriors. Each point represents one simulation
-    replicate, with the true parameter value on the x-axis and the posterior mean estimate on the y-axis; error bars denote
-    50% credible intervals. Panels show the time-prior mean (A) and mean divergence time (B) under the exponential hyperprior
-    τ ~ Exponential(mean ~ Exponential(mean = 0.2)), and the time-prior upper bound (C) and mean divergence time (D) under the
-    uniform hyperprior τ ~ Uniform(0, max ~ Uniform(0, 0.2)). The diagonal line represents perfect recovery. Statistics include
-    the probability of underestimation, proportion of true values within the 50% credible interval, and root mean square error (RMSE).
-](
     ./images/coverage-figure-exp-unif.svg
 ){
-    #fig-coverage-figure-2-svg
-    fig-alt="SVG-coverage-figure-is-working?"
+    #fig-coverage-figure-svg
+    fig-alt="SVG-coverage-figure"
     fig-align="center"
 }
 
@@ -245,14 +229,14 @@ The marginal posterior for the divergence-time hyperparameter was clearly distin
 }
 
 ## Discussion
-
+** Somer papers to guide the discussion --> ?  McGaughran et al., 2022,...**
 **ideas for discussion and text progression - draft**
 hyperpriors eliminate the downward bias on divergence events without requiring hyper-specific a priori knowledge
+In most of times, researchers don't know much about the deversification historical events a population or species went through, and thus they don't know much about their demographic dynamics. Geomorphological and climatic events are often used as proxies for the timing of divergence events, but these are often poorly constrained and can be highly uncertain.
 
 Well-Calibrated Behavior and Posterior Robustness - MCMC sampling and Coverage of credible intervals? Simulated data analysis result
 
 It's interesting that the model without the hyperprior on the mean divergence time is relatively robust to the prior on the concentration parameter. This robustness is likely the result of the strong penalty the prior on div times creates against adding div time parameters to the model. While the model with the hyperprior on the mean div time shows more honest sensitivity to the concentration parameter.
-
 
 Re-evaluating the Comparative Biogeography of Philippine Gekkonids?
 The marked divergence between the posterior and prior number of events under the standard (non-hyperprior) model is consistent with the over-clustering bias described above: in the absence of the hyperprior, the model favors fewer, larger clusters of divergence events even when the prior places most of its mass on the many-independent-events scenario. The hyperprior model's posterior, by contrast, closely tracked its prior, suggesting this bias is substantially reduced when divergence times are allowed to vary hierarchically rather than being effectively pooled. This demonstrates the practical utility of hyperpriors in real-world comparative biogeographic analyses, highlighting their potential to improve inference in studies where prior knowledge is limited or uncertain. The analysis with the vague prior.
