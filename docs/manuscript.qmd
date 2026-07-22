@@ -178,6 +178,22 @@ produces accurate and well-calibrated estimates under both hyperprior specificat
     fig-align="center"
 }
 
+test @fig-coverage-figure-2-svg
+![
+    Coverage check for the ecoevolity implementation of divergence-time hyperpriors. Each point represents one simulation
+    replicate, with the true parameter value on the x-axis and the posterior mean estimate on the y-axis; error bars denote
+    50% credible intervals. Panels show the time-prior mean (A) and mean divergence time (B) under the exponential hyperprior
+    τ ~ Exponential(mean ~ Exponential(mean = 0.2)), and the time-prior upper bound (C) and mean divergence time (D) under the
+    uniform hyperprior τ ~ Uniform(0, max ~ Uniform(0, 0.2)). The diagonal line represents perfect recovery. Statistics include
+    the probability of underestimation, proportion of true values within the 50% credible interval, and root mean square error (RMSE).
+](
+    ./images/coverage-figure-exp-unif.svg
+){
+    #fig-coverage-figure-2-svg
+    fig-alt="SVG-coverage-figure-is-working?"
+    fig-align="center"
+}
+
 ### Hyper prior estimates on divergence time using simulated data
 The introduction of hyperpriors on the divergence-time prior parameters substantially mitigated the underestimation bias observed under
 fixed vague priors @fig-ecoevolityperformance-simulated. For the exponential prior, placing a hyperprior on the mean of the exponential prior, τ ~ Exponential (μ), where μ ~ Exponential(mean = 0.2), reduced the probability of underestimation from 0.97 to 0.42, and restored 95% credible set coverage to
@@ -234,6 +250,7 @@ The marginal posterior for the divergence-time hyperparameter was clearly distin
 hyperpriors eliminate the downward bias on divergence events without requiring hyper-specific a priori knowledge
 
 Well-Calibrated Behavior and Posterior Robustness - MCMC sampling and Coverage of credible intervals? Simulated data analysis result
+
 It's interesting that the model without the hyperprior on the mean divergence time is relatively robust to the prior on the concentration parameter. This robustness is likely the result of the strong penalty the prior on div times creates against adding div time parameters to the model. While the model with the hyperprior on the mean div time shows more honest sensitivity to the concentration parameter.
 
 
