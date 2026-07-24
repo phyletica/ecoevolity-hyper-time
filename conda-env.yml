@@ -8,6 +8,7 @@ dependencies:
   - cmake=4.2.3
   - quarto
   - librsvg # Used by quarto to convert svg images to pdf
+  - svgutils # Used in python scripts to create grids of SVG plots
   - python>=3.8
   - pyyaml
   - scipy
