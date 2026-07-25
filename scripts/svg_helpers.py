@@ -8,20 +8,26 @@ import string
 import svgutils.transform as svgt
 import svgutils.compose as svgc
 
-def get_max_plot_dimensions(svg_paths):
+def get_plot_dimensions(svg_path):
+    fig = svgt.fromfile(svg_path)
+    w = float(fig.width[:-2])
+    h = float(fig.height[:-2])
+    u = fig.height[-2:]
+    return w, h, u
+def get_max_plot_dimensions(svg_paths, scale_by_widths = False):
     max_height = None
     max_width = None
     units = None
     for svg_path in svg_paths:
-        fig = svgt.fromfile(svg_path)
-        w = float(fig.width[:-2])
-        h = float(fig.height[:-2])
-        u = fig.height[-2:]
+        w, h, u = get_plot_dimensions(svg_path)
         if units is None:
             max_height = h
-            max_width = h
+            max_width = w
             units = u
         else:
+            if scale_by_widths and (w < max_width):
+                m = max_width / w
+                h *= m
             if h > max_height:
                 max_height = h
             if w > max_width:
@@ -29,9 +35,62 @@ def get_max_plot_dimensions(svg_paths):
             assert units == u
     return max_width, max_height, units
 
+def stack_plots(
+    svg_paths,
+    space = 0,
+    scale_by_widths = True,
+    include_letters = False,
+    letter_font_weight = "bold",
+    letter_font_size = 16,
+    letter_x_indent = None,
+):
+    max_width, max_height, units = get_max_plot_dimensions(svg_paths, scale_by_widths)
+    if letter_x_indent is None:
+        letter_x_indent = 0.01 * max_width
+    panels = []
+    current_y = 0.0
+    half_space = space / 2.0
+    for i, svg_path in enumerate(svg_paths):
+        letter = string.ascii_uppercase[i]
+        scaler = 1.0
+        w, h, u = get_plot_dimensions(svg_path)
+        if scale_by_widths:
+            scaler = max_width / w
+        if include_letters:
+            p = svgc.Panel(
+                svgc.SVG(
+                    svg_path,
+                ).scale(scaler).move(0, space),
+                svgc.Text(
+                    letter,
+                    letter_x_indent, (letter_font_size * 0.9),
+                    size = letter_font_size,
+                    weight = letter_font_weight,
+                ),
+                # Moving SVG image down within the panel to give room under
+                # letter
+            ).move(0, current_y)
+        else:
+            p = svgc.Panel(
+                svgc.SVG(svg_path),
+            ).scale(scaler).move(0, current_y)
+        panels.append(p)
+        if i < (len(svg_paths) - 1) or include_letters:
+            current_y += (h * scaler) + space
+        else:
+            current_y += (h * scaler)
+    figure_width = max_width
+    figure_height = current_y
+    fig = svgc.Figure(
+        f"{figure_width}px", f"{figure_height}px",
+        *panels,
+    )
+    return fig
+
 def get_panel_figure(
     svg_paths,
     num_cols,
+    scale_by_widths = False,
     col_headers = None,
     col_header_svg_paths = None,
     header_svg_scale = 1.0,
@@ -46,7 +105,7 @@ def get_panel_figure(
     letter_y_indent = None,
 ):
     num_rows = int(math.ceil(len(svg_paths) / num_cols))
-    plot_width, plot_height, units = get_max_plot_dimensions(svg_paths)
+    plot_width, plot_height, units = get_max_plot_dimensions(svg_paths, scale_by_widths)
     header_width = None
     header_height = None
     header_units = None
@@ -101,13 +160,18 @@ def get_panel_figure(
         move_x = plot_width * col_index
         move_y = plot_height * row_index
         move_y += header_height_buffer
+        scaler = 1.0
+        if scale_by_widths:
+            w, h, u = get_plot_dimensions(svg_path)
+            if w < plot_width:
+                scaler = plot_width / w
         if include_letters:
             # Move whole panel down for previous rows' letters
             move_y += (row_index * letter_height_buffer)
             p = svgc.Panel(
                 svgc.SVG(
                     svg_path,
-                ).move(0, letter_y_indent * 1.2),
+                ).scale(scaler).move(0, letter_y_indent * 1.2),
                 svgc.Text(
                     letter,
                     letter_x_indent, letter_y_indent,
@@ -120,7 +184,7 @@ def get_panel_figure(
         else:
             p = svgc.Panel(
                 svgc.SVG(svg_path),
-            ).move(move_x, move_y)
+            ).scale(scaler).move(move_x, move_y)
         panels.append(p)
     figure_width = plot_width * num_cols
     figure_height = plot_height * num_rows
