@@ -79,6 +79,9 @@ pyco-eco-viz-sims \
     --config-label-order 'Exp(mean = 0.2); Exp(mean ~ Exp(mean = 0.2)); Exp(mean = 0.01)' \
     --comparison 'Exp(mean = 0.2)' 'Exp(mean ~ Exp(mean = 0.2))' \
     --comparison 'Exp(mean ~ Exp(mean = 0.2))' 'Exp(mean = 0.01)' \
+    --violin-label-size 7 \
+    --column-title-template "$\tau \sim$ {col_name}" \
+    --row-title-template "True model: $\tau \sim$ {row_name}" \
     exp-hyperprior-sim-study/results-summary.tsv.gz
 ```
 
@@ -152,5 +155,8 @@ pyco-eco-viz-sims \
     --config-label-order 'Unif(0, 0.2); Unif(0, Unif(0, 0.2)); Unif(0, 0.02)' \
     --comparison 'Unif(0, 0.2)' 'Unif(0, Unif(0, 0.2))' \
     --comparison 'Unif(0, Unif(0, 0.2))' 'Unif(0, 0.02)' \
+    --violin-label-size 8 \
+    --column-title-template "$\tau \sim$ {col_name}" \
+    --row-title-template "True model: $\tau \sim$ {row_name}" \
     unif-hyperprior-sim-study/results-summary.tsv.gz
 ```
