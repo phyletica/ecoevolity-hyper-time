@@ -30,7 +30,7 @@ def main():
     fig = svg_helpers.stack_plots(
         svg_paths = unif_svg_paths,
         space = 0,
-        scale_by_widths = True,
+        scale_by_width = True,
         include_letters = False,
         letter_font_weight = "bold",
         letter_font_size = 18,
@@ -51,7 +51,7 @@ def main():
     fig = svg_helpers.stack_plots(
         svg_paths = exp_svg_paths,
         space = 0,
-        scale_by_widths = True,
+        scale_by_width = True,
         include_letters = False,
         letter_font_weight = "bold",
         letter_font_size = 18,

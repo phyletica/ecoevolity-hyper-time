@@ -14,7 +14,20 @@ def get_plot_dimensions(svg_path):
     h = float(fig.height[:-2])
     u = fig.height[-2:]
     return w, h, u
-def get_max_plot_dimensions(svg_paths, scale_by_widths = False):
+
+def scale_by_max_width(max_width, max_height, width, height):
+    if width < max_width:
+        m = max_width / width
+        return width * m, height * m
+    return width, height
+
+def scale_by_max_height(max_width, max_height, width, height):
+    if height < max_height:
+        m = max_height / height
+        return width * m, height * m
+    return width, height
+
+def get_max_plot_dimensions(svg_paths, scale_func = None):
     max_height = None
     max_width = None
     units = None
@@ -25,9 +38,8 @@ def get_max_plot_dimensions(svg_paths, scale_by_widths = False):
             max_width = w
             units = u
         else:
-            if scale_by_widths and (w < max_width):
-                m = max_width / w
-                h *= m
+            if scale_func:
+                w, h = scale_func(max_width, max_height, w, h)
             if h > max_height:
                 max_height = h
             if w > max_width:
@@ -38,13 +50,16 @@ def get_max_plot_dimensions(svg_paths, scale_by_widths = False):
 def stack_plots(
     svg_paths,
     space = 0,
-    scale_by_widths = True,
+    scale_by_width = True,
     include_letters = False,
     letter_font_weight = "bold",
     letter_font_size = 16,
     letter_x_indent = None,
 ):
-    max_width, max_height, units = get_max_plot_dimensions(svg_paths, scale_by_widths)
+    scale_func = None
+    if scale_by_width:
+        scale_func = scale_by_max_width
+    max_width, max_height, units = get_max_plot_dimensions(svg_paths, scale_func)
     if letter_x_indent is None:
         letter_x_indent = 0.01 * max_width
     panels = []
@@ -54,7 +69,7 @@ def stack_plots(
         letter = string.ascii_uppercase[i]
         scaler = 1.0
         w, h, u = get_plot_dimensions(svg_path)
-        if scale_by_widths:
+        if scale_by_width:
             scaler = max_width / w
         if include_letters:
             p = svgc.Panel(
@@ -87,10 +102,62 @@ def stack_plots(
     )
     return fig
 
+def align_plots(
+    svg_paths,
+    space = 0,
+    scale_by_height = True,
+    include_letters = False,
+    letter_font_weight = "bold",
+    letter_font_size = 16,
+    letter_x_indent = None,
+):
+    scale_func = None
+    if scale_by_height:
+        scale_func = scale_by_max_height
+    max_width, max_height, units = get_max_plot_dimensions(svg_paths, scale_func)
+    if letter_x_indent is None:
+        letter_x_indent = 0.01 * max_width
+    panels = []
+    current_x = 0.0
+    half_space = space / 2.0
+    for i, svg_path in enumerate(svg_paths):
+        letter = string.ascii_uppercase[i]
+        scaler = 1.0
+        w, h, u = get_plot_dimensions(svg_path)
+        if scale_by_height:
+            scaler = max_height / h
+        if include_letters:
+            p = svgc.Panel(
+                svgc.SVG(
+                    svg_path,
+                ).scale(scaler).move(0, space),
+                svgc.Text(
+                    letter,
+                    letter_x_indent, (letter_font_size * 0.9),
+                    size = letter_font_size,
+                    weight = letter_font_weight,
+                ),
+                # Moving SVG image down within the panel to give room under
+                # letter
+            ).move(current_x, 0)
+        else:
+            p = svgc.Panel(
+                svgc.SVG(svg_path),
+            ).scale(scaler).move(current_x, 0)
+        panels.append(p)
+        current_x += (w * scaler)
+    figure_width = current_x
+    figure_height = max_height + space
+    fig = svgc.Figure(
+        f"{figure_width}px", f"{figure_height}px",
+        *panels,
+    )
+    return fig
+
 def get_panel_figure(
     svg_paths,
     num_cols,
-    scale_by_widths = False,
+    scale_by_width = False,
     col_headers = None,
     col_header_svg_paths = None,
     header_svg_scale = 1.0,
@@ -105,7 +172,10 @@ def get_panel_figure(
     letter_y_indent = None,
 ):
     num_rows = int(math.ceil(len(svg_paths) / num_cols))
-    plot_width, plot_height, units = get_max_plot_dimensions(svg_paths, scale_by_widths)
+    scale_func = None
+    if scale_by_width:
+        scale_func = scale_by_max_width
+    plot_width, plot_height, units = get_max_plot_dimensions(svg_paths, scale_func)
     header_width = None
     header_height = None
     header_units = None
@@ -161,7 +231,7 @@ def get_panel_figure(
         move_y = plot_height * row_index
         move_y += header_height_buffer
         scaler = 1.0
-        if scale_by_widths:
+        if scale_by_width:
             w, h, u = get_plot_dimensions(svg_path)
             if w < plot_width:
                 scaler = plot_width / w

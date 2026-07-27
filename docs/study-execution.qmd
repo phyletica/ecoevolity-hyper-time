@@ -79,7 +79,7 @@ pyco-eco-viz-sims \
     --config-label-order 'Exp(mean = 0.2); Exp(mean ~ Exp(mean = 0.2)); Exp(mean = 0.01)' \
     --comparison 'Exp(mean = 0.2)' 'Exp(mean ~ Exp(mean = 0.2))' \
     --comparison 'Exp(mean ~ Exp(mean = 0.2))' 'Exp(mean = 0.01)' \
-    --violin-label-size 7 \
+    --violin-label-size 7.5 \
     --column-title-template "$\tau \sim$ {col_name}" \
     --row-title-template "True model: $\tau \sim$ {row_name}" \
     exp-hyperprior-sim-study/results-summary.tsv.gz
