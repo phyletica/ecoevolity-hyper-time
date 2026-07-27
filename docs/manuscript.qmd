@@ -249,26 +249,60 @@ We evaluated the performance of the hyperprior on the divergence-time prior usin
 
 ### Hyper prior estimates on divergence time using simulated data
 The introduction of hyperpriors on the divergence-time prior parameters substantially mitigated the underestimation bias observed under
-fixed vague priors @fig-ecoevolityperformance-simulated. For the exponential prior, placing a hyperprior on the mean of the exponential prior, τ ~ Exponential (μ), where μ ~ Exponential(mean = 0.2), reduced the probability of underestimation from 0.97 to 0.42, and restored 95% credible set coverage to
-0.99 @fig-ecoevolityperformance-simulated, B. Performance under the hyperprior was nearly identical to that of the true prior used in simulations, τ ~
+fixed vague priors @fig-sim-nevents. For the exponential prior, placing a hyperprior on the mean of the exponential prior, τ ~ Exponential (μ), where μ ~ Exponential(mean = 0.2), reduced the probability of underestimation from 0.97 to 0.42, and restored 95% credible set coverage to
+0.99 @fig-sim-nevents, B. Performance under the hyperprior was nearly identical to that of the true prior used in simulations, τ ~
 Exponential(mean = 0.01), which achieved p(k̂ < k) = 0.40 and coverage of 0.98 (Figure 11A, right panel). A parallel pattern was observed for
 the uniform prior: placing a hyperprior on the upper bound of the uniform prior, τ ~ Uniform(0, 2), where Uniform (0, Uniform(0, 0.2)), reduced
-underestimation from 0.97 to 0.39 and improved coverage from 0.19 to 0.95 @fig-ecoevolityperformance-simulated, B , again approaching the performance of the true prior (coverage = 0.95; @fig-ecoevolityperformance-simulated, B, right panel).
+underestimation from 0.97 to 0.39 and improved coverage from 0.19 to 0.95 @fig-sim-nevents, B , again approaching the performance of the true prior (coverage = 0.95; @fig-sim-nevents, B, right panel).
 
 ![
-    Performance of ecoevolity under fixed and hyperprior divergence-time models. Heatmaps show the joint distribution
-    of the true versus MAP-estimated number of divergence events across simulation replicates for the exponential (A)
-    and uniform (B) prior families. Color intensity reflects the frequency of each true-MAP combination. For each prior
-    family, three models are compared: a fixed vague prior (left; Exp(mean = 0.2) and Unif(0, 0.2)), a hyperprior model 
-    (middle; Exp(mean ~ Exp(mean = 0.2)) and Unif(0, Unif(0, 0.2))), and the true reference prior used to simulate the data
-    (right; Exp(mean = 0.01) and Unif(0, 0.02)). Statistics reported in each panel include the probability of underestimation
-    p(k̂ < k), the proportion of true values falling within the 95% credible set p(k ∈ CS₀.₉₅), and the median posterior probability
-    of the true number of divergence events median p(k|D)
+    Using a hyperprior on the (top-middle) mean and (bottom-middle) maximum
+    time mitigates the underestimation of the number of divergence times ($k$).
+    Heatmaps show the number of simulation replicates with a particular combination 
+    of the true versus maximum *a posteriori* (MAP) number of divergence events
+    For the exponential (top) and uniform (bottom) hyperprior,
+    three models are compared: a fixed diffuse prior (left), a hyperprior model 
+    (middle), and the true distribution used to simulate the data
+    (right).
+    Statistics reported in each panel include the proportion of simulation replicates
+    for which the number of divergences is underestimated---$p(\hat{k} < k$---and for which
+    the true number of divegences falls within the 95% credible set---$p(k \in 0.95\textsf{ CS})$,
+    and the 
+    median posterior probability across simulation replicates of the
+    true number of divergence events---median $p(k|D)$.
 ](
-    ./images/hyperprior-ecoevolityperformance-simulated-data.svg
+    ./images/hp-sim-study-nevents-grid.svg
 ){
-    #fig-ecoevolityperformance-simulated
-    fig-alt="simulated data performance"
+    #fig-sim-nevents
+    fig-alt="True vs estimated number of events"
+    fig-align="center"
+}
+
+![
+    Using a hyperprior on the (left) mean and (right) maximum time improves the
+    inference of the true divergence model (clustering of population pairs to
+    divergence times).
+    Within each plot, the violin diagrams compare the posterior rank sum of the
+    true divergence model across simulation replicates when analyzed under a
+    (left) diffuse, (middle) hyperprior, and (right) the true distribution used
+    to simulate the data.
+    A posterior rank sum is calculated by ranking divergence models by their
+    approximate posterior probability (from highest to lowest) and summing the
+    probability down the list until the true model is found.
+    A value of zero means the model with the highest posterior probability is
+    the true model; a value of one means the true model was not sampled.
+    Brackets show the p-value of Wilcoxon signed-rank tests comparing the
+    results of the diffuse prior to the hyperprior and the results of the
+    hyperprior to the true distribution.
+    Above the p-value, a greater-than/less-than symbol shows that the posterior
+    rank sums on the left/right are more often larger, respectively; an equal
+    sign means the the number replicates with a larger value on the left and
+    right is equal.
+](
+    ./images/hp-sim-study-true-model-rank-sum-grid.svg
+){
+    #fig-sim-model-rank
+    fig-alt="Comparing the posterior rank sum of the true divergence model"
     fig-align="center"
 }
 
@@ -367,7 +401,7 @@ samples from the specified hyperprior distributions when likelihood contribution
 }
 
 ## Posterior coverage of divergence-time hyperparameter
-Coverage checks confirmed that ecoevolity accurately recovers hyperprior parameters and divergence times @fig-coverage-figure-svg. Under the 
+Coverage checks confirmed that ecoevolity accurately recovers hyperprior parameters and divergence times @fig-coverage. Under the 
 exponential hyperprior, the time-prior mean showed near-nominal 50% credible interval coverage (p(μ ∈ CI₀.₅₀) = 0.55;
 RMSE = 0.058; Figure 9A), and divergence times were well-calibrated (p(τ ∈ CI₀.₅₀) = 0.49; RMSE = 0.065; Figure 9B).
 Under the uniform hyperprior, the time-prior upper bound was recovered with coverage close to nominal (p(x ∈ CI₀.₅₀)
@@ -394,7 +428,7 @@ produces accurate and well-calibrated estimates under both hyperprior specificat
 ](
     ./images/posterior-coverage-grid.svg
 ){
-    #fig-coverage-figure-2-pdf
+    #fig-coverage
     fig-alt="Posterior coverage assessment"
     fig-align="center"
 }
