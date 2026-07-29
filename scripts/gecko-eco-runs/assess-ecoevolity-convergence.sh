@@ -7,7 +7,7 @@ output_dir="${project_dir}/gecko-ecoevolity-output"
 
 source "${project_dir}/project_utils.sh"
 
-for config_prefix in "geckos-combined" "geckos-combined-hyper-time"
+for config_prefix in "geckos-combined" "geckos-combined-conc11" "geckos-combined-hyper-time" "geckos-combined-hyper-time-conc11"
 do
     log_paths="$(find "$output_dir" -maxdepth 1 -name "run-??-threads-*-${config_prefix}-state-run-1.log")"
     gzipped_log_paths="$(find "$output_dir" -maxdepth 1 -name "run-??-threads-*-${config_prefix}-state-run-1.log.gz")"

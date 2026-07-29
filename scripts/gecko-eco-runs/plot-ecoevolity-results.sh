@@ -44,11 +44,18 @@ source "${project_dir}/project_utils.sh"
 config_prefices=(
     "geckos-combined"
     "geckos-combined-hyper-time"
+    "geckos-combined-conc11"
+    "geckos-combined-hyper-time-conc11"
 )
 burnin_values=(
     101
     101
+    101
+    101
 )
+
+zip_path="${output_dir}/state-logfiles-geckos.zip"
+conc11_zip_path="${output_dir}/state-logfiles-geckos-conc11.zip"
 
 labels='-l "Bohol0" "Bohol"
 -l "CamiguinSur0" "Camiguin Sur"
@@ -104,6 +111,9 @@ labels='-l "Bohol0" "Bohol"
 
 convert_labels_to_array $labels
 
+extracted_zip=false
+extracted_conc11_zip=false
+
 for i in "${!config_prefices[@]}"
 do
     config_prefix="${config_prefices[i]}"
@@ -111,22 +121,34 @@ do
     config_path="${project_dir}/ecoevolity-configs/${config_prefix}.yml"
 
     log_paths="$(find "$output_dir" -maxdepth 1 -name "run-??-threads-*-${config_prefix}-state-run-1.log")"
-    gzipped_log_paths="$(find "$output_dir" -maxdepth 1 -name "run-??-threads-*-${config_prefix}-state-run-1.log.gz")"
 
     if [ -z "$log_paths" ]
     then
-        if [ -n "$gzipped_log_paths" ]
+        ext_zip="$extracted_zip"
+        z_path="$zip_path"
+        if [[ "$config_prefix" == *"conc11" ]]
         then
-            gzip -d -k $gzipped_log_paths
-            log_paths="$(find "$output_dir" -maxdepth 1 -name "run-??-threads-*-${config_prefix}-state-run-1.log")"
+            ext_zip="$extracted_conc11_zip"
+            z_path="$conc11_zip_path"
+            extracted_conc11_zip=true
         else
-            echo "No state log files found for $config_prefix; Skipping!"
-            continue
+            extracted_zip=true
+        fi
+        if [ "$ext_zip" == "false" ]
+        then
+            if [ -e "$z_path" ]
+            then
+                ( cd "$output_dir" && unzip "$(basename "$z_path")" )
+                log_paths="$(find "$output_dir" -maxdepth 1 -name "run-??-threads-*-${config_prefix}-state-run-1.log")"
+            else
+                echo "No state log files or zip archive found for $config_prefix; Skipping!"
+                continue
+            fi
         fi
     fi
     if [ -z "$log_paths" ]
     then
-        echo "Problem decompressing gzipped stated log files for $config_prefix; Skipping!"
+        echo "Problem extracting state log files for $config_prefix; Skipping!"
         continue
     fi
 
@@ -141,6 +163,7 @@ do
     if [ ! -e "$sumco_out_path" ]
     then
         "$ht_conda_exe" run -n "$ht_conda_env_name" "$sumco_exe_path" \
+            --seed 1 \
             -b "$burnin" \
             -n 1000000 \
             -p "${output_dir}/sumcoevolity-${config_prefix}-" \
