@@ -247,7 +247,7 @@ We evaluated the performance of the hyperprior on the divergence-time prior usin
 
 ## Results
 
-### Hyper prior estimates on divergence time using simulated data
+### Hyperprior estimates on divergence time using simulated data
 The introduction of hyperpriors on the divergence-time prior parameters substantially mitigated the underestimation bias observed under
 fixed vague priors @fig-sim-nevents. For the exponential prior, placing a hyperprior on the mean of the exponential prior, τ ~ Exponential (μ), where μ ~ Exponential(mean = 0.2), reduced the probability of underestimation from 0.97 to 0.42, and restored 95% credible set coverage to
 0.99 @fig-sim-nevents, B. Performance under the hyperprior was nearly identical to that of the true prior used in simulations, τ ~
@@ -307,27 +307,44 @@ underestimation from 0.97 to 0.39 and improved coverage from 0.19 to 0.95 @fig-s
 }
 
 ### Empirical application to Philippine Gekkonids
-The empirical application to the Philippine gekkonid dataset showed differences in the inferred number of divergence events among analytical settings @fig-pycoevolity-nevents-dp-conc. Under a concentration prior placing 50% probability on all-independent divergence events, the model with the hyperprior on the mean divergence time produced a posterior distribution that closely matched this prior, with both distributions peaking at k = 16 events (posterior = 0.49, prior = 0.50) and Bayes factors near 1 across most values of k (maximum BF = 1.30, at k = 15; Fig. 4A). The model without the hyperprior produced a posterior that departed substantially from the same prior (Fig. 4B): the posterior peaked at k = 12 (0.31) rather than k = 16, with Bayes factors of 16.2 and 14.8 at k = 11 and k = 12, and 0.0207 at k = 16. When the Dirichlet process concentration prior mean was set to 8.5, both analyses shifted toward fewer inferred divergence events, with posterior support centered on 13 events with the hyperprior and 11 events without the hyperprior.
+The empirical application to the Philippine gekkonid dataset showed differences in the inferred number of divergence events among analytical settings @fig-gecko-nevents. Under a concentration prior placing 50% probability on all-independent divergence events, the model with the hyperprior on the mean divergence time produced a posterior distribution that closely matched this prior, with both distributions peaking at k = 16 events (posterior = 0.49, prior = 0.50) and Bayes factors near 1 across most values of k (maximum BF = 1.30, at k = 15; Fig. 4A). The model without the hyperprior produced a posterior that departed substantially from the same prior (Fig. 4B): the posterior peaked at k = 12 (0.31) rather than k = 16, with Bayes factors of 16.2 and 14.8 at k = 11 and k = 12, and 0.0207 at k = 16. When the Dirichlet process concentration prior mean was set to 8.5, both analyses shifted toward fewer inferred divergence events, with posterior support centered on 13 events with the hyperprior and 11 events without the hyperprior.
 
 ![
-    Empirical application of hyperpriors to the Philippine gekkonid dataset. Posterior distributions of the inferred number of divergence events under four analytical settings. (A) Analysis using the hyperprior on divergence times under the default Ecoevolity prior, which places 50% of the prior probability mass on the maximum number of divergence events. (B) Analysis without the hyperprior under the same default Ecoevolity prior. (C) Analysis using the hyperprior with a Dirichlet process concentration prior mean of 8.5. (D) Analysis without the hyperprior with a Dirichlet process concentration prior mean of 8.5.
+    The number of divergence events across 16 pairs of Philippine gecko
+    populations estimated by ecoevolity under a (left column) fixed diffuse
+    prior and (right column) hyperprior on divergence times, and two different
+    priors on the concentration of the Dirichlet process (top and bottom rows).
+    The bars show the approximate posterior and prior probabilities for the
+    number of divergences, and approximate Bayes factors are shown for all
+    values that were sampled by the MCMC chains.
 ](
-    ./images/pycoevolity-nevents-dp-conc.svg
+    ./images/gecko-nevents-grid.svg
 ){
-    #fig-pycoevolity-nevents-dp-conc
-    fig-alt="gecko-nevents-time-dp-conc-both"
+    #fig-gecko-nevents
+    fig-alt="The estimated number of divergence events across 16 pairs of Philippine gecko populations"
     fig-align="center"
 }
 
-The marginal posterior for the divergence-time hyperparameter was clearly distinguishable from its prior under both concentration priors @fig-posterior-mean-prior-div-time, and this separation was similar in magnitude regardless of whether the concentration prior was specified with a mean of 8.5 events or to place 50% probability on all-independent events. In contrast, the posterior over the number of divergence events, k, showed differing sensitivity to the concentration prior: under the 8.5-mean prior, Bayes factors for k deviated substantially from 1 up to 14.8 and the posterior mode shifted to a higher number of events than the prior mode; under the all-independent-events prior, Bayes factors for k remained close to 1 and the posterior closely resembled the prior.
+The marginal posterior for the divergence-time hyperparameter was clearly distinguishable from its prior under both concentration priors @fig-gecko-div-times, and this separation was similar in magnitude regardless of whether the concentration prior was specified with a mean of 8.5 events or to place 50% probability on all-independent events. In contrast, the posterior over the number of divergence events, k, showed differing sensitivity to the concentration prior: under the 8.5-mean prior, Bayes factors for k deviated substantially from 1 up to 14.8 and the posterior mode shifted to a higher number of events than the prior mode; under the all-independent-events prior, Bayes factors for k remained close to 1 and the posterior closely resembled the prior.
 
 ![
-    Plotting the posterior of the mean of the prior on divergence times.
+    The estimated divergence times of 15 of the 16 pairs of Philippine gecko
+    populations.
+    The pair of *Cyrtodactylus* populations on Palawan and Borneo diverged much
+    earlier than the other pairs and is not shown here; please see Supporting
+    Information for plots of all 16 pairs.
+    The white circle, black bars, and violin represent
+    the posterior mean, 95% credible interval, and the full approximate
+    posterior sample, respectively.
+    The number at the end of the comparison labels represents the indices of
+    unique divergences for the maximum *a posteriori* divergence model.
+    The "G" and "C" next to the divergence index represents *Gekko* and
+    *Cyrtodactylus*, respectively.
 ](
-    ./images/posterior-mean-prior-div-time.svg
+    ./images/geckos-combined-hyper-time-div-times-sans-palawan.svg
 ){
-    #fig-posterior-mean-prior-div-time
-    fig-alt="posterior-mean-prior-div-time"
+    #fig-gecko-div-times
+    fig-alt="Estimated divergence times of 16 pairs of Philippine gecko populations"
     fig-align="center"
 }
 
@@ -430,5 +447,100 @@ produces accurate and well-calibrated estimates under both hyperprior specificat
 ){
     #fig-coverage
     fig-alt="Posterior coverage assessment"
+    fig-align="center"
+}
+
+## Simulation results
+
+![
+    True versus estimated values of the concentration parameter of the
+    Dirichlet process.
+    For the exponential (top) and uniform (bottom) hyperprior,
+    three models are compared: a fixed diffuse prior (left), a hyperprior model 
+    (middle), and the true distribution used to simulate the data
+    (right).
+    Statistics reported in each panel include the proportion of simulation replicates
+    for which the concentration is underestimated---$p(\hat{\alpha} < \alpha$---and for which
+    the true concentration falls within the 95% credible set---$p(\alpha \in 0.95\textsf{ CS})$,
+    and the 
+    root mean square error (RMSE).
+](
+    ./images/hp-sim-study-concentration-grid.svg
+){
+    #fig-sim-conc
+    fig-alt="True vs estimated concentration"
+    fig-align="center"
+}
+
+![
+    True versus estimated values of divergence times.
+    For the exponential (top) and uniform (bottom) hyperprior,
+    three models are compared: a fixed diffuse prior (left), a hyperprior model 
+    (middle), and the true distribution used to simulate the data
+    (right).
+    Statistics reported in each panel include the proportion of simulation replicates
+    for which the divergence time is underestimated---$p(\hat{\tau} < \tau$---and for which
+    the true time falls within the 95% credible set---$p(\tau \in 0.95\textsf{ CS})$,
+    and the 
+    root mean square error (RMSE).
+](
+    ./images/hp-sim-study-div-time-grid.svg
+){
+    #fig-sim-div-time
+    fig-alt="True vs estimated divergence times"
+    fig-align="center"
+}
+
+![
+    True versus estimated values of effective population size.
+    For the exponential (top) and uniform (bottom) hyperprior,
+    three models are compared: a fixed diffuse prior (left), a hyperprior model 
+    (middle), and the true distribution used to simulate the data
+    (right).
+    Statistics reported in each panel include the proportion of simulation replicates
+    for which the population size is underestimated---$p(\hat{N_{e}} < N_{e}$---and for which
+    the true size falls within the 95% credible set---$p(N_{e} \in 0.95\textsf{ CS})$,
+    and the 
+    root mean square error (RMSE).
+](
+    ./images/hp-sim-study-pop-size-grid.svg
+){
+    #fig-sim-pop-size
+    fig-alt="True vs estimated effective population sizes"
+    fig-align="center"
+}
+
+## Gecko results
+
+![
+    The divergence times of 16 pairs of Philippine gecko
+    populations estimated by ecoevolity under a
+    (left column) fixed diffuse prior and (right column) hyperprior on
+    divergence times, and two different priors on the concentration of the
+    Dirichlet process (top and bottom rows).
+    The white circle, black bars, and violin represent
+    the posterior mean, 95% credible interval, and the full approximate
+    posterior sample, respectively.
+    The number at the end of the comparison labels represents the indices of
+    unique divergences for the maximum *a posteriori* divergence model.
+    The "G" and "C" next to the divergence index represents *Gekko* and
+    *Cyrtodactylus*, respectively.
+](
+    ./images/gecko-div-times-grid.svg
+){
+    #fig-gecko-div-time-grid
+    fig-alt="Estimated divergence times of 16 pairs of Philippine gecko populations"
+    fig-align="center"
+}
+
+![
+    The same results as in @fig-gecko-div-time-grid, but with the oldest
+    diverging pair of *Cyrtodactylus* populations from Palawan and Borneo
+    removed.
+](
+    ./images/gecko-div-times-sans-palawan-grid.svg
+){
+    #fig-gecko-div-time-grid-sans-palawan
+    fig-alt="Estimated divergence times of 15 pairs of Philippine gecko populations"
     fig-align="center"
 }
