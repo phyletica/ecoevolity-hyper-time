@@ -314,6 +314,12 @@ whereas the latter has a prior mean number of 8.5 divergences.
 
 For each of the four combinations of divergence time and concentration priors,
 we ran 10 MCMC chains for 150,000 generations, sampling every 100 generations.
+To evaluate the convergence and mixing of the chains of each analysis,
+we used the `pyco-sumchains` tool of pycoevolity
+pycoevolity (Version X.X Commit XXXX)
+to calculate the PSRF and ESS for all continuous parameters
+and the log likelihood,
+ignoring the beginning of each chain in increments of 100 samples.
 
 
 ## Results
@@ -430,6 +436,17 @@ hyperprior model restores nominal coverage
 All time prior settings perform similarly well in estimating the effective size
 of the populations (@sfig-sim-pop-size).
 
+The four MCMC chains of all the analyses of simulated data converged
+quickly and mixed well.
+When ignoring the first 201 samples of each chain, the log likelihood and all
+parameters had an ESS > 363 and PSRF < 1.0017 across all analyses of simulated
+data, so no values were highlighted for poor sampling in any of our plots
+(@sfig-coverage,
+@sfig-sim-conc,
+@sfig-sim-div-time,
+&
+@sfig-sim-pop-size).
+
 ### Empirical test of Philippine PAIC model for gekkonids
 
 Similar to the results of the simulated data sets, we see fewer divergence
@@ -498,6 +515,15 @@ The estimated marginal divergence times of all 16 pairs are shown in
     fig-alt="Estimated divergence times of 15 pairs of Philippine gecko populations"
     fig-align="center"
 }
+
+The 10 MCMC chains of all four models converged quickly and mixed well.
+Based on the values of the ESS and PSRF calculated by `pyco-sumchains`, we
+chose to ignore the first 101 samples of each chain (including the initial
+state) and summarize the results of the remaining 1,400 samples of each chain,
+for a total of 14,000 MCMC samples per model.
+Across all the parameters and log likelihood of all four analyses, the smallest
+ESS was 1014.8 and largest PSRF was 1.0056, suggesting good convergence to, and
+sampling from, the posterior disribution.
 
 ## Discussion
 ** Somer papers to guide the discussion --> ?  McGaughran et al., 2022,...**
