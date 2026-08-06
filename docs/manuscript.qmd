@@ -56,10 +56,12 @@ crossref:
 
 ## Introduction
 Reconstructing the timing of evolutionary events is fundamental for understanding key processes in evolutionary biology,
-including the mechanisms driving lineage diversification, the emergence of biogeographic patterns, and the assembly of regional biodiversity. 
+including the mechanisms driving lineage diversification, the emergence of biogeographic patterns, and the assembly of regional biodiversity [@Wallace1876;@Oaks2014dpp;@Edwards2017]. 
 <!-- Citations for the sentence above would be helpful -->
+<!-- I added a few citations, but please feel free to add any others you think are appropriate or recommend additional references that would strengthen this section. -->
+
 A central question in comparative phylogeography is whether codistributed lineages have responded synchronously
-to shared historical events or whether each lineage has a unique divergence history [@Avise2000; @Hickerson2006MolEcol].
+to shared historical events or whether each lineage has a unique divergence history [@Avise2000; @Hickerson2006MolEcol; @Edwards2022].
 <!-- TODO for Jamie: This might be a good place to introduce the Philippine PAIC diversification hypothesis -->
 Distinguishing between these
 scenarios requires accurate estimates of divergence times across multiple co-distributed population pairs, as well as robust statistical methods
@@ -69,10 +71,10 @@ Bayesian approaches have become the standard for estimating divergence times bec
 biological knowledge while explicitly propagating uncertainty across model parameters [@Drummond2007; @Yang2006].
 In the context of comparative phylogeography, Bayesian methods have been developed to simultaneously estimate divergence times across multiple
 taxon pairs and infer the degree to which those divergences are clustered in time, that is, whether lineages diverged synchronously or 
-asynchronously [@Hickerson2006; @Oaks2018ecoevolity]. Both simulation-based [@Hickerson2006; @Huang2011] and full-likelihood [@Oaks2018ecoevolity;
+asynchronously [@Hickerson2006; @Oaks2018ecoevolity]. Both simulation-based [@Hickerson2006; @Huang2011;@Hue&Hickerson2020;@Hue&Hickerson2020] and full-likelihood [@Oaks2018ecoevolity;
 @Oaks2019codemog] implementations of this framework have been proposed, enabling rigorous tests of synchronous divergence hypotheses.
 <!-- Are there other simulation-based implementations that might be worth citing? -->
-
+<!-- I added a few citations, but please feel free to suggest any others you think would strengthen this section! -->
 However, these methods can be biased toward over-clustering divergence events (i.e., underestimating the number of divergence times) [@Oaks2012;
 @Oaks2014reply]. This bias can lead to spurious inferences of synchronous divergence, with potentially misleading implications for our understanding
 of the historical processes structuring biodiversity. @Oaks2014reply proposed this tendency to prefer models with too few divergence-time parameters
